@@ -1,52 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %} {% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <header class="p-3 text-bg-dark">
-        <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li>
-                    <a href="#" class="nav-link px-2 text-secondary">Главная</a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link px-2 text-white">Расписания</a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link px-2 text-white">Профиль</a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link px-2 text-white">О гас</a>
-                </li>
-            </ul>
-                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                    <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Поиск..." aria-label="Поиск">
-                </form>
-                <div class="text-end">
-                    <button type="button" class="btn btn-outline-light me-2">Вход</button>
-                    <button type="button" class="btn btn-warning">Регестрация</button>
-                </div>
-            </div>
-        </div>
-    </header>
+    {% include 'header.html' %}
 </head>
-<body>
-{% block content %} {% endblock %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-</body>
-<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-    <div class="col-md-4 d-flex align-items-center">
-        <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1" aria-label="Bootstrap">
-            <svg class="bi" width="30" height="24" aria-hidden="true"><use xlink:href="#bootstrap">
 
-            </use>
-            </svg>
-        </a>
-        <span class="mb-3 mb-md-0 text-body-secondary">© 2026 USAZD, Inc</span>
-    </div>
-</footer>
+<body>
+
+    {% block content %} {% endblock %}
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+             crossorigin="anonymous"></script>
+
+</body>
+
+<script>
+    {% block js_code %} {% endblock %}
+</script>
+
+
+
 </html>
