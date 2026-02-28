@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Профиль</h1>
+    {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}"
+             alt="avatar"
+             style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+    {% else %}
+        <div style="width:120px;height:120px;border-radius:50%;background:#eee"></div>
+    {% endif %}
+    <span class="label">Имя пользователя</span> <br>
+    <span class="value">@{{ user.username }}</span> <br> <br>
+    <span class="label">Отображаемое имя</span> <br>
+    {% if profile.name %}
+        <span class="value">{{ profile.name }}</span> <br> <br>
+    {% else %}
+        <span class="value">{{ user.username }}</span> <br> <br>
+    {% endif %}
+    <span class="label">О себе</span> <br>
+    {% if profile.description %}
+        <div class="description">
+            {{ profile.description }}
+        </div>
+    {% else %}
+        <span class="label">No bio yet.</span> <br>
+    {% endif %}
+{% endblock %}
