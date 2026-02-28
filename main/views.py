@@ -24,3 +24,7 @@ def reg(request):
         form = RegistrationForm()
 
     return render(request, "registration/reg.html", {'form': form})
+
+def train(request):
+    """Функция для отображения страницы поезда"""
+    return render(request, "train.html")

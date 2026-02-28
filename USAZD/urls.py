@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('profile/<str:username>/', views.profile, name='profile'),
     path('reg/', views.reg),
+    path('train/', views.train),
 ]
