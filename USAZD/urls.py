@@ -17,10 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from main import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='index'),
+    path('info/', views.info, name='info'),
     path('profile/<str:username>/', views.profile, name='profile'),
     path('reg/', views.reg,name="reg"),
+    path('autho/', views.autho, name="autho"),
+    path('timetable/', views.timetable, name="timetable"),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
