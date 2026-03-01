@@ -29,10 +29,9 @@
                 </form>
                 <div class="text-end">
                     {% if user.is_authenticated %}
-                            <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="button" class="btn btn-outline-light me-2">Выйти</button>
-                            </form>
+                            <a href="{% url 'autho' %}" class="btn btn-danger">
+                                Выйти
+                            </a>
                     {% else %}
                         <button type="button" class="btn btn-outline-light me-2" onclick="window.location.href='/autho'">Войти</button>
                     {% endif %}
