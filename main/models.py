@@ -31,8 +31,8 @@ class Station(models.Model):
 class Train(models.Model):
     """Модель поездов"""
     train_id = models.AutoField(primary_key=True)
-    id_station_start = models.ForeignKey(Station, on_delete=models.CASCADE)
-    id_station_stop = models.ForeignKey(Station, on_delete=models.CASCADE)
+    id_station_start = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='station_start')
+    id_station_stop = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='station_stop')
     station_at_time = models.DateTimeField()
     path = models.TextField(blank=True)
 
@@ -43,11 +43,11 @@ class Train(models.Model):
 class Reservation(models.Model):
     """Модель бронирования"""
     reservation_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    train = models.ForeignKey(Train, on_delete=models.CASCADE)
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='user')
+    train = models.ForeignKey(Train, on_delete=models.CASCADE, related_name='train')
     place_num = models.CharField(max_length=10)
-    station_in = models.ForeignKey(Station, on_delete=models.CASCADE)
-    station_out = models.ForeignKey(Station, on_delete=models.CASCADE)
+    station_in = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='station_in')
+    station_out = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='station_out')
     reservation_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default='active')
 
