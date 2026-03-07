@@ -5,19 +5,11 @@ class Profile(models.Model):
     """Модель профиля"""
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
+    role = models.CharField(max_length=20, default='user')
     description = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     def __str__(self):
         return self.user.username
-
-class Users(models.Model):
-    """Модель пользователей"""
-    username = models.CharField(max_length=80, unique=True)
-    user_id = models.AutoField(primary_key=True)
-    passwd = models.CharField(max_length=128)
-    role = models.CharField(max_length=20, default='user')  # admin, user, manager
-    def __str__(self):
-        return self.username
 
 
 class Station(models.Model):
@@ -43,7 +35,7 @@ class Train(models.Model):
 class Reservation(models.Model):
     """Модель бронирования"""
     reservation_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='user')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     train = models.ForeignKey(Train, on_delete=models.CASCADE, related_name='train')
     place_num = models.CharField(max_length=10)
     station_in = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='station_in')
