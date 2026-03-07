@@ -31,7 +31,7 @@ class YandexAPI:
 
 
     def station_request(self, id_station_from, id_station_to, date = datetime.datetime.now().strftime('%Y-%m-%d'),lang = 'ru_RU'):
-        url = f'https://api.rasp.yandex-net.ru/v3.0/search/?apikey={self.YandexAPI_Key}&format=json&from={id_station_from}&to={id_station_to}&lang={lang}&page=1&date={date}'
+        url = f'https://api.rasp.yandex-net.ru/v3.0/search/?apikey={self.YandexAPI_Key}&format=json&from={id_station_from}&to={id_station_to}&lang={lang}&page=1&date={date}&limit=500'
         response = requests.get(url)
         if response.status_code == 200:
             return response.json()
