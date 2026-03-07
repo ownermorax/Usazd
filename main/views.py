@@ -215,3 +215,7 @@ def timetable_handler(request):
         }
         context['data']['trains'].append(train_info)
     return JsonResponse(context)
+
+def train(request):
+    """Функция для отображения страницы поезда"""
+    return render(request, "train.html")
