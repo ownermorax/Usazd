@@ -28,5 +28,6 @@ urlpatterns = [
     path('reg/', views.reg,name="reg"),
     path('autho/', views.autho, name="autho"),
     path('timetable/', views.timetable, name="timetable"),
+    path('api/search/',views.timetable_handler, name = "timetable_api"),
     path('logout/', LogoutView.as_view(), name='logout'),
 ]
