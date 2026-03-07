@@ -20,7 +20,7 @@ class YandexAPI:
     def __init__(self):
         with open('main/config.json') as file:
             conf = json.load(file)
-            self.YandexAPI_Key = conf['keys']['YandexAPI'] #для получения ключа xpowl.t.me
+            self.YandexAPI_Key = conf['keys']['YandexAPI'] #для получения ключа https://developer.tech.yandex.ru/services
 
     def load_stations_id(self):
         stations_id = requests.get(f'https://api.rasp.yandex-net.ru/v3.0/stations_list/?apikey={self.YandexAPI_Key}&lang=ru_RU&format=json')
