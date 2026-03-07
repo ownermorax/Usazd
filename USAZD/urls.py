@@ -17,11 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from main import views
-from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import LogoutView, LoginView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',views.index,name='index'),
+    path('info/', views.info, name='info'),
     path('profile/<str:username>/', views.profile, name='profile'),
-    path('reg/', views.reg),
-    path('auth/', auth_views.LoginView.as_view()),
+    path('reg/', views.reg, name="reg"),
+    path('timetable/', views.timetable, name="timetable"),
+    path('api/search/',views.timetable_handler, name = "timetable_api"),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('auth/', LoginView.as_view(), name='login'),
 ]
