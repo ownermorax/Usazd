@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Поиск поездов</h2>
+<div>
+    <label>Откуда (код):</label>
+    <input type="text" id="from_code" value="s9600766">
+</div>
+<div>
+    <label>Куда (код):</label>
+    <input type="text" id="to_code" value="s9601261">
+</div>
+<div>
+    <label>Дата:</label>
+    <input type="date" id="date">
+</div>
+<div>
+    <label>Язык:</label>
+    <select id="lang">
+        <option value="ru_RU">RU</option>
+        <option value="en_US">EN</option>
+    </select>
+</div>
+<div>
+    <button onclick="searchRoutes()">Найти</button>
+</div>
+<hr>
+<div id="results"></div>
+<script>
+document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+function searchRoutes() {
+    let r = new XMLHttpRequest()
+    let url = "/api/search/?from_code="+document.getElementById('from_code').value+"&to_code="+document.getElementById('to_code').value+"&date="+document.getElementById('date').value+"&lang="+document.getElementById('lang').value
+    r.open("GET", url)
+    r.onload = function() {
+        let response = JSON.parse(r.response)
+        let html = ''
+        if (response.status == 'ok' && response.data && response.data.segments) {
+            for (let i = 0; i < response.data.segments.length; i++) {
+                let s = response.data.segments[i]
+                html += '<div style="border:1px solid #000; margin:10px 0; padding:10px;">'
+                html += '<b>Поезд №' + (s.thread?.number || '???') + '</b> - ' + (s.thread?.title || '') + '<br>'
+                html += '🚉 ' + (s.from?.title || '???') + ' → ' + (s.to?.title || '???') + '<br>'
+                html += '🕒 ' + (s.departure ? s.departure.slice(11,16) : '???') + ' - ' + (s.arrival ? s.arrival.slice(11,16) : '???') + '<br>'
+                html += '⏱ ' + Math.floor((s.duration||0)/3600) + 'ч ' + Math.floor(((s.duration||0)%3600)/60) + 'м'
+                html += '</div>'
+            }
+        } else {
+            html = '<p>Ничего нет</p>'
+        }
+        document.getElementById('results').innerHTML = html
+    }
+    r.send()
+}
+</script>
+{% endblock %}
