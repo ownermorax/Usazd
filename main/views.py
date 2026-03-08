@@ -3,9 +3,35 @@ from main.models import Profile
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from main.forms import RegistrationForm
-from main.classes import YandexAPI
+from main.classes import YandexAPI, Train, Carriage,Seat
 from django.http import JsonResponse
 import datetime
+
+def train(request):#TODO: переделать docstring коментарий
+    """Функция для отображения страницы поезда"""
+
+    train = Train()
+    carriages_data = []
+    for carriage in train.carriages:
+        seats_data = []
+        for seats in carriage.seats:
+            seats_data.append({
+                'number': seats.number,
+                'is_taken': seats.is_taken,
+            })
+
+
+        carriages_data.append({
+            'number': carriage.number,
+            'seats': seats_data,
+        })
+
+    context = {
+            'train': train,
+            'carriages': carriages_data,
+    }
+    return render(request, "train.html", context)
+
 
 def profile(request, username):
     user = get_object_or_404(User, username=username)
@@ -216,6 +242,3 @@ def timetable_handler(request):
         context['data']['trains'].append(train_info)
     return JsonResponse(context)
 
-def train(request):
-    """Функция для отображения страницы поезда"""
-    return render(request, "train.html")

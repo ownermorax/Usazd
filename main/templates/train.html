@@ -2,5 +2,113 @@
 
 {% block content %}
     <h1>TrainMap</h1>
-    <a href="/" class="btn-back">← На главную</a>
+<div style="margin-bottom: 20px;">
+    <span style="display: inline-block; margin-right: 10px;">Вагон</span>
+    <select id="carriage-select" style="display: inline-block; padding: 8px; font-size: 16px; width: 200px;">
+        {% for carriage in carriages %}
+            <option value="{{ forloop.counter0 }}" {% if forloop.first %}selected{% endif %}>
+                {{ carriage.number }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="button" id="done">Выбрать</button>
+</div>
+{% endblock %}
+
+{% block js_code %}
+document.addEventListener('DOMContentLoaded', function() {
+    const carriages = [
+        {% for carriage in carriages %}{
+             number: {{carriage.number}},
+             seats: [
+                        {% for seat in carriage.seats %}
+                        {
+                            number: {{ seat.number }},
+                            is_taken: {{ seat.is_taken|lower }}
+                        }{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+             ]
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    var svgNS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute('id', 'my-svg');
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', '725');
+    svg.setAttribute('viewBox', '0 0 1000 600');
+    document.body.appendChild(svg);
+
+    var rect = document.createElementNS(svgNS, "rect");
+    rect.setAttribute('height', '370');
+    rect.setAttribute('width', '1140');
+    rect.setAttribute('fill', 'lightgray');
+    rect.setAttribute('stroke', 'black');
+    rect.setAttribute('stroke-width', '2');
+    rect.setAttribute('y', '90');
+    rect.setAttribute('x', '-10');
+    svg.appendChild(rect);
+
+    var text = document.createElementNS(svgNS, "text");
+    text.setAttribute('id', 'wagon-text');
+    text.setAttribute('x', '-13');
+    text.setAttribute('y', '75');
+    text.setAttribute('font-family', 'Arial');
+    text.setAttribute('font-size', '25');
+    text.setAttribute('fill', 'black');
+    svg.appendChild(text);
+
+    function Draw() {
+        var select = document.getElementById('carriage-select');
+        var selectedValue = select.value;
+
+        var textElement = document.getElementById('wagon-text');
+        textElement.textContent = 'Вагон: ' + carriages[selectedValue].number;
+
+        var oldSeats = document.querySelectorAll('#my-svg .seat-rect');
+        oldSeats.forEach(seat => seat.remove());
+
+        carriages[selectedValue].seats.forEach(seat => {
+            var seatRect = document.createElementNS(svgNS, "rect");
+            seatRect.setAttribute('class', 'seat-rect');
+            seatRect.setAttribute('height', '40');
+            seatRect.setAttribute('width', '40');
+            seatRect.setAttribute('fill', seat.is_taken ? 'red' : 'gray');
+            seatRect.setAttribute('stroke', 'black');
+            seatRect.setAttribute('stroke-width', '2');
+
+            if (seat.number <= 18){
+                seatRect.setAttribute('y', '100');
+                seatRect.setAttribute('x', -40 + (seat.number * 60));
+            } else if (seat.number > 18 && seat.number <= 36 ){
+                seatRect.setAttribute('y', '150');
+                seatRect.setAttribute('x', -40 + ((seat.number-18) * 60));
+            } else if (seat.number > 36 && seat.number <= 50 ){
+                seatRect.setAttribute('y', '200');
+                seatRect.setAttribute('x', -40 + ((seat.number-34) * 60));
+            } else if (seat.number > 50 && seat.number <= 68 ){
+                seatRect.setAttribute('y', '410');
+                seatRect.setAttribute('x', -40 + ((seat.number - 50)* 60));
+            } else if (seat.number > 68 && seat.number <= 86 ){
+                seatRect.setAttribute('y', '360');
+                seatRect.setAttribute('x', -40 + ((seat.number - 68)* 60));
+            } else if (seat.number > 86 ){
+                seatRect.setAttribute('y', '310');
+                seatRect.setAttribute('x', -40 + ((seat.number - 84)* 60));
+            }
+
+            svg.appendChild(seatRect);
+        });
+    }
+
+    var done = document.getElementById('done');
+    done.addEventListener('click', Draw);
+
+    var select = document.getElementById('carriage-select');
+    var initialValue = select.value;
+    var textElement = document.getElementById('wagon-text');
+    textElement.textContent = 'Вагон: ' + carriages[initialValue].number;
+});
+
 {% endblock %}

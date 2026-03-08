@@ -19,16 +19,15 @@ from django.urls import path
 from main import views
 from django.contrib.auth.views import LogoutView, LoginView
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.index,name='index'),
+    path('', views.index, name='index'),
     path('info/', views.info, name='info'),
     path('profile/<str:username>/', views.profile, name='profile'),
     path('reg/', views.reg, name="reg"),
     path('timetable/', views.timetable, name="timetable"),
-    path('api/search/',views.timetable_handler, name = "timetable_api"),
+    path('api/search/', views.timetable_handler, name="timetable_api"),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('auth/', LoginView.as_view(), name='auth'),
-    path('train/', views.train),
+    path('train/', views.train, name='train'),
 ]
