@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', '725');
     svg.setAttribute('viewBox', '0 0 1000 600');
-    document.body.appendChild(svg);
+    document.querySelector('main').appendChild(svg);
 
     var rect = document.createElementNS(svgNS, "rect");
     rect.setAttribute('height', '370');
