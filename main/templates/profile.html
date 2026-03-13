@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-
 {% block content %}
+
     <h1>Профиль</h1>
     {% if profile.avatar %}
         <img src="{{ profile.avatar.url }}"
@@ -25,4 +25,29 @@
     {% else %}
         <span class="label">No bio yet.</span> <br>
     {% endif %}
+
+    <!-- Иконки внизу профиля -->
+    <div style="margin-top: 40px; display: flex; gap: 30px; justify-content: center;">
+        <!-- Иконка личной информации -->
+        <div style="text-align: center;">
+            <a href="{% url 'user_info' %}" style="text-decoration: none; font-size: 32px;" title="Личная информация">
+                👤
+            </a>
+            <div style="font-size: 12px;">Личная информация</div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="{% url 'active_reservations' %}" style="text-decoration: none; font-size: 32px;" title="Активные брони">
+                🔴
+            </a>
+            <div style="font-size: 12px;">Активные</div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="{% url 'reservation_history' %}" style="text-decoration: none; font-size: 32px;" title="История броней">
+                📋
+            </a>
+            <div style="font-size: 12px;">История</div>
+        </div>
+    </div>
 {% endblock %}

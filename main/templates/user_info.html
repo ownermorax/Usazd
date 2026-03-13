@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Личная информация</h1>
+<p>Имя пользователя: {{ user.username }}</p>
+<p>Email: {{ user.email }}</p>
+<p>Отображаемое имя: {% if profile.name %}{{ profile.name }}{% else %}{{ user.username }}{% endif %}</p>
+<p>О себе: {% if profile.description %}{{ profile.description }}{% else %}Нет информации{% endif %}</p>
+<p>Дата регистрации: {{ user.date_joined|date:"d.m.Y" }}</p>
+<p>Последний вход: {{ user.last_login|date:"d.m.Y H:i" }}</p>
+<a href="{% url 'profile' user.username %}">← Назад</a>
+{% endblock %}

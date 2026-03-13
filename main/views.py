@@ -75,6 +75,47 @@ def index(request):
     return render(request, 'index.html')
 
 
+def user_info(request):
+    """
+    Страница с личной информацией пользователя.
+
+    Отображает персональные данные текущего авторизованного пользователя.
+
+    :param request: HTTP запрос
+    :type request: HttpRequest
+    :returns: HTTP ответ с шаблоном user_info.html
+    :rtype: HttpResponse
+    """
+    return render(request, 'user_info.html')
+
+
+def active_reservations(request):
+    """
+    Страница с активными бронями пользователя.
+
+    Отображает список текущих активных броней пользователя.
+
+    :param request: HTTP запрос
+    :type request: HttpRequest
+    :returns: HTTP ответ с шаблоном active_reservations.html
+    :rtype: HttpResponse
+    """
+    return render(request, 'active_reservations.html')
+
+
+def reservation_history(request):
+    """
+    Страница с историей броней пользователя.
+
+    Отображает список завершенных броней пользователя.
+
+    :param request: HTTP запрос
+    :type request: HttpRequest
+    :returns: HTTP ответ с шаблоном reservation_history.html
+    :rtype: HttpResponse
+    """
+    return render(request, 'reservation_history.html')
+
 def autho(request):
     """
     Страница авторизации пользователя.
@@ -240,5 +281,6 @@ def timetable_handler(request):
             'thread_uid': thread.get('uid', ''),
         }
         context['data']['trains'].append(train_info)
+
     return JsonResponse(context)
 
