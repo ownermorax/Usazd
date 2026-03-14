@@ -8,6 +8,16 @@ class Profile(models.Model):
     role = models.CharField(max_length=20, default='user')
     description = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+
+    role_choice = [
+        ('vip', 'виппользователь'),
+        ('base_user', 'базпользователь'),
+        ('admin', 'админ')
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20, choices=role_choice, default='base_user')
+
     def __str__(self):
         return self.user.username
 
