@@ -8,6 +8,7 @@ class Profile(models.Model):
     role = models.CharField(max_length=20, default='user')
     description = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    currency = models.IntegerField(default=1000)
     def __str__(self):
         return self.user.username
 
