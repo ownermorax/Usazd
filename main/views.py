@@ -34,6 +34,19 @@ def train(request):#TODO: переделать docstring коментарий
 
 
 def profile(request, username):
+    """
+    Отображает страницу профиля пользователя.
+
+    :param request: HTTP запрос
+    :type request: HttpRequest
+
+    :param username: имя пользователя из URL
+    :type username: str
+
+    :returns: HTTP ответ с шаблоном profile.html
+    :rtype: HttpResponse
+
+    """
     user = get_object_or_404(User, username=username)
     profile, created = Profile.objects.get_or_create(user=user)
     context = {
