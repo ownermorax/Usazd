@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             seatRect.setAttribute('stroke', 'black');
             seatRect.setAttribute('stroke-width', '2');
 
+
             if (seat.number <= 18){
                 seatRect.setAttribute('y', '100');
                 seatRect.setAttribute('x', -40 + (seat.number * 60));
@@ -98,6 +99,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 seatRect.setAttribute('x', -40 + ((seat.number - 84)* 60));
             }
 
+            seatRect.addEventListener('click', function(){
+                var status = 'Свободно';
+                if (seat.is_taken){ status = 'Занято'; }
+                else{ status = 'Свободно'; }
+                alert(`Вагон: ${carriages[selectedValue].number}\nМесто: ${seat.number}\nСтатус: ${status}`);
+            })
             svg.appendChild(seatRect);
         });
     }
