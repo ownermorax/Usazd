@@ -21,7 +21,7 @@ from django.contrib.auth.views import LogoutView, LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.main, name='index'),
+    path('', views.main, name='main'),
     path('info/', views.info, name='info'),
     path('user-info/', views.user_info, name='user_info'),
     path('active-reservations/', views.active_reservations, name='active_reservations'),

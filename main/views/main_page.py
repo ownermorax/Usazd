@@ -8,4 +8,4 @@ def main(request):
     :param request: HttpRequest
     :returns: HttpResponse с шаблоном index.html
     """
-    return render(request, 'index.html')
+    return render(request, 'main.html')
