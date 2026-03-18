@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from main.models import Profile
 
 def user_info(request):
     """
@@ -11,4 +12,5 @@ def user_info(request):
     :returns: HTTP ответ с шаблоном user_info.html
     :rtype: HttpResponse
     """
-    return render(request, 'user_info.html')
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+    return render(request, 'user_info.html', {'profile':profile})

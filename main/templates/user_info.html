@@ -8,5 +8,11 @@
 <p>О себе: {% if profile.description %}{{ profile.description }}{% else %}Нет информации{% endif %}</p>
 <p>Дата регистрации: {{ user.date_joined|date:"d.m.Y" }}</p>
 <p>Последний вход: {{ user.last_login|date:"d.m.Y H:i" }}</p>
+<div style="text-align: left;">
+    <a href="{% url 'edit_user_info' %}" style="text-decoration: none; font-size: 32px;" title="Изменить">
+        📝
+    </a>
+    <div style="font-size: 15px;">Изменить</div>
+</div>
 <a href="{% url 'profile' user.username %}">← Назад</a>
 {% endblock %}

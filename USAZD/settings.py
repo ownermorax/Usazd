@@ -145,3 +145,6 @@ UNFOLD = {
     "SITE_HEADER": "Админ-панель",
     "THEME": "dark",
 }
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

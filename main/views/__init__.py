@@ -8,3 +8,4 @@ from .timetable_page import *
 from .timtable_header_page import *
 from .train_page import *
 from .user_info_page import *
+from .user_info_edit_page import *

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Редактирование личной информации</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p> Имя:
+        <input type="text" name="name" value="{{ profile.name }}">
+    </p>
+
+    <p> Расскажите о себе:
+        <textarea name="description"> {{ profile.description }} </textarea>
+    </p>
+    {% if profile.avatar %}
+    <p>
+        Текущий аватар: <br>
+        <img src="{{ profile.avatar.url }}" width="120">
+    </p>
+    <p>
+        <label>
+            <input type="checkbox" name="delete_avatar">
+            Удалить аватар
+        </label>
+    </p>
+    {% endif %}
+    <p>
+        Новый аватар:
+        <input type="file" name="avatar">
+    </p>
+
+    <button type="submit">Сохранить</button>
+</form>
+<a href="{% url 'profile' user.username %}">← Назад</a>
+{% endblock %}

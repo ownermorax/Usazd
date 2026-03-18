@@ -5,7 +5,7 @@
     {% if profile.avatar %}
         <img src="{{ profile.avatar.url }}"
              alt="avatar"
-             style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+             style="width:120px;height:120px;border-radius:50%;object-fit:cover;"> <br>
     {% else %}
         <div style="width:120px;height:120px;border-radius:50%;background:#eee"></div>
     {% endif %}
@@ -22,8 +22,9 @@
         <div class="description">
             {{ profile.description }}
         </div>
+    {% else %}
+        <span class="label">Нет информации.</span> <br>
     {% endif %}
-        <span class="label">No bio yet.</span> <br>
     <div style="position: absolute; top: 80px; right: 320px; display: flex; gap: 10px; text-align: right;">
     <span style="font-size: 24px;">💵</span>
     <div>
@@ -32,30 +33,26 @@
     </div>
 </div>
 
-
-
-    <!-- Иконки внизу профиля -->
-    <div style="margin-top: 40px; display: flex; gap: 30px; justify-content: center;">
-        <!-- Иконка личной информации -->
-        <div style="text-align: center;">
-            <a href="{% url 'user_info' %}" style="text-decoration: none; font-size: 32px;" title="Личная информация">
-                🚻
-            </a>
-            <div style="font-size: 12px;">Личная информация</div>
-        </div>
-
-        <div style="text-align: center;">
-            <a href="{% url 'active_reservations' %}" style="text-decoration: none; font-size: 32px;" title="Активные брони">
-                🚆
-            </a>
-            <div style="font-size: 12px;">Активные</div>
-        </div>
-
-        <div style="text-align: center;">
-            <a href="{% url 'reservation_history' %}" style="text-decoration: none; font-size: 32px;" title="История броней">
-               📅
-            </a>
-            <div style="font-size: 12px;">История</div>
-        </div>
+<div style="margin-top: 40px; display: flex; gap: 30px; justify-content: center">
+    <div style="text-align: center;">
+        <a href="{% url 'user_info' %}" style="text-decoration: none; font-size: 32px;" title="Личная информация">
+            🚻
+        </a>
+        <div style="font-size: 12px;">Личная информация</div>
     </div>
+
+    <div style="text-align: center;">
+        <a href="{% url 'active_reservations' %}" style="text-decoration: none; font-size: 32px;" title="Активные брони">
+            🚆
+        </a>
+        <div style="font-size: 12px;">Активные</div>
+    </div>
+
+    <div style="text-align: center;">
+        <a href="{% url 'reservation_history' %}" style="text-decoration: none; font-size: 32px;" title="История броней">
+           📅
+        </a>
+        <div style="font-size: 12px;">История</div>
+    </div>
+</div>
 {% endblock %}
