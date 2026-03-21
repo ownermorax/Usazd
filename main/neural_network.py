@@ -4,7 +4,7 @@ import json
 response = requests.post(
   url="https://openrouter.ai/api/v1/chat/completions",
   headers={
-    "Authorization": "Bearer <OPENROUTER_API_KEY>",
+    "Authorization": "Bearer OPENROUTER_API_KEY_REPLACED",
     "Content-Type": "application/json",
     "HTTP-Referer": "<YOUR_SITE_URL>", # Optional. Site URL for rankings on openrouter.ai.
     "X-OpenRouter-Title": "<YOUR_SITE_NAME>", # Optional. Site title for rankings on openrouter.ai.
@@ -18,7 +18,7 @@ response = requests.post(
         "content": [
           {
             "type": "text",
-            "text": n
+            "text": input()
           },
 
         ]
@@ -28,10 +28,9 @@ response = requests.post(
 )
 
 
-n = input()
 
 if response.status_code == 200:
-  jsn = response.json()
-  res = jsn['choice']['choices'][0]['message']['content']
+  res = response.json()
+  ans = res['choices'][0]['message']['content']
   print("Ответ модели:")
-  print(res)
+  print(ans)
