@@ -78,11 +78,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.search_form',
             ],
         },
     },
 ]
-
+OPENROUTER_API_KEY = os.environ.get(
+    'OPENROUTER_API_KEY',
+    'OPENROUTER_API_KEY_REPLACED'
+)
 WSGI_APPLICATION = 'USAZD.wsgi.application'
 
 

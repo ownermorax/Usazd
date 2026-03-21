@@ -24,3 +24,14 @@ def clean_password(self):
             raise forms.ValidationError("Пароль должен содержать буквы различного регистра и цифры")
 
         return password
+
+class NeuralNetworkForm(forms.Form):
+    text = forms.CharField(
+        max_length=100,
+        label='Введите запрос',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control form-control-dark text-bg-dark',
+            'placeholder': 'Поиск...',
+            'type': 'search'
+        })
+    )
