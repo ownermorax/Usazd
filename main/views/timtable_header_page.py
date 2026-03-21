@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from main.classes import YandexAPI
+from main.api_instance import yandex_api as yandexAPI
 import datetime
 
 def timetable_handler(request):
@@ -84,10 +84,13 @@ def timetable_handler(request):
     :param str thread_uid: UID нитки расписания
     """
 
-    from_code = request.GET.get('from_code', '')
-    to_code = request.GET.get('to_code', '')
+    from_name = request.GET.get('from_code', '')
+    to_name = request.GET.get('to_code', '')
     date = request.GET.get('date', '')
     lang = request.GET.get('lang', 'ru_RU')
+    from_code = yandexAPI.get_station_id(from_name)
+    to_code = yandexAPI.get_station_id(to_name)
+    print(from_name, to_name, from_code, to_code)
     if not from_code or not to_code:
         return JsonResponse({
             'status': 'error',
@@ -95,7 +98,6 @@ def timetable_handler(request):
         }, status=400)
     if not date:
         date = datetime.now().strftime('%Y-%m-%d')
-    yandexAPI = YandexAPI()
     result = yandexAPI.station_request(from_code, to_code, date, lang)
     context = {
         'status': 'ok',
