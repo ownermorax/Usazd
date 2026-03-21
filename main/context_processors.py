@@ -1,6 +1,4 @@
-# main/context_processors.py
 import requests
-import json
 from django.conf import settings
 
 from .forms import NeuralNetworkForm
@@ -14,18 +12,14 @@ def search_form(request):
     3. Передает результаты во все шаблоны
     """
 
-    # Создаем форму с данными из GET-запроса
     form = NeuralNetworkForm(request.GET or None)
 
-    # Переменные для результатов
     search_query = None
     search_answer = None
 
-    # Если форма отправлена и валидна
     if form.is_valid():
         search_query = form.cleaned_data['text']
 
-        # Отправляем запрос к нейросети
         try:
             response = requests.post(
                 url="https://openrouter.ai/api/v1/chat/completions",
@@ -51,9 +45,8 @@ def search_form(request):
         except Exception as e:
             search_answer = f"Ошибка: {str(e)}"
 
-    # Возвращаем все данные для шаблонов
     return {
-        'search_form': form,  # Форма (с сохраненным значением)
-        'search_query': search_query,  # Запрос пользователя
-        'search_answer': search_answer,  # Ответ нейросети
+        'search_form': form,
+        'search_query': search_query,
+        'search_answer': search_answer,
     }
