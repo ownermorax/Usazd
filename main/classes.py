@@ -83,8 +83,6 @@ class YandexAPI:
             :rtype: str or None
             """
         station_name = station_name.lower()
-        print(station_name)
-        print(len(self.stations_id))
         return self.stations_id.get(station_name)
 
     def station_request(self, id_station_from, id_station_to, date = datetime.datetime.now().strftime('%Y-%m-%d'),lang = 'ru_RU'):

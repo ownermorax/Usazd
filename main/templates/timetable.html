@@ -3,23 +3,16 @@
 {% block content %}
 <h2>Поиск поездов</h2>
 <div>
-    <label>Откуда (код):</label>
-    <input type="text" id="from_code" value="s9600766">
+    <label>Откуда:</label>
+    <input type="text" id="from_code" value="">
 </div>
 <div>
-    <label>Куда (код):</label>
-    <input type="text" id="to_code" value="s9601261">
+    <label>Куда:</label>
+    <input type="text" id="to_code" value="">
 </div>
 <div>
     <label>Дата:</label>
     <input type="date" id="date">
-</div>
-<div>
-    <label>Язык:</label>
-    <select id="lang">
-        <option value="ru_RU">RU</option>
-        <option value="en_US">EN</option>
-    </select>
 </div>
 <div>
     <button onclick="searchRoutes()">Найти</button>
