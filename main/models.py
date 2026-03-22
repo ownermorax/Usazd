@@ -1,11 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
-
 class Profile(models.Model):
     """Модель профиля"""
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
-    role = models.CharField(max_length=20, default='user')
+    # role = models.CharField(max_length=20, default='user')
     description = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     currency = models.IntegerField(default=1000)
@@ -46,3 +45,14 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f"Бронь #{self.reservation_id}"
+
+
+class Roles(models.Model):
+    """Модель ролей"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    ROLE_CHOICES = (
+        ('admin', 'Admin'),
+        ('user', 'User'),
+        ('VIP', 'VIP')
+    )
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
