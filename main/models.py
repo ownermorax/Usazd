@@ -11,6 +11,10 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+    def update_balance(self, money):
+        self.currency += money
+        self.save()
+
 
 class Station(models.Model):
     """Модель станций"""

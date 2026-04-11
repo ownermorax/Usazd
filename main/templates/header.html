@@ -35,7 +35,7 @@
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Выйти</button>
                         </form>
-                        <span class="btn btn-warning">💰 {{ user.profile.currency }}</span>
+                        <button class="btn btn-warning" onclick="window.location.href='/balance'">$ {{ user.profile.currency }} </button>
                     {% else %}
                         <button type="button" class="btn btn-outline-light me-2" onclick="window.location.href='/auth'">Войти</button>
                         <button type="button" class="btn btn-warning" onclick="window.location.href='/reg'">Регистрация</button>

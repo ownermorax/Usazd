@@ -17,10 +17,9 @@
 
 <div class = 'wrapper'>
     <header>{% include 'header.html' %}</header>
-    <p> {{ search_answer }}</p>
+    <p> {{ search_answer|safe }} </p>
     <main>{% block content %} {% endblock %}</main>
     <footer>{% include 'footer.html' %}</footer>
-
 </div>
     <script>
         {% block js_code %} {% endblock %}
