@@ -4,7 +4,7 @@ class Profile(models.Model):
     """Модель профиля"""
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
-    # role = models.CharField(max_length=20, default='user')
+    role = models.CharField(max_length=20, default='user')
     description = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     currency = models.IntegerField(default=1000)

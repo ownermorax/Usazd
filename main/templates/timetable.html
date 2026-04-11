@@ -24,7 +24,7 @@ document.getElementById('date').value = new Date().toISOString().split('T')[0];
 
 function searchRoutes() {
     let r = new XMLHttpRequest()
-    let url = "/api/search/?from_code="+document.getElementById('from_code').value+"&to_code="+document.getElementById('to_code').value+"&date="+document.getElementById('date').value+"&lang="+document.getElementById('lang').value
+    let url = "/api/search/?from_code="+document.getElementById('from_code').value+"&to_code="+document.getElementById('to_code').value+"&date="+document.getElementById('date').value
     r.open("GET", url)
     r.onload = function() {
         let response = JSON.parse(r.response)
