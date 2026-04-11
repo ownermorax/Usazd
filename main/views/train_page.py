@@ -2,8 +2,18 @@ from django.shortcuts import render
 from main.classes import Train
 
 
-def train(request):#TODO: переделать docstring коментарий
-    """Функция для отображения страницы поезда"""
+def train(request):
+    """
+    Отображает страницу поезда с вагонами и местами.
+
+    Создает объект поезда и формирует структуру данных вагонов, мест,
+    номер места и статус места (занято/свободно) и передает эти данные в шаблон.
+
+    :param request: HTTP-запрос
+    :type request: HttpRequest
+    :return: HTTP ответ с шаблоном train.html
+    :rtype: HttpResponse
+    """
 
     train = Train()
     carriages_data = []
