@@ -148,6 +148,7 @@ def timetable_handler(request):
             'from_code': from_info.get('code', ''),
             'to_code': to_info.get('code', ''),
             'thread_uid': thread.get('uid', ''),
+            'price': 1000,
         }
         context['data']['trains'].append(train_info)
 
