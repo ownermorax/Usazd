@@ -2,17 +2,70 @@
 
 {% block content %}
     <h1>TrainMap</h1>
-<div style="margin-bottom: 20px;">
-    <span style="display: inline-block; margin-right: 10px;">Вагон</span>
-    <select id="carriage-select" style="display: inline-block; padding: 8px; font-size: 16px; width: 200px;">
-        {% for carriage in carriages %}
-            <option value="{{ forloop.counter0 }}" {% if forloop.first %}selected{% endif %}>
-                {{ carriage.number }}
-            </option>
-        {% endfor %}
-    </select>
-    <button type="button" id="done">Выбрать</button>
-</div>
+
+    <input type="hidden" id="username" value="{{ request.user.id }}">
+    <input type="hidden" id="user-balance" value="{{ user.profile.balance }}">
+    <input type="hidden" id="train-number" value="{{ train_number }}">
+    <input type="hidden" id="station-from" value="{{ station_from }}">
+    <input type="hidden" id="station-to" value="{{ station_to }}">
+
+    <div style="margin-bottom: 20px; display: flex; align-items: flex-start; gap: 20px;">
+        <div>
+            <span style="display: inline-block; margin-right: 10px;">Вагон</span>
+            <select id="carriage-select" style="display: inline-block; padding: 8px; font-size: 16px; width: 200px;">
+                {% for carriage in carriages %}
+                    <option value="{{ forloop.counter0 }}" {% if forloop.first %}selected{% endif %}>
+                        Вагон {{ carriage.number }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="button" id="done" style="margin-left: 10px; padding: 8px 16px; cursor: pointer;">Показать вагон</button>
+        </div>
+
+        <!-- Корзина бронирования -->
+        <div id="booking-summary" style="background: white; border: 2px solid #006241; border-radius: 12px; padding: 15px; min-width: 280px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); font-size: 14px;">
+            <strong style="color: #006241; font-size: 16px;">🛒 Корзина бронирования</strong><br>
+            <div style="margin-top: 10px; color: #666;">
+                <div>🚂 Поезд: <span id="display-train-number">{{ train_number }}</span></div>
+                <div>📍 От: <span id="display-station-from">{{ station_from }}</span></div>
+                <div>📍 До: <span id="display-station-to">{{ station_to }}</span></div>
+            </div>
+            <div id="selected-seats" style="max-height: 150px; overflow-y: auto; margin: 10px 0; padding: 5px; border-top: 1px solid #eee; border-bottom: 1px solid #eee;">
+                <div style="color: #999;">Нет выбранных мест</div>
+            </div>
+            <div style="line-height: 1.4;">
+                <span id="seats-count" style="display: block;">Выбрано: 0 мест</span>
+                <span id="seats-total" style="font-weight: bold; color: #006241; font-size: 16px;">Сумма: $0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно -->
+    <div id="seatModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+        <div style="position: relative; background-color: white; margin: 15% auto; padding: 20px; border-radius: 8px; width: 300px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+            <h3 id="modalTitle" style="margin-top: 0; color: #333;">Информация о месте</h3>
+            <p id="modalMessage" style="margin: 20px 0; font-size: 16px;"></p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="bookSeatBtn" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; display: none;">Выбрать место</button>
+                <button id="cancelModalBtn" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Кнопка бронирования -->
+    <div style="margin-top: 20px; text-align: center;">
+        <button id="book-all-seats" style="background-color: #006241; color: white; border: none; padding: 12px 40px; border-radius: 25px; font-size: 16px; cursor: pointer; font-weight: bold;">
+            🎫 Забронировать выбранные места
+        </button>
+    </div>
+
+    <div style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 8px; text-align: center;">
+        <span style="margin-right: 20px;">🟢 Свободно</span>
+        <span style="margin-right: 20px;">🔴 Занято</span>
+        <span>🟡 Выбрано</span>
+    </div>
+
+    {% csrf_token %}
 {% endblock %}
 
 {% block js_code %}
@@ -31,6 +84,111 @@ document.addEventListener('DOMContentLoaded', function() {
         }{% if not forloop.last %},{% endif %}
         {% endfor %}
     ];
+
+    // Получаем данные из URL и скрытых полей
+    function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            trainNumber: params.get('id') || document.getElementById('train-number').value,
+            stationFrom: params.get('from') || document.getElementById('station-from').value,
+            stationTo: params.get('to') || document.getElementById('station-to').value
+        };
+    }
+
+    const urlParams = getUrlParams();
+    const trainNumber = urlParams.trainNumber;
+    const stationFrom = urlParams.stationFrom;
+    const stationTo = urlParams.stationTo;
+
+    // Отображаем информацию о маршруте
+    document.getElementById('display-train-number').textContent = trainNumber || 'Не указан';
+    document.getElementById('display-station-from').textContent = stationFrom || 'Не указана';
+    document.getElementById('display-station-to').textContent = stationTo || 'Не указана';
+
+    // Корзина выбранных мест
+    let selectedSeats = {};
+    const PRICE_PER_SEAT = 50;
+
+    function updateBookingSummary() {
+        let totalSeats = 0;
+        let totalPrice = 0;
+        let seatsHtml = '';
+
+        for (let key in selectedSeats) {
+            const seat = selectedSeats[key];
+            totalSeats++;
+            totalPrice += PRICE_PER_SEAT;
+            seatsHtml += `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; padding: 5px; background: #f9f9f9; border-radius: 4px;">
+                    <span>🚃 Вагон ${seat.carriage}, место ${seat.seat}</span>
+                    <button class="remove-seat" data-key="${key}" style="background: #ff4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 14px; padding: 0;">×</button>
+                </div>
+            `;
+        }
+
+        document.getElementById('selected-seats').innerHTML = seatsHtml || '<div style="color: #999; text-align: center; padding: 10px;">Нет выбранных мест</div>';
+        document.getElementById('seats-count').textContent = `Выбрано: ${totalSeats} мест`;
+        document.getElementById('seats-total').textContent = `Сумма: $${totalPrice}`;
+
+        // Добавляем обработчики для кнопок удаления
+        document.querySelectorAll('.remove-seat').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const key = this.dataset.key;
+                delete selectedSeats[key];
+                updateBookingSummary();
+                Draw();
+            });
+        });
+    }
+
+    function showNotification(message, type = 'error') {
+        let notificationDiv = document.getElementById('notification');
+
+        if (!notificationDiv) {
+            notificationDiv = document.createElement('div');
+            notificationDiv.id = 'notification';
+            notificationDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'error' ? '#ff4444' : '#006241'};
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 14px;
+                z-index: 10000;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                display: none;
+                text-align: center;
+                max-width: 400px;
+            `;
+            document.body.appendChild(notificationDiv);
+        }
+
+        notificationDiv.textContent = message;
+        notificationDiv.style.display = 'block';
+        notificationDiv.style.background = type === 'error' ? '#ff4444' : '#006241';
+
+        setTimeout(() => {
+            notificationDiv.style.display = 'none';
+        }, 5000);
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
     var svgNS = "http://www.w3.org/2000/svg";
     var svg = document.createElementNS(svgNS, "svg");
@@ -59,6 +217,152 @@ document.addEventListener('DOMContentLoaded', function() {
     text.setAttribute('fill', 'black');
     svg.appendChild(text);
 
+    let currentSelectedCarriage = null;
+    let currentSelectedSeat = null;
+    let currentIsTaken = false;
+
+    function showModal(carriageNumber, seatNumber, isTaken) {
+        const modal = document.getElementById('seatModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const bookBtn = document.getElementById('bookSeatBtn');
+        const status = isTaken ? 'Занято' : 'Свободно';
+        const statusColor = isTaken ? '#f44336' : '#4CAF50';
+
+        const seatKey = `${carriageNumber}-${seatNumber}`;
+        const isSelected = selectedSeats[seatKey];
+
+        currentSelectedCarriage = carriageNumber;
+        currentSelectedSeat = seatNumber;
+        currentIsTaken = isTaken;
+
+        modalMessage.innerHTML = `
+            <strong>Вагон:</strong> ${carriageNumber}<br>
+            <strong>Место:</strong> ${seatNumber}<br>
+            <strong>Статус:</strong> <span style="color: ${statusColor}; font-weight: bold;">${status}</span>
+            ${isSelected ? '<br><span style="color: #006241;">✓ Уже в корзине</span>' : ''}
+        `;
+
+        if (!isTaken && !isSelected) {
+            bookBtn.style.display = 'inline-block';
+        } else {
+            bookBtn.style.display = 'none';
+        }
+
+        modal.style.display = 'block';
+    }
+
+    function addSeatToCart(carriageNumber, seatNumber) {
+        const seatKey = `${carriageNumber}-${seatNumber}`;
+
+        if (selectedSeats[seatKey]) {
+            showNotification('Это место уже выбрано', 'error');
+            return;
+        }
+
+        selectedSeats[seatKey] = {
+            carriage: carriageNumber,
+            seat: seatNumber
+        };
+
+        updateBookingSummary();
+        Draw();
+        document.getElementById('seatModal').style.display = 'none';
+        showNotification(`Место ${seatNumber} в вагоне ${carriageNumber} добавлено`, 'success');
+    }
+
+    document.getElementById('book-all-seats').addEventListener('click', function() {
+        const selectedSeatsArray = Object.values(selectedSeats);
+
+        if (selectedSeatsArray.length === 0) {
+            showNotification('Выберите хотя бы одно место', 'error');
+            return;
+        }
+
+        if (!trainNumber) {
+            showNotification('Номер поезда не указан', 'error');
+            return;
+        }
+
+        const totalPrice = selectedSeatsArray.length * PRICE_PER_SEAT;
+        const userBalance = parseFloat(document.getElementById('user-balance').value);
+
+        if (userBalance < totalPrice) {
+            showNotification(`Недостаточно средств! Баланс: $${userBalance}, нужно: $${totalPrice}`, 'error');
+            return;
+        }
+
+        let url = `/api/create/reservation/?username=${document.getElementById('username').value}&train_id=${trainNumber}`;
+
+        if (stationFrom) url += `&station_in_name=${encodeURIComponent(stationFrom)}`;
+        if (stationTo) url += `&station_out_name=${encodeURIComponent(stationTo)}`;
+
+        url += `&seats=`;
+        selectedSeatsArray.forEach(seat => {
+            url += `W${seat.carriage}x${seat.seat}`;
+        });
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+
+        xhr.onload = function() {
+            try {
+                const response = JSON.parse(xhr.responseText);
+
+                if (xhr.status === 200) {
+                    showNotification(response.message || 'Бронирование успешно!', 'success');
+
+                    selectedSeatsArray.forEach(seat => {
+                        const carriage = carriages.find(c => c.number == seat.carriage);
+                        if (carriage) {
+                            const seatObj = carriage.seats.find(s => s.number == seat.seat);
+                            if (seatObj) {
+                                seatObj.is_taken = true;
+                            }
+                        }
+                    });
+
+                    selectedSeats = {};
+                    updateBookingSummary();
+                    Draw();
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    showNotification(response.message || 'Ошибка бронирования', 'error');
+                }
+            } catch (e) {
+                showNotification('Ошибка при обработке ответа', 'error');
+            }
+        };
+
+        xhr.onerror = function() {
+            showNotification('Ошибка соединения с сервером', 'error');
+        };
+
+        xhr.send();
+    });
+
+    const modal = document.getElementById('seatModal');
+    const cancelBtn = document.getElementById('cancelModalBtn');
+    const bookBtn = document.getElementById('bookSeatBtn');
+
+    cancelBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    bookBtn.addEventListener('click', function() {
+        if (currentSelectedCarriage && currentSelectedSeat && !currentIsTaken) {
+            addSeatToCart(currentSelectedCarriage, currentSelectedSeat);
+        }
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
     function Draw() {
         var select = document.getElementById('carriage-select');
         var selectedValue = select.value;
@@ -74,11 +378,35 @@ document.addEventListener('DOMContentLoaded', function() {
             seatRect.setAttribute('class', 'seat-rect');
             seatRect.setAttribute('height', '40');
             seatRect.setAttribute('width', '40');
-            seatRect.setAttribute('fill', seat.is_taken ? 'red' : 'gray');
+
+            const seatKey = `${carriages[selectedValue].number}-${seat.number}`;
+            const isSelected = selectedSeats[seatKey];
+
+            if (seat.is_taken) {
+                seatRect.setAttribute('fill', '#ff4444');
+            } else if (isSelected) {
+                seatRect.setAttribute('fill', '#FFD700');
+            } else {
+                seatRect.setAttribute('fill', '#4CAF50');
+            }
+
             seatRect.setAttribute('stroke', 'black');
             seatRect.setAttribute('stroke-width', '2');
+            seatRect.style.cursor = seat.is_taken ? 'not-allowed' : 'pointer';
 
+            if (!seat.is_taken) {
+                seatRect.addEventListener('mouseenter', function() {
+                    this.setAttribute('stroke', '#006241');
+                    this.setAttribute('stroke-width', '3');
+                });
 
+                seatRect.addEventListener('mouseleave', function() {
+                    this.setAttribute('stroke', 'black');
+                    this.setAttribute('stroke-width', '2');
+                });
+            }
+
+            // Позиционирование мест
             if (seat.number <= 18){
                 seatRect.setAttribute('y', '100');
                 seatRect.setAttribute('x', -40 + (seat.number * 60));
@@ -100,22 +428,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             seatRect.addEventListener('click', function(){
-                var status = 'Свободно';
-                if (seat.is_taken){ status = 'Занято'; }
-                else{ status = 'Свободно'; }
-                alert(`Вагон: ${carriages[selectedValue].number}\nМесто: ${seat.number}\nСтатус: ${status}`);
-            })
+                if (!seat.is_taken) {
+                    showModal(carriages[selectedValue].number, seat.number, seat.is_taken);
+                }
+            });
+
             svg.appendChild(seatRect);
         });
     }
 
-    var done = document.getElementById('done');
-    done.addEventListener('click', Draw);
+    document.getElementById('done').addEventListener('click', Draw);
 
-    var select = document.getElementById('carriage-select');
-    var initialValue = select.value;
-    var textElement = document.getElementById('wagon-text');
-    textElement.textContent = 'Вагон: ' + carriages[initialValue].number;
+    Draw();
 });
-
 {% endblock %}

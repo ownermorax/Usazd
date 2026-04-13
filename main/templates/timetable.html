@@ -37,8 +37,8 @@ function searchRoutes() {
                 html += '🚉 ' + (s.from?.title || '???') + ' → ' + (s.to?.title || '???') + '<br>'
                 html += '🕒 ' + (s.departure ? s.departure.slice(11,16) : '???') + ' - ' + (s.arrival ? s.arrival.slice(11,16) : '???') + '<br>'
                 html += '⏱ ' + Math.floor((s.duration||0)/3600) + 'ч ' + Math.floor(((s.duration||0)%3600)/60) + 'м<br>'
-                html += '💰 Цена: 1000 ₽<br>'
-                html += '<a href="/train" style="display:inline-block; margin-top:10px; padding:5px 10px; background:#007bff; color:white; text-decoration:none; border-radius:5px;">Забронировать</a>'
+                html += '💰 Цена: 2$<br>'
+                html += '<a href="/train/?id=' + (s.thread?.number || '') + '&from=' + (s.from?.title || '') + '&to=' + (s.to?.title || '') + '" style="display:inline-block; margin-top:10px; padding:5px 10px; background:#007bff; color:white; text-decoration:none; border-radius:5px;">Забронировать</a>'
                 html += '</div>'
             }
         } else {
