@@ -16,37 +16,148 @@
 </div>
 <div>
     <button onclick="searchRoutes()">Найти</button>
+    <button id="togglePastBtn" onclick="togglePastTrains()" style="display:none; margin-left:10px;">Показать прошедшие</button>
 </div>
 <hr>
 <div id="results"></div>
+
 <script>
+let allSegments = []
+let showPast = false
+let currentTime = ''
+let selectedDate = ''
+
 document.getElementById('date').value = new Date().toISOString().split('T')[0];
 
 function searchRoutes() {
     let r = new XMLHttpRequest()
-    let url = "/api/search/?from_code="+document.getElementById('from_code').value+"&to_code="+document.getElementById('to_code').value+"&date="+document.getElementById('date').value
+    let now = new Date()
+    currentTime = now.toTimeString().slice(0, 5)
+    selectedDate = document.getElementById('date').value
+    let url = "/api/search/?from_code=" + document.getElementById('from_code').value +
+              "&to_code=" + document.getElementById('to_code').value +
+              "&date=" + selectedDate
     r.open("GET", url)
     r.onload = function() {
         let response = JSON.parse(r.response)
-        let html = ''
+
         if (response.status == 'ok' && response.data && response.data.segments) {
-            for (let i = 0; i < response.data.segments.length; i++) {
-                let s = response.data.segments[i]
-                html += '<div style="border:1px solid #000; margin:10px 0; padding:10px;">'
-                html += '<b>Поезд №' + (s.thread?.number || '???') + '</b> - ' + (s.thread?.title || '') + '<br>'
-                html += '🚉 ' + (s.from?.title || '???') + ' → ' + (s.to?.title || '???') + '<br>'
-                html += '🕒 ' + (s.departure ? s.departure.slice(11,16) : '???') + ' - ' + (s.arrival ? s.arrival.slice(11,16) : '???') + '<br>'
-                html += '⏱ ' + Math.floor((s.duration||0)/3600) + 'ч ' + Math.floor(((s.duration||0)%3600)/60) + 'м<br>'
-                html += '💰 Цена: 2$<br>'
-                html += '<a href="/train/?id=' + (s.thread?.number || '') + '&from=' + (s.from?.title || '') + '&to=' + (s.to?.title || '') + '" style="display:inline-block; margin-top:10px; padding:5px 10px; background:#007bff; color:white; text-decoration:none; border-radius:5px;">Забронировать</a>'
-                html += '</div>'
+            allSegments = response.data.segments
+            showPast = false
+            document.getElementById('togglePastBtn').style.display = 'inline-block'
+            document.getElementById('togglePastBtn').textContent = 'Показать прошедшие'
+            renderResults()
+        } else {
+            allSegments = []
+            showPast = false
+            document.getElementById('togglePastBtn').style.display = 'none'
+            document.getElementById('results').innerHTML = '<p>Ничего нет</p>'
+        }
+    }
+    r.send()
+}
+
+function togglePastTrains() {
+    showPast = !showPast
+    let btn = document.getElementById('togglePastBtn')
+    if (showPast) {
+        btn.textContent = 'Скрыть прошедшие'
+    } else {
+        btn.textContent = 'Показать прошедшие'
+    }
+    renderResults()
+}
+
+function renderResults() {
+    let html = ''
+    let is_today = selectedDate === new Date().toISOString().split('T')[0]
+
+    if (allSegments.length === 0) {
+        html = '<p>Ничего нет</p>'
+        document.getElementById('results').innerHTML = html
+        return
+    }
+
+    let futureSegments = []
+    let pastSegments = []
+
+    if (is_today) {
+        for (let i = 0; i < allSegments.length; i++) {
+            let s = allSegments[i]
+            let departure_time = s.departure ? s.departure.slice(11,16) : null
+            if (departure_time && departure_time > currentTime) {
+                futureSegments.push(s)
+            } else {
+                pastSegments.push(s)
             }
+        }
+
+        pastSegments.sort((a, b) => {
+            let timeA = a.departure ? a.departure.slice(11,16) : '00:00'
+            let timeB = b.departure ? b.departure.slice(11,16) : '00:00'
+            return timeA.localeCompare(timeB)
+        })
+
+        futureSegments.sort((a, b) => {
+            let timeA = a.departure ? a.departure.slice(11,16) : '00:00'
+            let timeB = b.departure ? b.departure.slice(11,16) : '00:00'
+            return timeA.localeCompare(timeB)
+        })
+    } else {
+        futureSegments = allSegments
+        pastSegments = []
+
+        futureSegments.sort((a, b) => {
+            let timeA = a.departure ? a.departure.slice(11,16) : '00:00'
+            let timeB = b.departure ? b.departure.slice(11,16) : '00:00'
+            return timeA.localeCompare(timeB)
+        })
+    }
+
+    let segmentsToShow = []
+    if (showPast) {
+        segmentsToShow = [...pastSegments, ...futureSegments]
+    } else {
+        segmentsToShow = futureSegments
+    }
+
+    if (segmentsToShow.length === 0) {
+        if (is_today && futureSegments.length === 0 && !showPast) {
+            html = '<p>На сегодня поездов больше нет</p>'
+        } else if (is_today && pastSegments.length === 0 && showPast) {
+            html = '<p>Нет прошедших поездов</p>'
         } else {
             html = '<p>Ничего нет</p>'
         }
-        document.getElementById('results').innerHTML = html
+    } else {
+        for (let i = 0; i < segmentsToShow.length; i++) {
+            let s = segmentsToShow[i]
+            let departure_time = s.departure ? s.departure.slice(11,16) : null
+            let isPast = is_today && departure_time && departure_time <= currentTime
+
+            let style = isPast ? 'border:1px solid #999; margin:10px 0; padding:10px; background:#f5f5f5; opacity:0.7;' : 'border:1px solid #000; margin:10px 0; padding:10px;'
+
+            html += '<div style="' + style + '">'
+            if (isPast) {
+                html += '<span style="color:#999; font-size:12px;">[ПРОШЕДШИЙ]</span><br>'
+            }
+            html += '<b>Поезд №' + (s.thread?.number || '???') + '</b> - ' + (s.thread?.title || '') + '<br>'
+            html += '🚉 ' + (s.from?.title || '???') + ' → ' + (s.to?.title || '???') + '<br>'
+            html += '🕒 ' + (s.departure ? s.departure.slice(11,16) : '???') + ' - ' + (s.arrival ? s.arrival.slice(11,16) : '???') + '<br>'
+            html += '⏱ ' + Math.floor((s.duration||0)/3600) + 'ч ' + Math.floor(((s.duration||0)%3600)/60) + 'м<br>'
+            html += '💰 Цена: 2$<br>'
+
+            if (!isPast) {
+                html += '<a href="/train/?id=' + (s.thread?.number || '') + '&from=' + (s.from?.title || '') + '&to=' + (s.to?.title || '') + '" style="display:inline-block; margin-top:10px; padding:5px 10px; background:#007bff; color:white; text-decoration:none; border-radius:5px;">Забронировать</a>'
+            } else {
+                html += '<span style="display:inline-block; margin-top:10px; padding:5px 10px; background:#ccc; color:#666; border-radius:5px;">Бронирование недоступно</span>'
+            }
+
+            html += '</div>'
+        }
     }
-    r.send()
+
+    document.getElementById('results').innerHTML = html
 }
 </script>
 {% endblock %}
