@@ -22,7 +22,6 @@
             <button type="button" id="done" style="margin-left: 10px; padding: 8px 16px; cursor: pointer;">Показать вагон</button>
         </div>
 
-        <!-- Корзина бронирования -->
         <div id="booking-summary" style="background: white; border: 2px solid #006241; border-radius: 12px; padding: 15px; min-width: 280px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); font-size: 14px;">
             <strong style="color: #006241; font-size: 16px;">🛒 Корзина бронирования</strong><br>
             <div style="margin-top: 10px; color: #666;">
@@ -40,7 +39,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно -->
     <div id="seatModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
         <div style="position: relative; background-color: white; margin: 15% auto; padding: 20px; border-radius: 8px; width: 300px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
             <h3 id="modalTitle" style="margin-top: 0; color: #333;">Информация о месте</h3>
@@ -52,7 +50,6 @@
         </div>
     </div>
 
-    <!-- Кнопка бронирования -->
     <div style="margin-top: 20px; text-align: center;">
         <button id="book-all-seats" style="background-color: #006241; color: white; border: none; padding: 12px 40px; border-radius: 25px; font-size: 16px; cursor: pointer; font-weight: bold;">
             🎫 Забронировать выбранные места
@@ -107,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Корзина выбранных мест
     let selectedSeats = {};
-    const PRICE_PER_SEAT = 50;
+    const PRICE_PER_SEAT = 2;
 
     function updateBookingSummary() {
         let totalSeats = 0;
