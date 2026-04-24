@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from main.models import Train as TrainModel, Profile, Reservation, Station
 import json
+from main.utils import logger
 
 
-def train(request):
+def train(request):  # TODO: переделать docstring комментарий
     """
     Отображает страницу поезда с вагонами и местами.
     """
     train_number = request.GET.get('id', '')
+    logger.info(f"Пользователь зашел на страницу поезда: {train_number}.")
     station_from = request.GET.get('from', '')
     station_to = request.GET.get('to', '')
     carriages_data = []
@@ -21,8 +23,9 @@ def train(request):
                 if str(path_data.get('number', '')) == str(train_number):
                     train_obj = t
                     break
-            except:
-                pass
+            except Exception as e:
+                logger.warning(f"Ошибка path: {e}.")
+        logger.debug(f"Поезд найден: {bool(train_obj)}.")
 
     for carriage_num in range(1, 12):
         seats_data = []

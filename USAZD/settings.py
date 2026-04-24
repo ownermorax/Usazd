@@ -154,17 +154,8 @@ UNFOLD = {
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-
-
-import os
-from pathlib import Path
-
-# Определяем путь к папке logs
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
-
-# Создаем папку, если её нет, чтобы избежать ошибки FileNotFoundError
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
 
@@ -187,7 +178,7 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': os.path.join(LOG_DIR, 'info.log'),
             'formatter': 'main_formatter',
-            'encoding': 'utf-8', # Важно для корректного отображения кириллицы
+            'encoding': 'utf-8',
         },
     },
     'root': {

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from main.utils import logger
 
 
 def reservation_history(request):
@@ -12,4 +13,5 @@ def reservation_history(request):
     :returns: HTTP ответ с шаблоном reservation_history.html
     :rtype: HttpResponse
     """
+    logger.info("Пользователь зашел на страницу с историей брони.")
     return render(request, 'reservation_history.html')

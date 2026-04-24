@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from main.utils import logger
 
 
 def info(request):
@@ -10,4 +11,5 @@ def info(request):
     :returns: HTTP-ответ с шаблоном info.html.
     :rtype: HttpResponse
     """
+    logger.info("Пользователь зашел на информационную страницу.")
     return render(request, 'info.html')
