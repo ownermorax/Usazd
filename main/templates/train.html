@@ -66,6 +66,7 @@
 {% endblock %}
 
 {% block js_code %}
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     const carriages = [
         {% for carriage in carriages %}{
@@ -438,4 +439,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
     Draw();
 });
+</script>
 {% endblock %}

@@ -23,5 +23,14 @@ class MainConfig(AppConfig):
             from main.parser import parser
             parser.start()
 
+        def run_bot():
+            import time
+            time.sleep(2)
+            from main.bot import start_bot
+            start_bot()
+
         thread = threading.Thread(target=run_parser, daemon=True)
         thread.start()
+
+        thread_bot = threading.Thread(target=run_bot, daemon=True)
+        thread_bot.start()
