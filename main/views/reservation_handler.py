@@ -3,10 +3,12 @@ from django.contrib.auth.models import User
 from djmoney.money import Money
 from main.models import Train, Profile, Reservation, Station
 import json
+from main.utils import logger
 
 
 def reservation_handler(request):
     """Обработчик бронирования мест"""
+    logger.info("Пользователь отправил запрос на бронирование.")
     user_id = request.GET.get('username', '')
     train_number = request.GET.get('train_id', '')
     seats = request.GET.get('seats', '')
@@ -17,6 +19,7 @@ def reservation_handler(request):
     departure_time = request.GET.get('departure_time', '')
 
     if not user_id or not train_number or not seats:
+        logger.error("Недостаточно данных для бронирования.")
         return JsonResponse({
             'status': 'error',
             'message': 'Недостаточно данных для бронирования'
@@ -24,6 +27,7 @@ def reservation_handler(request):
 
     try:
         profile = Profile.objects.get(user__id=user_id)
+        logger.debug(f"Пользователь найден: #{user_id}.")
         user = profile.user
 
         if station_in_id:
@@ -39,6 +43,7 @@ def reservation_handler(request):
             station_out, _ = Station.objects.get_or_create(name=station_out_name)
         else:
             return JsonResponse({'status': 'error', 'message': 'Не указана станция назначения'}, status=400)
+        logger.debug(f"Станции: {station_in} -> {station_out}.")
 
         train = None
 
@@ -49,8 +54,8 @@ def reservation_handler(request):
                 if str(path_data.get('number', '')) == str(train_number):
                     train = t
                     break
-            except:
-                pass
+            except Exception as e:
+                logger.warning(f"Ошибка чтения path: {e}.")
 
         if not train:
             train = Train.objects.create(
@@ -59,11 +64,14 @@ def reservation_handler(request):
                 station_at_time=departure_time or '2024-01-01 00:00:00',
                 path=json.dumps({'number': train_number})
             )
+            logger.info(f"Создан новый поезд: #{train.train_id} с номером {train_number}.")
             print(f"Создан новый поезд #{train.train_id} с номером {train_number}")
 
     except Profile.DoesNotExist:
+        logger.error(f"Профиль не найден: #{user_id}.")
         return JsonResponse({'status': 'error', 'message': 'Пользователь не найден'}, status=400)
     except Exception as e:
+        logger.exception("Ошибка при обработке бронирования.")
         return JsonResponse({'status': 'error', 'message': f'Ошибка: {str(e)}'}, status=400)
 
     booked_seats = []
@@ -78,6 +86,7 @@ def reservation_handler(request):
             place_num = f"{carriage_num}-{seat_num}"
 
             if Reservation.objects.filter(train=train, place_num=place_num, status='active').exists():
+                logger.warning(f"Место занято: {place_num}.")
                 return JsonResponse({
                     'status': 'error',
                     'message': f'Место {seat_num} в вагоне {carriage_num} уже занято'
@@ -92,6 +101,7 @@ def reservation_handler(request):
             total_price += PRICE_PER_SEAT
 
     if profile.balance < total_price:
+        logger.warning(f"Недостаточно средств у пользователя: #{user_id}.")
         return JsonResponse({
             'status': 'error',
             'message': f'Недостаточно средств. Баланс: ${profile.balance.amount:.2f}, нужно: ${total_price.amount:.2f}'
@@ -108,6 +118,8 @@ def reservation_handler(request):
         station_out=station_out,
         status='active'
     )
+
+    logger.info(f"Успешное бронирование #{reservation.reservation_id}.")
 
     seats_list = ', '.join(place_nums)
 

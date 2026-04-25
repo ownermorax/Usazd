@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from main.utils import logger
 
 
 def main(request):
@@ -8,4 +9,5 @@ def main(request):
     :param request: HttpRequest
     :returns: HttpResponse с шаблоном index.html
     """
+    logger.info("Пользователь зашел на главную страницу.")
     return render(request, 'main.html')

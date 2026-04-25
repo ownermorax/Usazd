@@ -1,6 +1,8 @@
 from django.http import JsonResponse
 from main.api_instance import yandex_api as yandexAPI
 import datetime
+from main.utils import logger
+
 
 def timetable_handler(request):
     """
@@ -83,15 +85,19 @@ def timetable_handler(request):
     :param str to_code: Код станции назначения
     :param str thread_uid: UID нитки расписания
     """
-
+    logger.info("Пользователь запросил расписание.")
     from_name = request.GET.get('from_code', '')
     to_name = request.GET.get('to_code', '')
+    
+    logger.debug(f"Маршрут: {from_name} -> {to_name}ю")
+    
     date = request.GET.get('date', '')
     lang = request.GET.get('lang', 'ru_RU')
     from_code = yandexAPI.get_station_id(from_name)
     to_code = yandexAPI.get_station_id(to_name)
     print(from_name, to_name, from_code, to_code)
     if not from_code or not to_code:
+        logger.error("Пользователь не указал станции отправления и назначения.")
         return JsonResponse({
             'status': 'error',
             'message': 'Не указаны станции отправления и назначения'
