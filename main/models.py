@@ -60,6 +60,11 @@ class Reservation(models.Model):
     reservation_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default='active')
 
+    def cancel(self):
+        if self.status != 'cancelled':
+            self.status = 'cancelled'
+            self.save()
+
     def __str__(self):
         return f"Бронь #{self.reservation_id}"
 
