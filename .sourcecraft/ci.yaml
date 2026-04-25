@@ -23,7 +23,7 @@ workflows:
               - python -m pip install sphinx --root-user-action=ignore
               - apk add --no-cache make
               - cd docs
-              - make html
+              - sphinx-build -M html . _build -v
             artifacts:
                 paths:
                   - docs/build/html/
