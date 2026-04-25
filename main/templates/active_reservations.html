@@ -2,5 +2,67 @@
 
 {% block content %}
 <h1>Активные брони</h1>
-<p>Список активных броней</p>
+
+<div style="margin-top: 20px;">
+    {% if reservations %}
+        {% for reservation in reservations %}
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: #f9f9f9;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; color: #006241;">Бронь #{{ reservation.reservation_id }}</h3>
+                    <span style="background: #4CAF50; color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px;">
+                        {{ reservation.status }}
+                    </span>
+                </div>
+
+                <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div>
+                        <strong>🚂 Поезд:</strong>
+                        {{ reservation.train.train_id }}
+                    </div>
+                    <div>
+                        <strong>📅 Дата бронирования:</strong>
+                        {{ reservation.reservation_date|date:"d.m.Y H:i" }}
+                    </div>
+                    <div>
+                        <strong>📍 Отправление:</strong>
+                        {{ reservation.station_in.name }}
+                    </div>
+                    <div>
+                        <strong>🎯 Назначение:</strong>
+                        {{ reservation.station_out.name }}
+                    </div>
+                    <div>
+                        <strong>💺 Места:</strong>
+                        {{ reservation.place_num }}
+                    </div>
+                    <div>
+                        <strong>🕒 Время отправления:</strong>
+                        {{ reservation.train.station_at_time|date:"d.m.Y H:i" }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: #999; text-align: center; padding: 40px;">
+            У вас пока нет активных бронирований
+        </p>
+    {% endif %}
+</div>
+
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
 {% endblock %}

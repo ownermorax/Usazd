@@ -1,15 +1,32 @@
 from django.db import models
 from django.contrib.auth.models import User
+from djmoney.models.fields import MoneyField
+from djmoney.money import Money
+
+
 class Profile(models.Model):
     """Модель профиля"""
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, default='username')
     role = models.CharField(max_length=20, default='user')
     description = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
-    currency = models.IntegerField(default=1000)
+
+    balance = MoneyField(
+        max_digits=10,
+        decimal_places=2,
+        default_currency='USD',
+        default=1000
+    )
+
     def __str__(self):
         return self.user.username
+
+    def update_balance(self, money):
+        if isinstance(money, (int, float)):
+            money = Money(money, self.balance.currency)
+        self.balance += money
+        self.save()
 
 
 class Station(models.Model):
@@ -42,6 +59,11 @@ class Reservation(models.Model):
     station_out = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='station_out')
     reservation_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default='active')
+
+    def cancel(self):
+        if self.status != 'cancelled':
+            self.status = 'cancelled'
+            self.save()
 
     def __str__(self):
         return f"Бронь #{self.reservation_id}"
