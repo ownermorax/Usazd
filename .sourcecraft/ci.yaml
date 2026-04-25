@@ -19,8 +19,8 @@ workflows:
             image: docker.io/library/python:3.13.3-alpine3.20
             script:
               - cd "$SOURCECRAFT_WORKSPACE"
-              - python -m pip install --upgrade pip
-              - python -m pip install sphinx
+              - python -m pip install --upgrade pip --root-user-action=ignore
+              - python -m pip install sphinx --root-user-action=ignore
               - apk add --no-cache make
               - cd docs
               - make html
