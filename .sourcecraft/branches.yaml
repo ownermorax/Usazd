@@ -1,0 +1,14 @@
+# Конфигурация защиты веток
+# Документация: https://sourcecraft.dev/portal/docs/ru/operations/branch-policies.html
+
+branch_protection:
+  policies:
+    # Защита основной ветки main
+    # Запрещает прямой push, force push и удаление ветки
+    # Разрешает push только через pull request
+    - target: default_branch
+      message: "Прямой push в ветку main запрещён. Создайте pull request для внесения изменений."
+      rules:
+        - prevent_force_push
+        - prevent_non_pr_changes
+        - prevent_deletion
