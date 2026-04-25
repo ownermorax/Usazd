@@ -399,6 +399,7 @@
 {% endblock %}
 
 {% block js_code %}
+<script>
 const walletValue = 'UQCqiM0Yt-zWQWUgn4PdeV4pDp0c6yqeaLLjIuJQ2A0lNNNI';
 const walletAddressElem = document.getElementById('walletAddress');
 const inlineWalletSpan = document.getElementById('inlineWallet');
@@ -523,4 +524,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Пользователь ID: {{ user.id }}');
     {% endif %}
 });
+</script>
 {% endblock %}
