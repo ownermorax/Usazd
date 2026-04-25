@@ -1,0 +1,29 @@
+on:
+  pull_request:
+    - workflows: [python-ci]
+      filter:
+        source_branches: ["**"]
+        target_branches: ["main", "master"]
+
+  push:
+    - workflows: [python-ci]
+      filter:
+        branches: ["main", "master", "ci"]
+
+workflows:
+  python-ci:
+    tasks:
+      - name: sphinx-docs
+        cubes:
+          - name: sphinx-html
+            image: docker.io/library/python:3.13.3-alpine3.20
+            script:
+              - cd "$SOURCECRAFT_WORKSPACE"
+              - python -m pip install --upgrade pip
+              - python -m pip install sphinx
+              - apk add --no-cache make
+              - cd docs
+              - make html
+            artifacts:
+                paths:
+                  - docs/build/html/
