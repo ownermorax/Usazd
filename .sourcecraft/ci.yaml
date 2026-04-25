@@ -20,7 +20,7 @@ workflows:
             script:
               - cd "$SOURCECRAFT_WORKSPACE"
               - python -m pip install --upgrade pip --root-user-action=ignore
-              - python -m pip install sphinx --root-user-action=ignore
+              - python -m pip install sphinx django --root-user-action=ignore
               - apk add --no-cache make
               - cd docs
               - sphinx-build -M html . _build -v
