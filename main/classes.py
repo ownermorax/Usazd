@@ -46,7 +46,7 @@ class YandexAPI:
         :rtype: None
         """
         stations_id = requests.get(f'https://api.rasp.yandex-net.ru/v3.0/stations_list/?apikey={self.YandexAPI_Key}&lang=ru_RU&format=json')
-        with open('main/stations.json', 'w', encoding='utf-8') as file:
+        with open('stations.json', 'w', encoding='utf-8') as file:
             json.dump(stations_id.json(), file, ensure_ascii=False, indent=4)
 
     def load_stations_to_memory(self):
@@ -59,7 +59,7 @@ class YandexAPI:
         :return: True в случае успешной загрузки
         :rtype: bool
         """
-        with open('main/stations.json', 'r', encoding='utf-8') as file:
+        with open('stations.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
             for country in data.get('countries', []):
                 for region in country.get('regions', []):

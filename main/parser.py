@@ -40,8 +40,6 @@ class UsdtParser:
             pass
 
     def start(self):
-        print(f"Loaded {len(self.seen)} transactions")
-
         while True:
             try:
                 response = requests.get(self.url, timeout=30)
@@ -75,18 +73,17 @@ class UsdtParser:
                                 try:
                                     profile = Profile.objects.get(user_id=user_id)
                                     profile.update_balance(amount)
-                                    print(f"{amount} USDT to user {user_id} (tx: {event_id[:8]}...)")
                                     self.seen.add(event_id)
                                     self.save_seen_transactions()
                                 except Profile.DoesNotExist:
-                                    print(f"User {user_id} not found")
-                                except Exception as e:
-                                    print(f"Error: {e}")
+                                    pass
+                                except Exception:
+                                    pass
                             else:
-                                print(f"No user ID in comment: {comment}")
+                                pass
 
-            except Exception as e:
-                print(f"Error: {e}")
+            except Exception:
+                pass
             sleep(10)
 
 parser = UsdtParser()

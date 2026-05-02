@@ -38,6 +38,8 @@ urlpatterns = [
     path('train/', views.train, name='train'),
     path('balance/', views.update_balance, name='balance'),
     path('api/create/reservation/', views.reservation_handler, name='create_reservation'),
+    path('schedule/<str:from_station>/<str:to_station>/', views.schedule_card, name='schedule_card'),
+    path('quick-booking/', views.quick_booking, name='quick_booking'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
