@@ -1,0 +1,11 @@
+[run]
+omit =
+    manage.py
+    */migrations/*
+    */__init__.py
+    */asgi.py
+    */wsgi.py
+    */settings.py
+    main/bot.py
+    main/parser.py
+    main/neural_network.py
