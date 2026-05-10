@@ -14,6 +14,11 @@ from main.models import Profile
 
 
 class UsdtParser:
+    """Парсер транзакций USDT из блокчейна TON.
+
+    Мониторит события кошелька через TONAPI.io,
+    отслеживает новые транзакции и сохраняет их ID в JSON-файл
+    для исключения повторной обработки."""
     def __init__(self):
         self.usdt_contract = '0:b113a994b5024a16719f69139328eb759596c38a25f59028b146fecdc3621dfe'
         self.wallet_address = '0:aa88cd18b7ecd64165209f83dd795e290e9d1ceb2a9e68b2e322e250d80d2534'
@@ -22,6 +27,7 @@ class UsdtParser:
         self.seen = self.load_seen_transactions()
 
     def load_seen_transactions(self):
+        """Загружает обработанные ID событий из файла"""
         if self.seen_file.exists():
             try:
                 with open(self.seen_file, 'r', encoding='utf-8') as f:
@@ -32,6 +38,7 @@ class UsdtParser:
         return set()
 
     def save_seen_transactions(self):
+        """Сохраняет обработанные ID событий"""
         try:
             data = {'processed_events': list(self.seen)}
             with open(self.seen_file, 'w', encoding='utf-8') as f:
@@ -40,6 +47,11 @@ class UsdtParser:
             pass
 
     def start(self):
+        """Запускает цикл парсинга:
+        1. Запрашивает последние события кошелька через TONAPI
+        2. Фильтрует новые события
+        3. Добавляет новые ID в self.seen
+        4. Сохраняет обновлённый список в файл"""
         print(f"Loaded {len(self.seen)} transactions")
 
         while True:

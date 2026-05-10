@@ -5,7 +5,13 @@ import json
 
 def train(request):
     """
-    Отображает страницу поезда с вагонами и местами.
+    Отображает страницу поезда с вагонами и местами.\\
+
+    :param request: HTTP GET-запрос
+    :var train_number: Номер поезда
+    :var station_from: Станция отправления
+    :var station_to: Станция высадки
+    :var carriages_data: Данные о вагонах
     """
     train_number = request.GET.get('id', '')
     station_from = request.GET.get('from', '')

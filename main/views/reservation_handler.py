@@ -6,7 +6,33 @@ import json
 
 
 def reservation_handler(request):
-    """Обработчик бронирования мест"""
+    """Обработчик бронирования мест в поезде.
+    Принимает GET-запрос с параметрами бронирования, проверяет наличие мест,
+    списывает средства с баланса пользователя и создаёт запись о бронировании.
+
+    :param request: HTTP GET-запрос
+    :var user_id: ID пользователя
+    :var train_id: ID поезда
+    :var seats: Места в вагоне
+    :var station_in: ID станции посадки
+    :var station_in_name: Название станции посадки
+    :var station_out: ID станции высадки
+    :var station_out_name: Название станции высадки
+    :var departure_time: Время отправления (по умолчанию '2024-01-01 00:00:00')
+
+    Returns:
+        JsonResponse:
+            Успех (200):
+                - status: 'success'
+                - message: Сообщение с деталями бронирования
+                - reservation_id: ID созданной брони
+                - places: Список занятых мест
+                - total_price: Общая стоимость
+                - new_balance: Новый баланс пользователя
+            Ошибка (400):
+                - status: 'error'
+                - message: Описание ошибки
+        """
     user_id = request.GET.get('username', '')
     train_number = request.GET.get('train_id', '')
     seats = request.GET.get('seats', '')

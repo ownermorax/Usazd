@@ -4,13 +4,31 @@ import datetime
 
 class Train:
     def __init__(self):
+        """Класс поезда
+
+        Управляет составом поезда, объединяет вагоны
+
+        :ivar carriages: Список вагонов в поезде"""
         self.carriages = [Carriage(i) for i in range(1,12)]
+
 class Carriage:
+    """Класс вагона
+
+    Управляет составом вагона, объединяет места
+
+    :ivar number: Номер вагона
+    :ivar seats: Список мест в вагоне"""
     def __init__(self, number):
         self.number = number
         self.seats = [Seat(i) for i in range(1,101)]
 
 class Seat:
+    """Класс места
+
+        Отвечает за отдельное место в вагоне, хранит информацию о его статусе (занято/незанято)
+
+        :ivar number: Номер места
+        :ivar is_taken: Статус места"""
     def __init__(self,number):
         self.number = number
         self.is_taken = False

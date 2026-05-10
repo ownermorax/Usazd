@@ -5,7 +5,17 @@ from djmoney.money import Money
 
 
 class Profile(models.Model):
-    """Модель профиля"""
+    """Модель профиля пользователя
+
+    Расширяет стандартную модель User, добавляя личную информацию,
+    роль пользователя и баланс.
+
+    :var user: Связь один-к-одному с моделью User
+    :var name: Имя пользователя в системе
+    :var role: Роль пользователя в системе
+    :var description: Описание профиля (необязательное поле)
+    :var avatar: Аватар пользователя (необязательно, загружается в 'avatars/'
+    :var balance: Денежный баланс"""
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, default='username')
     role = models.CharField(max_length=20, default='user')
@@ -23,6 +33,7 @@ class Profile(models.Model):
         return self.user.username
 
     def update_balance(self, money):
+        """Обновляет баланс пользователя, сохраняет данные в БД"""
         if isinstance(money, (int, float)):
             money = Money(money, self.balance.currency)
         self.balance += money
@@ -30,7 +41,10 @@ class Profile(models.Model):
 
 
 class Station(models.Model):
-    """Модель станций"""
+    """Модель станций, хранит название и ID отдельной станции
+
+    :var station_id: ID станции
+    :var name: Названия станции"""
     station_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, unique=True)
     def __str__(self):
@@ -38,7 +52,14 @@ class Station(models.Model):
 
 
 class Train(models.Model):
-    """Модель поездов"""
+    """Модель поездов, хранит ID отдельного поезда, начальную и конечную станции,
+    время отправления и путь следования
+
+    :var train_id: ID поезда
+    :var id_station_start: ID начальной станции
+    :var id_station_stop: ID конечной станции
+    :var station_at_time Время отправления:
+    :var path: Путь следования"""
     train_id = models.AutoField(primary_key=True)
     id_station_start = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='station_start')
     id_station_stop = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='station_stop')
@@ -50,7 +71,17 @@ class Train(models.Model):
 
 
 class Reservation(models.Model):
-    """Модель бронирования"""
+    """Модель бронирования, хранит информацию об ID бронирования, пользователе, поезде,
+    статусе бронирования, месте, станций начала и конца маршрута и номер места
+
+    :var reservation_id: ID бронирования
+    :var user: Пользователь, совершивший бронирование
+    :var train: Поезд с забронированным местом
+    :var place_num: Номер забронированного места
+    :var station_in: Станция начала муршрута
+    :var station_out: Станция конца маршрута
+    :var reservation_date: Дата бронирования
+    :var status: Статус бронирования"""
     reservation_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     train = models.ForeignKey(Train, on_delete=models.CASCADE, related_name='train')
@@ -65,7 +96,10 @@ class Reservation(models.Model):
 
 
 class Roles(models.Model):
-    """Модель ролей"""
+    """Модель ролей, хранит данные о роли пользователя
+
+    :var user: Связь один-к-одному с моделью User
+    :var role: Роль пользователя"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     ROLE_CHOICES = (
         ('admin', 'Admin'),

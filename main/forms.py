@@ -5,6 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 
 
 class RegistrationForm(UserCreationForm):
+    """Форма для регистрации пользователя"""
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ("username",)
@@ -26,6 +27,7 @@ def clean_password(self):
         return password
 
 class NeuralNetworkForm(forms.Form):
+    """Форма запроса нейронной сети"""
     text = forms.CharField(
         max_length=100,
         label='Введите запрос',
