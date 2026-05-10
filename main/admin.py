@@ -25,7 +25,7 @@ class ProfileInline(StackedInline):
     :var verbose_name_plural: Отображаемое название
     :var fk_name: Внешний ключ для связи с пользователем
     :var formfield_overrides: Переопределение виджета для MoneyField
-    :var fields: Отображаемые поля профиля (имя, роль, описание, аватар, баланс)"""
+    :var fields: Отображаемые поля профиля (имя, роль, описание профиля, аватар, баланс)"""
     model = Profile
     can_delete = False
     verbose_name_plural = 'Профиль и валюта'
