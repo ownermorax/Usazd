@@ -10,7 +10,7 @@ class UnfoldUserAdmin(BaseUserAdmin, ModelAdmin):
     """Класс админа для управления пользователями
 
     Наследует стандартный BaseUserAdmin и ModelAdmin
-    от Unfold, добавляя профиль пользователя как Inline-форму"""
+    от Unfold, добавляя профиль пользователя как Inline-форму."""
     pass
 
 class ProfileInline(StackedInline):
