@@ -38,6 +38,7 @@ urlpatterns = [
     path('train/', views.train, name='train'),
     path('balance/', views.update_balance, name='balance'),
     path('api/create/reservation/', views.reservation_handler, name='create_reservation'),
+    path('/<str:username>/vip', views.vip, name='vip'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

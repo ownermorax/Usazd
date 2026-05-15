@@ -11,6 +11,8 @@ class Profile(models.Model):
     role = models.CharField(max_length=20, default='user')
     description = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    is_vip = models.BooleanField(default=False)
+    vip_data = models.TextField(blank=True)
 
     balance = MoneyField(
         max_digits=10,
