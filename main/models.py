@@ -59,6 +59,16 @@ class Reservation(models.Model):
     station_out = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='station_out')
     reservation_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default='active')
+    REPEAT_CHOICES = (
+        ('none', 'Нет'),
+        ('daily', 'Ежедневно'),
+        ('weekly', 'Еженедельно'),
+        ('monthly', 'Ежемесячно'),
+    )
+    repeat_type = models.CharField(max_length=10, choices=REPEAT_CHOICES, default='none')
+    repeat_end_date = models.DateTimeField(null=True, blank=True)
+    parent_reservation = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True,
+                                           related_name='child_reservations')
 
     def cancel(self):
         if self.status != 'cancelled':

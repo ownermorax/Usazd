@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.password_validation import validate_password
-
+from .models import Reservation
 
 class RegistrationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -35,3 +35,18 @@ class NeuralNetworkForm(forms.Form):
             'type': 'search'
         })
     )
+class ReservationForm(forms.ModelForm):
+    class Meta:
+        model = Reservation
+        fields = ['train', 'place_num', 'station_in', 'station_out', 'repeat_type', 'repeat_end_date']
+        widgets = {
+            'repeat_end_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
+        labels = {
+            'train': 'Поезд',
+            'place_num': 'Номер места',
+            'station_in': 'Станция отправления',
+            'station_out': 'Станция назначения',
+            'repeat_type': 'Повторять',
+            'repeat_end_date': 'Дата окончания повторения',
+        }
