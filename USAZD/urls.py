@@ -20,7 +20,7 @@ from django.contrib import admin
 from django.urls import path
 from main import views
 from django.contrib.auth.views import LogoutView, LoginView
-
+from main.views.cancel_reservation import cancel_reservation
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.main, name='main'),
@@ -38,6 +38,7 @@ urlpatterns = [
     path('train/', views.train, name='train'),
     path('balance/', views.update_balance, name='balance'),
     path('api/create/reservation/', views.reservation_handler, name='create_reservation'),
+    path('cancel/<int:reservation_id>/', cancel_reservation, name='cancel_reservation'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
