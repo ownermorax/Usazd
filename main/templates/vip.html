@@ -1,5 +1,690 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Premium подписка{% endblock %}
 
 {% block content %}
+<style>
+    .premium-container {
+        padding: 50px 30px;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        text-align: center;
+        max-width: 1400px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d1f0c 30%, #3d2b13 60%, #1a1a1a 100%);
+        border-radius: 30px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+    }
 
+    .premium-container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at 30% 20%, rgba(255,215,0,0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 80%, rgba(255,180,0,0.06) 0%, transparent 50%);
+        animation: shimmer 8s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    @keyframes shimmer {
+        0%, 100% { transform: translate(0, 0); }
+        25% { transform: translate(20px, -10px); }
+        50% { transform: translate(-10px, 20px); }
+        75% { transform: translate(-20px, -20px); }
+    }
+
+    .premium-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .premium-crown {
+        font-size: 5rem;
+        filter: drop-shadow(0 0 30px rgba(255,215,0,0.8)) drop-shadow(0 0 60px rgba(255,180,0,0.4));
+        animation: floatCrown 3s ease-in-out infinite;
+        display: inline-block;
+    }
+
+    @keyframes floatCrown {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+    }
+
+    .page-heading {
+        background: linear-gradient(180deg, #ffd700 0%, #ffaa00 30%, #ff8c00 60%, #ffd700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 3rem;
+        font-weight: 900;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        text-shadow: none;
+        filter: drop-shadow(0 4px 8px rgba(255,215,0,0.5));
+        font-family: 'Georgia', serif;
+        text-transform: uppercase;
+    }
+
+    .premium-subtitle {
+        color: #ffd700;
+        font-size: 1.2rem;
+        font-weight: 500;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        opacity: 0.9;
+        margin-bottom: 15px;
+    }
+
+    .premium-benefits {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        flex-wrap: wrap;
+        margin: 35px 0 50px 0;
+    }
+
+    .benefit-item {
+        background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(255,180,0,0.05) 100%);
+        border: 2px solid rgba(255,215,0,0.3);
+        border-radius: 20px;
+        padding: 20px 25px;
+        min-width: 200px;
+        backdrop-filter: blur(10px);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .benefit-item::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,215,0,0.15), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .benefit-item:hover::after {
+        left: 100%;
+    }
+
+    .benefit-item:hover {
+        transform: translateY(-8px);
+        border-color: #ffd700;
+        box-shadow: 0 15px 40px rgba(255,215,0,0.25), 0 0 60px rgba(255,180,0,0.1);
+        background: linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(255,180,0,0.1) 100%);
+    }
+
+    .benefit-icon {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        filter: drop-shadow(0 0 10px rgba(255,215,0,0.6));
+    }
+
+    .benefit-title {
+        color: #ffd700;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .benefit-desc {
+        color: #e0c88e;
+        font-size: 0.85rem;
+        opacity: 0.9;
+    }
+
+    .plans-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 25px;
+        max-width: 1200px;
+        margin: 0 auto 50px auto;
+        padding: 0 15px;
+    }
+
+    .plan-card {
+        background: linear-gradient(135deg, #2a1f0c 0%, #1a1005 100%);
+        border: 2px solid #8b6914;
+        border-radius: 24px;
+        padding: 30px 20px;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .plan-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255,215,0,0.05) 0%, rgba(255,180,0,0.02) 100%);
+        pointer-events: none;
+    }
+
+    .plan-card:hover {
+        transform: translateY(-15px) scale(1.03);
+        border-color: #ffd700;
+        box-shadow: 0 25px 50px rgba(255,215,0,0.3), 0 0 80px rgba(255,180,0,0.2), inset 0 0 30px rgba(255,215,0,0.05);
+        z-index: 10;
+    }
+
+    .plan-card.popular {
+        border-color: #ffd700;
+        background: linear-gradient(135deg, #3d2b13 0%, #2a1f0c 100%);
+        box-shadow: 0 0 40px rgba(255,215,0,0.3), 0 0 80px rgba(255,180,0,0.15);
+        transform: scale(1.05);
+    }
+
+    .plan-card.popular:hover {
+        transform: translateY(-15px) scale(1.08);
+        box-shadow: 0 30px 60px rgba(255,215,0,0.4), 0 0 100px rgba(255,180,0,0.25);
+    }
+
+    .popular-badge {
+        position: absolute;
+        top: 15px;
+        right: -30px;
+        background: linear-gradient(90deg, #ffd700, #ffaa00);
+        color: #1a1005;
+        padding: 8px 40px;
+        font-weight: 900;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transform: rotate(45deg);
+        box-shadow: 0 4px 15px rgba(255,215,0,0.5);
+        z-index: 2;
+    }
+
+    .plan-duration {
+        font-size: 1.6rem;
+        color: #ffd700;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .plan-price {
+        font-size: 3rem;
+        font-weight: 900;
+        background: linear-gradient(180deg, #ffd700 0%, #ffaa00 50%, #ff8c00 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        z-index: 1;
+        margin: 10px 0;
+    }
+
+    .plan-price-currency {
+        font-size: 1.2rem;
+        -webkit-text-fill-color: #ffd700;
+        vertical-align: super;
+    }
+
+    .plan-original-price {
+        color: #8b6914;
+        text-decoration: line-through;
+        font-size: 1.1rem;
+        opacity: 0.7;
+        position: relative;
+        z-index: 1;
+    }
+
+    .plan-savings {
+        display: inline-block;
+        background: linear-gradient(90deg, #ffd700, #ffaa00);
+        color: #1a1005;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: 900;
+        font-size: 0.85rem;
+        margin: 10px 0;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 3px 15px rgba(255,215,0,0.4);
+    }
+
+    .plan-features {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+        text-align: left;
+        position: relative;
+        z-index: 1;
+    }
+
+    .plan-features li {
+        color: #e0c88e;
+        padding: 6px 0;
+        font-size: 0.9rem;
+        border-bottom: 1px solid rgba(255,215,0,0.1);
+    }
+
+    .plan-features li::before {
+        content: '✦ ';
+        color: #ffd700;
+    }
+
+    .buy-btn {
+        background: linear-gradient(135deg, #ffd700 0%, #ffaa00 50%, #ff8c00 100%);
+        color: #1a1005;
+        border: none;
+        padding: 14px 30px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 900;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 8px 25px rgba(255,215,0,0.4);
+        width: 100%;
+    }
+
+    .buy-btn:hover {
+        box-shadow: 0 12px 35px rgba(255,215,0,0.6), 0 0 50px rgba(255,180,0,0.3);
+        transform: translateY(-3px);
+    }
+
+    .buy-btn:active {
+        transform: scale(0.95);
+        box-shadow: 0 4px 15px rgba(255,215,0,0.3);
+    }
+
+    .premium-footer-note {
+        background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(255,180,0,0.05) 100%);
+        border: 1px solid rgba(255,215,0,0.3);
+        border-radius: 20px;
+        padding: 20px;
+        max-width: 700px;
+        margin: 0 auto;
+        color: #e0c88e;
+        font-size: 0.9rem;
+        backdrop-filter: blur(10px);
+    }
+
+    .sparkle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #ffd700;
+        border-radius: 50%;
+        pointer-events: none;
+        animation: sparkleFloat 2s ease-in-out infinite;
+        box-shadow: 0 0 10px #ffd700, 0 0 20px #ffaa00;
+    }
+
+    @keyframes sparkleFloat {
+        0%, 100% { opacity: 0; transform: translateY(0) scale(0); }
+        50% { opacity: 1; transform: translateY(-20px) scale(1.5); }
+    }
+
+    .vip-active-container {
+        text-align: center;
+        padding: 60px 30px;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d1f0c 30%, #3d2b13 60%, #1a1a1a 100%);
+        border-radius: 30px;
+        max-width: 800px;
+        margin: 50px auto;
+        border: 2px solid #ffd700;
+        box-shadow: 0 0 60px rgba(255,215,0,0.3), 0 0 120px rgba(255,180,0,0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .vip-active-container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at 50% 50%, rgba(255,215,0,0.1) 0%, transparent 50%);
+        animation: shimmer 8s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .vip-active-crown {
+        font-size: 8rem;
+        filter: drop-shadow(0 0 40px rgba(255,215,0,0.9)) drop-shadow(0 0 80px rgba(255,180,0,0.5));
+        animation: floatCrown 3s ease-in-out infinite;
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+    }
+
+    .vip-active-title {
+        background: linear-gradient(180deg, #ffd700 0%, #ffaa00 30%, #ff8c00 60%, #ffd700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 2.5rem;
+        font-weight: 900;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-family: 'Georgia', serif;
+        position: relative;
+        z-index: 1;
+        margin: 20px 0;
+        filter: drop-shadow(0 4px 8px rgba(255,215,0,0.5));
+    }
+
+    .vip-active-subtitle {
+        color: #e0c88e;
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 30px;
+    }
+
+    .vip-expire-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(255,180,0,0.1) 100%);
+        border: 2px solid #ffd700;
+        border-radius: 50px;
+        padding: 15px 30px;
+        color: #ffd700;
+        font-weight: 700;
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 0 30px rgba(255,215,0,0.2);
+    }
+
+    .vip-active-benefits {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin: 30px 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+        .premium-container {
+            padding: 30px 15px;
+        }
+        .page-heading {
+            font-size: 2rem;
+        }
+        .plans-grid {
+            grid-template-columns: 1fr;
+            max-width: 380px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .plan-card.popular {
+            transform: scale(1);
+        }
+        .plan-card.popular:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+        .vip-active-title {
+            font-size: 1.8rem;
+        }
+    }
+
+    .toast-msg {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+        color: #1a1005;
+        padding: 14px 30px;
+        border-radius: 60px;
+        font-weight: 900;
+        z-index: 10000;
+        font-size: 0.95rem;
+        box-shadow: 0 10px 30px rgba(255,215,0,0.5);
+        transition: opacity 0.3s;
+        pointer-events: none;
+        letter-spacing: 0.5px;
+    }
+</style>
+
+{% if user.profile.is_vip %}
+<div class="vip-active-container">
+    <div class="vip-active-crown">👑</div>
+    <h1 class="vip-active-title">Premium активен</h1>
+    <p class="vip-active-subtitle">Вы обладатель королевского статуса</p>
+
+    <div class="vip-expire-badge">
+        Действует до: {{ user.profile.vip_expire|date:"d.m.Y H:i" }}
+    </div>
+
+    <div class="vip-active-benefits">
+        <div class="benefit-item">
+            <div class="benefit-icon">💎</div>
+            <div class="benefit-title">Повышенный кэшбек</div>
+            <div class="benefit-desc">До 15% с каждой покупки</div>
+        </div>
+        <div class="benefit-item">
+            <div class="benefit-icon">⚡</div>
+            <div class="benefit-title">Мгновенные выплаты</div>
+            <div class="benefit-desc">Без задержек и комиссий</div>
+        </div>
+        <div class="benefit-item">
+            <div class="benefit-icon">🌟</div>
+            <div class="benefit-title">Эксклюзивный доступ</div>
+            <div class="benefit-desc">Закрытые функции и бонусы</div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="premium-container">
+    <div class="premium-content">
+        <div class="premium-crown">👑</div>
+        <h1 class="page-heading">PREMIUM</h1>
+        <p class="premium-subtitle">Статус, который говорит сам за себя</p>
+
+        <div class="premium-benefits">
+            <div class="benefit-item">
+                <div class="benefit-icon">💎</div>
+                <div class="benefit-title">Повышенный кэшбек</div>
+                <div class="benefit-desc">До 15% с каждой покупки</div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">⚡</div>
+                <div class="benefit-title">Мгновенные выплаты</div>
+                <div class="benefit-desc">Без задержек и комиссий</div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">🌟</div>
+                <div class="benefit-title">Эксклюзивный доступ</div>
+                <div class="benefit-desc">Закрытые функции и бонусы</div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">🛡️</div>
+                <div class="benefit-title">Приоритетная поддержка</div>
+                <div class="benefit-desc">Ответ за 5 минут, 24/7</div>
+            </div>
+        </div>
+
+        <div class="plans-grid">
+            <div class="plan-card">
+                <div class="plan-duration">Пробный</div>
+                <div class="plan-price">1<span class="plan-price-currency">$</span></div>
+                <div style="color: #e0c88e; position: relative; z-index: 1;">1 минута</div>
+                <ul class="plan-features">
+                    <li>Полный доступ Premium</li>
+                    <li>Кэшбек 15%</li>
+                    <li>Мгновенная активация</li>
+                </ul>
+                <button class="buy-btn" onclick="purchasePlan('1min', 1)">Попробовать</button>
+            </div>
+
+            <div class="plan-card">
+                <div class="plan-duration">Месяц</div>
+                <div class="plan-price">5<span class="plan-price-currency">$</span></div>
+                <div style="color: #e0c88e; position: relative; z-index: 1;">30 дней</div>
+                <ul class="plan-features">
+                    <li>Все функции Premium</li>
+                    <li>Кэшбек 15%</li>
+                    <li>Приоритетная поддержка</li>
+                    <li>Без рекламы</li>
+                </ul>
+                <button class="buy-btn" onclick="purchasePlan('1month', 5)">Купить</button>
+            </div>
+
+            <div class="plan-card popular">
+                <div class="popular-badge">ХИТ</div>
+                <div class="plan-duration">Полгода</div>
+                <div class="plan-price">25<span class="plan-price-currency">$</span></div>
+                <div class="plan-original-price">30$</div>
+                <div class="plan-savings">ЭКОНОМИЯ 17%</div>
+                <div style="color: #e0c88e; position: relative; z-index: 1;">180 дней</div>
+                <ul class="plan-features">
+                    <li>Всё из месячного плана</li>
+                    <li>Экономия 5$</li>
+                    <li>Эксклюзивный значок</li>
+                    <li>Персональный менеджер</li>
+                </ul>
+                <button class="buy-btn" onclick="purchasePlan('6months', 25)">Купить</button>
+            </div>
+
+            <div class="plan-card">
+                <div class="plan-duration">Год</div>
+                <div class="plan-price">45<span class="plan-price-currency">$</span></div>
+                <div class="plan-original-price">60$</div>
+                <div class="plan-savings">ЭКОНОМИЯ 25%</div>
+                <div style="color: #e0c88e; position: relative; z-index: 1;">365 дней</div>
+                <ul class="plan-features">
+                    <li>Максимальная выгода</li>
+                    <li>Экономия 15$</li>
+                    <li>Все эксклюзивные функции</li>
+                    <li>Персональный менеджер 24/7</li>
+                </ul>
+                <button class="buy-btn" onclick="purchasePlan('1year', 45)">Купить</button>
+            </div>
+        </div>
+
+        <div class="premium-footer-note">
+            <span style="font-size: 1.5rem;">🔒</span>
+            <p style="margin: 10px 0; font-weight: 600; color: #ffd700;">Гарантия возврата средств в течение 24 часов</p>
+            <p style="font-size: 0.8rem; opacity: 0.8;">Если Premium не оправдает ваших ожиданий, мы вернем деньги. Никаких вопросов.</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div id="toastMessage" style="display: none;" class="toast-msg"></div>
+{% endblock %}
+
+{% block js_code %}
+<script>
+function createSparkles() {
+    const container = document.querySelector('.premium-container') || document.querySelector('.vip-active-container');
+    if (!container) return;
+
+    for (let i = 0; i < 20; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.classList.add('sparkle');
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.top = Math.random() * 100 + '%';
+        sparkle.style.animationDelay = Math.random() * 3 + 's';
+        sparkle.style.animationDuration = (Math.random() * 3 + 1.5) + 's';
+        container.appendChild(sparkle);
+    }
+}
+
+function showToast(message, duration = 3000) {
+    const toast = document.getElementById('toastMessage');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.style.display = 'block';
+    toast.style.opacity = '1';
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+            toast.style.display = 'none';
+            toast.style.opacity = '';
+        }, 300);
+    }, duration);
+}
+
+function purchasePlan(planType, price) {
+    const planDurations = {
+        '1min': '1min',
+        '1month': '1month',
+        '6months': '6months',
+        '1year': '1year'
+    };
+
+    const planNames = {
+        '1min': 'Пробный (1 минута)',
+        '1month': 'Месяц',
+        '6months': 'Полгода',
+        '1year': 'Год'
+    };
+
+    const planName = planNames[planType] || planType;
+    const duration = planDurations[planType] || '1month';
+
+    {% if user.is_authenticated %}
+        let r = new XMLHttpRequest();
+        let url = '/api/vip/pay?duration=' + duration + '&userid=' + {{ user.id }};
+
+        r.open("GET", url);
+        r.onload = function() {
+            let response = JSON.parse(r.response);
+
+            if (response.status == 'ok') {
+                showToast('👑 Premium "' + planName + '" успешно активирован!', 3000);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                showToast('❌ Ошибка: ' + (response.message || 'Не удалось активировать Premium'), 3000);
+            }
+        };
+        r.onerror = function() {
+            showToast('❌ Ошибка соединения с сервером', 3000);
+        };
+        r.send();
+    {% else %}
+        showToast('⚠️ Пожалуйста, авторизуйтесь для покупки Premium', 3000);
+        setTimeout(() => {
+            window.location.href = '/login/';
+        }, 2000);
+    {% endif %}
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    createSparkles();
+
+    {% if not user.profile.is_vip %}
+    const cards = document.querySelectorAll('.plan-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        setTimeout(() => {
+            card.style.transition = 'all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            card.style.opacity = '1';
+            card.style.transform = card.classList.contains('popular') ? 'scale(1.05) translateY(0)' : 'translateY(0)';
+        }, 150 + index * 120);
+    });
+    {% endif %}
+
+});
+</script>
 {% endblock %}

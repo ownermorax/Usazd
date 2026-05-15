@@ -34,7 +34,13 @@
                         <button type="button" class="btn btn-outline-light me-2" onclick="window.location.href='/auth'">Войти</button>
                         <button type="button" class="btn btn-warning" onclick="window.location.href='/reg'">Регистрация</button>
                     {% else %}
-                        <button type="button" class="btn btn-warning" onclick="window.location.href='/{{ user.username }}/vip'">Премиум</button>
+                        {% if user.profile.is_vip %}
+                            <button type="button" class="btn btn-warning" onclick="window.location.href='/{{ user.username }}/vip'">
+                                VIP до {{ user.profile.vip_expire|date:"d.m.Y" }}
+                            </button>
+                        {% else %}
+                            <button type="button" class="btn btn-warning" onclick="window.location.href='/{{ user.username }}/vip'">Премиум</button>
+                        {% endif %}
                         <button class="btn btn-warning" onclick="window.location.href='/balance'"> {{ user.profile.balance }} </button>
                         <button class="btn btn-success" onclick="window.open('https://t.me/USAZD_support_bot', '_blank')">Поддержка</button>
                         <form action="{% url 'logout' %}" method="post" class="d-inline">

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from djmoney.models.fields import MoneyField
 from djmoney.money import Money
-
+import datetime
 
 class Profile(models.Model):
     """Модель профиля"""
@@ -29,6 +29,12 @@ class Profile(models.Model):
             money = Money(money, self.balance.currency)
         self.balance += money
         self.save()
+
+    @property
+    def vip_expire(self):
+        if self.vip_data:
+            return datetime.datetime.fromisoformat(self.vip_data)
+        return None
 
 
 class Station(models.Model):
