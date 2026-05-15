@@ -14,7 +14,7 @@ def cancel_reservation(request, reservation_id):
     :param reservation_id: ID бронирования
     :return: перенаправление на страницу активных броней
     """
-    reservation = get_object_or_404(Reservation, id=reservation_id, user=request.user)
+    reservation = get_object_or_404(Reservation, reservation_id=reservation_id, user=request.user)
     if reservation.status == 'active':
         reservation.status = 'cancelled'
         reservation.save()
