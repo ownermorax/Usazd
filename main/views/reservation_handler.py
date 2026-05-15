@@ -4,7 +4,7 @@ from djmoney.money import Money
 from main.models import Train, Profile, Reservation, Station
 import json
 from main.utils import logger
-
+from decimal import Decimal
 
 def reservation_handler(request):
     """Обработчик бронирования мест"""
@@ -107,7 +107,10 @@ def reservation_handler(request):
             'message': f'Недостаточно средств. Баланс: ${profile.balance.amount:.2f}, нужно: ${total_price.amount:.2f}'
         }, status=400)
 
-    profile.balance -= total_price
+    profile.update_balance(-total_price)
+    if profile.is_vip:
+        cashback = total_price.amount * Decimal('0.05')
+        profile.update_balance(cashback)
     profile.save()
 
     reservation = Reservation.objects.create(

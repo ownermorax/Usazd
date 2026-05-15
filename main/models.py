@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from djmoney.models.fields import MoneyField
 from djmoney.money import Money
 import datetime
+from decimal import Decimal
 
 class Profile(models.Model):
     """Модель профиля"""
@@ -25,7 +26,7 @@ class Profile(models.Model):
         return self.user.username
 
     def update_balance(self, money):
-        if isinstance(money, (int, float)):
+        if isinstance(money, (int, float, Decimal)):
             money = Money(money, self.balance.currency)
         self.balance += money
         self.save()
