@@ -42,6 +42,8 @@ urlpatterns = [
     path('cancel/<int:reservation_id>/', cancel_reservation, name='cancel_reservation'),
     path('<str:username>/vip/', views.vip, name='vip'),
     path('api/vip/pay', views.vip_handler, name='vip_api'),
+    path('schedule/<str:from_station>/<str:to_station>/', views.schedule_card, name='schedule_card'),
+    path('quick-booking/', views.quick_booking, name='quick_booking'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
