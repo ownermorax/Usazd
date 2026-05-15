@@ -38,6 +38,4 @@ urlpatterns = [
     path('train/', views.train, name='train'),
     path('balance/', views.update_balance, name='balance'),
     path('api/create/reservation/', views.reservation_handler, name='create_reservation'),
-]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])

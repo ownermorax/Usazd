@@ -1,34 +1,66 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Редактирование личной информации</h1>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <p> Имя:
-        <input type="text" name="name" value="{{ profile.name }}">
-    </p>
+<div class="edit-container">
+    <div class="edit-header">
+        <h1> Редактирование профиля</h1>
+        <p class="subtitle">Измените свои персональные данные</p>
+    </div>
 
-    <p> Расскажите о себе:
-        <textarea name="description"> {{ profile.description }} </textarea>
-    </p>
-    {% if profile.avatar %}
-    <p>
-        Текущий аватар: <br>
-        <img src="{{ profile.avatar.url }}" width="120">
-    </p>
-    <p>
-        <label>
-            <input type="checkbox" name="delete_avatar">
-            Удалить аватар
-        </label>
-    </p>
-    {% endif %}
-    <p>
-        Новый аватар:
-        <input type="file" name="avatar">
-    </p>
+    <div class="edit-form-card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
 
-    <button type="submit">Сохранить</button>
-</form>
-<a href="{% url 'profile' user.username %}">← Назад</a>
+            <div class="form-field">
+                <label>
+                    <span class="label-icon">✨</span>
+                    Отображаемое имя
+                </label>
+                <input type="text" name="name" value="{{ profile.name }}" placeholder="Введите ваше имя">
+            </div>
+
+            <div class="form-field">
+                <label>
+                    <span class="label-icon">📝</span>
+                    Расскажите о себе
+                </label>
+                <textarea name="description" placeholder="Немного о себе...">{{ profile.description }}</textarea>
+            </div>
+
+            {% if profile.avatar %}
+            <div class="current-avatar">
+                <p> Текущий аватар:</p>
+                <img src="{{ profile.avatar.url }}" alt="avatar">
+                <div class="delete-avatar-checkbox">
+                    <label>
+                        <input type="checkbox" name="delete_avatar">
+                         Удалить аватар
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="form-field">
+                <label>
+                    <span class="label-icon">📷</span>
+                    Новый аватар
+                </label>
+                <div class="file-upload">
+                    <input type="file" name="avatar" accept="image/*">
+                </div>
+            </div>
+
+            <div class="form-buttons">
+                <button type="submit" class="btn-save"> Сохранить изменения</button>
+                <a href="{% url 'profile' user.username %}" class="btn-cancel">❌ Отмена</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="back-wrapper">
+        <a href="{% url 'profile' user.username %}" class="back-button">
+            ← Вернуться в профиль
+        </a>
+    </div>
+</div>
 {% endblock %}

@@ -1,53 +1,76 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>👤 Мой профиль</h1>
+        <p class="subtitle">Управляйте своим аккаунтом и бронированиями</p>
+    </div>
 
-    <h1>Профиль</h1>
-    {% if profile.avatar %}
-        <img src="{{ profile.avatar.url }}"
-             alt="avatar"
-             style="width:120px;height:120px;border-radius:50%;object-fit:cover;"> <br>
-    {% else %}
-        <div style="width:120px;height:120px;border-radius:50%;background:#eee"></div>
-    {% endif %}
-    <span class="label">Имя пользователя</span> <br>
-    <span class="value">@{{ user.username }}</span> <br> <br>
-    <span class="label">Отображаемое имя</span> <br>
-    {% if profile.name %}
-        <span class="value">{{ profile.name }}</span> <br> <br>
-    {% else %}
-        <span class="value">{{ user.username }}</span> <br> <br>
-    {% endif %}
-    <span class="label">О себе</span> <br>
-    {% if profile.description %}
-        <div class="description">
-            {{ profile.description }}
+    <div class="avatar-section">
+        <div class="avatar-wrapper">
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="avatar" class="avatar-image">
+            {% else %}
+                <div class="avatar-placeholder">
+                    <span>👤</span>
+                </div>
+            {% endif %}
         </div>
-    {% else %}
-        <span class="label">Нет информации.</span> <br>
-    {% endif %}
-
-
-
-<div style="margin-top: 40px; display: flex; gap: 30px; justify-content: center">
-    <div style="text-align: center;">
-        <a href="{% url 'user_info' %}" style="text-decoration: none; font-size: 32px;" title="Личная информация">
-            🚻
-        </a>
-        <div style="font-size: 12px;">Личная информация</div>
     </div>
 
-    <div style="text-align: center;">
-        <a href="{% url 'active_reservations' %}" style="text-decoration: none; font-size: 32px;" title="Активные брони">
-            🚆
-        </a>
-        <div style="font-size: 12px;">Активные</div>
+    <div class="info-card">
+        <div class="info-row">
+            <div class="info-label">🔖 Имя пользователя</div>
+            <div class="info-value username">@{{ user.username }}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">✨ Отображаемое имя</div>
+            <div class="info-value">
+                {% if profile.name %}
+                    {{ profile.name }}
+                {% else %}
+                    <span style="color: #95a5a6;">{{ user.username }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">📝 О себе</div>
+            <div class="info-value">
+                {% if profile.description %}
+                    <div class="description">
+                        {{ profile.description|linebreaks }}
+                    </div>
+                {% else %}
+                    <div class="empty-description">
+                        <span>📭 Пользователь пока ничего не рассказал о себе</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 
-    <div style="text-align: center;">
-        <a href="{% url 'reservation_history' %}" style="text-decoration: none; font-size: 32px;" title="История броней">
-           📅
+    <div class="navigation-grid">
+        <a href="{% url 'user_info' %}" class="nav-card">
+            <span class="nav-icon">🚻</span>
+            <div class="nav-label">Личная информация</div>
+            <div class="nav-subtitle">Редактировать профиль</div>
         </a>
-        <div style="font-size: 12px;">История</div>
+
+        <a href="{% url 'active_reservations' %}" class="nav-card">
+            <span class="nav-icon">🚆</span>
+            <div class="nav-label">Активные брони</div>
+            <div class="nav-subtitle">Текущие поездки</div>
+        </a>
+
+        <a href="{% url 'reservation_history' %}" class="nav-card">
+            <span class="nav-icon">📅</span>
+            <div class="nav-label">История</div>
+            <div class="nav-subtitle">Прошлые поездки</div>
+        </a>
     </div>
 </div>
 {% endblock %}

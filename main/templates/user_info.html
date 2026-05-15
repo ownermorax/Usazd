@@ -1,18 +1,88 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Личная информация</h1>
-<p>Имя пользователя: {{ user.username }}</p>
-<p>Email: {{ user.email }}</p>
-<p>Отображаемое имя: {% if profile.name %}{{ profile.name }}{% else %}{{ user.username }}{% endif %}</p>
-<p>О себе: {% if profile.description %}{{ profile.description }}{% else %}Нет информации{% endif %}</p>
-<p>Дата регистрации: {{ user.date_joined|date:"d.m.Y" }}</p>
-<p>Последний вход: {{ user.last_login|date:"d.m.Y H:i" }}</p>
-<div style="text-align: left;">
-    <a href="{% url 'edit_user_info' %}" style="text-decoration: none; font-size: 32px;" title="Изменить">
-        📝
-    </a>
-    <div style="font-size: 15px;">Изменить</div>
+<div class="info-container">
+    <div class="info-header">
+        <h1>👤 Личная информация</h1>
+        <p class="subtitle">Ваши персональные данные и настройки аккаунта</p>
+    </div>
+
+    <div class="info-details-card">
+        <div class="info-field">
+            <div class="field-icon">👤</div>
+            <div class="field-content">
+                <div class="field-label">Имя пользователя</div>
+                <div class="field-value username">{{ user.username }}</div>
+            </div>
+        </div>
+
+        <div class="info-field">
+            <div class="field-icon">📧</div>
+            <div class="field-content">
+                <div class="field-label">Email адрес</div>
+                <div class="field-value email">{{ user.email }}</div>
+            </div>
+        </div>
+
+        <div class="info-field">
+            <div class="field-icon">✨</div>
+            <div class="field-content">
+                <div class="field-label">Отображаемое имя</div>
+                <div class="field-value">
+                    {% if profile.name %}
+                        {{ profile.name }}
+                    {% else %}
+                        <span class="empty">{{ user.username }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="info-field">
+            <div class="field-icon">📝</div>
+            <div class="field-content">
+                <div class="field-label">О себе</div>
+                {% if profile.description %}
+                    <div class="field-value description">
+                        {{ profile.description|linebreaks }}
+                    </div>
+                {% else %}
+                    <div class="field-value empty">
+                        📭 Пользователь пока ничего не рассказал о себе
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="info-field">
+            <div class="field-icon">📅</div>
+            <div class="field-content">
+                <div class="field-label">Дата регистрации</div>
+                <div class="field-value">{{ user.date_joined|date:"d.m.Y" }}</div>
+            </div>
+        </div>
+
+        <div class="info-field">
+            <div class="field-icon">🕐</div>
+            <div class="field-content">
+                <div class="field-label">Последний вход</div>
+                <div class="field-value">{{ user.last_login|date:"d.m.Y H:i" }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <a href="{% url 'edit_user_info' %}" class="action-card">
+            <span class="action-icon">📝</span>
+            <div class="action-label">Редактировать</div>
+            <div class="action-subtitle">Изменить данные</div>
+        </a>
+    </div>
+
+    <div class="back-wrapper">
+        <a href="{% url 'profile' user.username %}" class="back-button">
+            ← Назад в профиль
+        </a>
+    </div>
 </div>
-<a href="{% url 'profile' user.username %}">← Назад</a>
 {% endblock %}
