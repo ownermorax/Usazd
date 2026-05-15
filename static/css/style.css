@@ -24,3 +24,193 @@ footer {
 }
 
 .post { border: 1px solid #ccc; padding: 20px; max-width: 400px; display: inline-block; }
+
+/* ========== КАРТОЧКИ В СТИЛЕ AVIASALES ========== */
+
+.promo-section {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+}
+
+.promo-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.promo-header h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e293b, #2d6a4f);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 12px;
+}
+
+.promo-header p {
+    color: #475569;
+    font-size: 1.1rem;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 28px;
+    margin-bottom: 48px;
+}
+
+.tour-card {
+    background: white;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.tour-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.14);
+}
+
+.card-img {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.route {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+.route i {
+    color: #2d6a4f;
+    font-size: 0.9rem;
+}
+
+.transport-type {
+    display: flex;
+    gap: 12px;
+    margin: 12px 0;
+    font-size: 0.8rem;
+    color: #5b6e8c;
+}
+
+.transport-type span {
+    background: #eef2ff;
+    padding: 4px 12px;
+    border-radius: 30px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.price {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #1e6f5c;
+}
+
+.price small {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #64748b;
+}
+
+.book-btn {
+    background: none;
+    border: none;
+    color: #2d6a4f;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.book-btn:hover {
+    color: #1e4a3b;
+    transform: translateX(4px);
+}
+
+.banner-bottom {
+    background: linear-gradient(105deg, #0f2b36 0%, #1b4d3e 100%);
+    border-radius: 32px;
+    padding: 32px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.banner-text h3 {
+    color: white;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.banner-text p {
+    color: #bbdde8;
+}
+
+.banner-btn {
+    background: #ffb74d;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 44px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.banner-btn:hover {
+    background: #ffa726;
+    transform: scale(1.02);
+}
+
+@media (max-width: 680px) {
+    .promo-section {
+        padding: 32px 16px;
+    }
+    .banner-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+    .price {
+        font-size: 1.3rem;
+    }
+}
