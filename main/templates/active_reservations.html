@@ -40,7 +40,16 @@
                         {{ reservation.train.station_at_time|date:"d.m.Y H:i" }}
                     </div>
                 </div>
+
+            <div style="margin-top: 15px; text-align: right;">
+                    <a href="{% url 'cancel_reservation' reservation.reservation_id %}"
+                       onclick="return confirm('Вы уверены, что хотите отменить это бронирование?')"
+                       style="background: #dc3545; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                        Отменить бронь
+                    </a>
+                </div>
             </div>
+
         {% endfor %}
     {% else %}
         <p style="color: #999; text-align: center; padding: 40px;">
@@ -50,6 +59,7 @@
 </div>
 
 <script>
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
