@@ -1,58 +1,150 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="about-container">
     <div class="about-header">
-        <h1>О проекте «USAZD»</h1>
+        <div class="header-badge">
+            <span class="badge-icon">🚆</span>
+            <span class="badge-text">Инновационный проект</span>
+        </div>
+        <h1>О проекте <span class="highlight">«USAZD»</span></h1>
         <p class="about-subtitle">Передовая система навигации по пригородному железнодорожному транспорту с элементами искусственного интеллекта</p>
     </div>
 
+    <div class="stats-showcase">
+        <div class="stat-item">
+            <div class="stat-value">24/7</div>
+            <div class="stat-label">Доступность</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">Актуальные данные</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">AI</div>
+            <div class="stat-label">Умный поиск</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">Бесплатно</div>
+            <div class="stat-label">Для всех пользователей</div>
+        </div>
+    </div>
+
     <div class="about-content">
-        <div class="about-text">
-            <span class="about-section-title">Кто мы?</span>
-            <br><br>
-            <span class="about-text">Мы — команда энтузиастов, объединённых любовью к технологиям и желанием сделать поездки на электричках комфортнее. Нам от 14 до 17, и мы уже сейчас создаём сервисы, которые облегчают жизнь тысячам пассажиров.</span>
+        <!-- Кто мы -->
+        <div class="about-card">
+            <div class="card-icon">👥</div>
+            <div class="card-badge">Кто мы?</div>
+            <h2 class="card-title">Команда молодых энтузиастов</h2>
+            <p class="card-text">Мы — команда энтузиастов, объединённых любовью к технологиям и желанием сделать поездки на электричках комфортнее. Нам <strong>от 14 до 17 лет</strong>, и мы уже сейчас создаём сервисы, которые облегчают жизнь тысячам пассажиров.</p>
+            <div class="age-badge-container">
+                <span class="age-badge">🚀 14-17 лет</span>
+                <span class="age-badge">💡 100% энтузиазма</span>
+                <span class="age-badge">🎯 Реальные результаты</span>
+            </div>
         </div>
 
-        <div class="about-text">
-            <span class="about-section-title">Технологии, которые нас двигают</span>
-            <br><br>
-            <span class="about-text">Наш проект построен на современных решениях:</span>
-            <br><br>
+        <!-- Технологии -->
+        <div class="about-card">
+            <div class="card-icon">⚙️</div>
+            <div class="card-badge">Наши технологии</div>
+            <h2 class="card-title">Современные решения</h2>
+            <p class="card-text">Наш проект построен на передовых технологических решениях:</p>
 
             <div class="tech-list">
                 <div class="tech-item">
-                    <div class="tech-icon">🔹</div>
+                    <div class="tech-icon">🚂</div>
                     <div class="tech-content">
-                        <span class="tech-title">Интеграция с API РЖД</span>
-                        <span class="tech-description">— мы получаем актуальные данные о расписаниях в реальном времени, обрабатываем их и выдаём вам в удобном формате.</span>
+                        <div class="tech-title">Интеграция с API РЖД</div>
+                        <div class="tech-description">Мы получаем актуальные данные о расписаниях в реальном времени, обрабатываем их и выдаём вам в удобном формате.</div>
                     </div>
                 </div>
 
                 <div class="tech-item">
-                    <div class="tech-icon">🔹</div>
+                    <div class="tech-icon">🧠</div>
                     <div class="tech-content">
-                        <span class="tech-title">Нейросетевой поиск</span>
-                        <span class="tech-description">— мы обучили модель понимать естественные запросы. Больше не нужно точно знать номер поезда или станции. Просто напишите "завтра утром с Ярославского вокзала до Болшево" — и система поймёт.</span>
+                        <div class="tech-title">Нейросетевой поиск</div>
+                        <div class="tech-description">Мы обучили модель понимать естественные запросы. Больше не нужно точно знать номер поезда или станции. Просто напишите <span class="example-query">"завтра утром с Ярославского вокзала до Болшево"</span> — и система поймёт.</div>
                     </div>
                 </div>
 
                 <div class="tech-item">
-                    <div class="tech-icon">🔹</div>
+                    <div class="tech-icon">💺</div>
                     <div class="tech-content">
-                        <span class="tech-title">Система бронирования</span>
-                        <span class="tech-description">— мы первыми среди школьных проектов реализовали механизм гарантированного резервирования мест в пригородных поездах.</span>
+                        <div class="tech-title">Система бронирования</div>
+                        <div class="tech-description">Мы первыми среди школьных проектов реализовали механизм гарантированного резервирования мест в пригородных поездах.</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="about-text">
-            <span class="about-section-title">Наша миссия</span>
-            <br><br>
+        <!-- Миссия -->
+        <div class="about-card mission-card">
+            <div class="card-icon">🎯</div>
+            <div class="card-badge">Наша миссия</div>
+            <h2 class="card-title">Сделать поездки лучше</h2>
             <div class="mission-block">
                 <p class="mission-text">Сделать передвижение на электричках таким же удобным и предсказуемым, как полёты на самолётах. Потому что миллионы людей ездят на электричках каждый день, и они заслуживают лучшего сервиса!</p>
             </div>
+            <div class="mission-quote">
+                <span class="quote-mark">"</span>
+                <p>Технологии должны служить людям, а не наоборот</p>
+                <span class="quote-author">— Команда USAZD</span>
+            </div>
+        </div>
+
+        <!-- Почему мы -->
+        <div class="about-card features-card">
+            <div class="card-icon">⭐</div>
+            <div class="card-badge">Почему выбирают нас</div>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">Удобный интерфейс</div>
+                    <div class="feature-desc">Интуитивно понятный дизайн для всех возрастов</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Мгновенный поиск</div>
+                    <div class="feature-desc">Результаты за доли секунды благодаря оптимизации</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-title">Безопасность</div>
+                    <div class="feature-desc">Ваши данные надёжно защищены</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🆓</div>
+                    <div class="feature-title">Полностью бесплатно</div>
+                    <div class="feature-desc">Никаких скрытых платежей и подписок</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Команда -->
+        <div class="about-card team-card">
+            <div class="card-icon">🌟</div>
+            <div class="card-badge">За кулисами</div>
+            <h2 class="card-title">Мы создаём будущее уже сегодня</h2>
+            <p class="card-text">Юные разработчики, дизайнеры и инженеры, которые доказывают, что возраст — не помеха для создания качественных продуктов. Каждый день мы учимся новому и делаем наш сервис ещё лучше для вас.</p>
+            <div class="team-values">
+                <span>🔥 Страсть к технологиям</span>
+                <span>💪 Упорство и труд</span>
+                <span>🚀 Стремление к совершенству</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Призыв к действию -->
+    <div class="cta-section">
+        <div class="cta-content">
+            <h3>Готовы попробовать?</h3>
+            <p>Присоединяйтесь к тысячам довольных пассажиров, которые уже пользуются USAZD</p>
         </div>
     </div>
 </div>

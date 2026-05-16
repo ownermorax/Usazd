@@ -45,6 +45,50 @@ footer {
     100% { transform: rotate(360deg); }
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
 /* ========== КАРТОЧКИ В СТИЛЕ AVIASALES ========== */
 .promo-section {
     max-width: 1280px;
@@ -222,19 +266,33 @@ footer {
 }
 
 /* ========== ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ ========== */
-.profile-container {
-    max-width: 900px;
+.profile-container,
+.info-container,
+.edit-container,
+.reservations-container,
+.train-search-container,
+.train-map-container {
+    animation: fadeIn 0.5s ease-out;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 30px 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.profile-header {
+.profile-header,
+.info-header,
+.edit-header,
+.reservations-header {
     text-align: center;
     margin-bottom: 40px;
 }
 
-.profile-header h1 {
+.profile-header h1,
+.info-header h1,
+.edit-header h1,
+.reservations-header h1,
+.train-search-container h2,
+.train-map-container h1 {
     font-size: 2.5rem;
     font-weight: 800;
     background: linear-gradient(135deg, #1e293b, #2d6a4f);
@@ -244,7 +302,10 @@ footer {
     margin-bottom: 10px;
 }
 
-.profile-header .subtitle {
+.profile-header .subtitle,
+.info-header .subtitle,
+.edit-header .subtitle,
+.reservations-header .subtitle {
     color: #475569;
     font-size: 1.1rem;
 }
@@ -299,8 +360,13 @@ footer {
     color: white;
 }
 
-/* Карточка информации */
-.info-card {
+/* Карточки информации */
+.info-card,
+.info-details-card,
+.edit-form-card,
+.reservation-card,
+.train-card,
+.search-form {
     background: white;
     border-radius: 28px;
     padding: 30px;
@@ -310,7 +376,12 @@ footer {
     border: 1px solid rgba(45, 106, 79, 0.1);
 }
 
-.info-card:hover {
+.info-card:hover,
+.info-details-card:hover,
+.edit-form-card:hover,
+.reservation-card:hover,
+.train-card:hover,
+.search-form:hover {
     transform: translateY(-5px);
     box-shadow: 0 24px 40px rgba(0, 0, 0, 0.12);
     border-color: rgba(45, 106, 79, 0.2);
@@ -342,7 +413,9 @@ footer {
     line-height: 1.5;
 }
 
-.info-value.username {
+.info-value.username,
+.field-value.email,
+.field-value.username {
     font-family: 'Courier New', monospace;
     background: #f0fdf4;
     padding: 5px 12px;
@@ -353,7 +426,8 @@ footer {
     border: 1px solid #bbf7d0;
 }
 
-.description {
+.description,
+.field-value.description {
     background: #f0fdf4;
     padding: 15px;
     border-radius: 16px;
@@ -363,14 +437,16 @@ footer {
     border-left: 3px solid #2d6a4f;
 }
 
-.empty-description {
+.empty-description,
+.field-value.empty {
     color: #94a3b8;
     font-style: italic;
     padding: 10px 0;
 }
 
 /* Навигационные карточки */
-.navigation-grid {
+.navigation-grid,
+.action-buttons {
     margin-top: 40px;
     display: flex;
     gap: 30px;
@@ -378,7 +454,8 @@ footer {
     flex-wrap: wrap;
 }
 
-.nav-card {
+.nav-card,
+.action-card {
     text-align: center;
     padding: 20px 30px;
     background: white;
@@ -392,23 +469,35 @@ footer {
     border: 1px solid rgba(45, 106, 79, 0.1);
 }
 
-.nav-card:hover {
+.nav-card:hover,
+.action-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 24px 40px rgba(0, 0, 0, 0.14);
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
 }
 
-.nav-icon {
+.nav-card:hover .nav-label,
+.action-card:hover .action-label,
+.nav-card:hover .nav-subtitle,
+.action-card:hover .action-subtitle {
+    color: white;
+}
+
+.nav-icon,
+.action-icon {
     font-size: 48px;
     display: block;
     margin-bottom: 12px;
     transition: transform 0.3s ease;
 }
 
-.nav-card:hover .nav-icon {
+.nav-card:hover .nav-icon,
+.action-card:hover .action-icon {
     transform: scale(1.1);
 }
 
-.nav-label {
+.nav-label,
+.action-label {
     font-size: 13px;
     font-weight: 700;
     color: #1e293b;
@@ -416,44 +505,20 @@ footer {
     letter-spacing: 0.5px;
 }
 
-.nav-subtitle {
+.nav-subtitle,
+.action-subtitle {
     font-size: 11px;
     color: #64748b;
     margin-top: 5px;
 }
 
-/* Цвета при наведении для каждой карточки в зелёной теме */
-.nav-card:nth-child(1):hover {
-    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
-}
-
-.nav-card:nth-child(1):hover .nav-label,
-.nav-card:nth-child(1):hover .nav-subtitle {
-    color: white;
-}
-
-.nav-card:nth-child(2):hover {
-    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
-}
-
-.nav-card:nth-child(2):hover .nav-label,
-.nav-card:nth-child(2):hover .nav-subtitle {
-    color: white;
-}
-
-.nav-card:nth-child(3):hover {
-    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
-}
-
-.nav-card:nth-child(3):hover .nav-label,
-.nav-card:nth-child(3):hover .nav-subtitle {
-    color: white;
-}
-
-/* Кнопка редактирования профиля */
-.edit-profile-btn {
+/* Кнопки */
+.edit-profile-btn,
+.btn-save,
+.btn-primary,
+.booking-link,
+.banner-btn {
     display: inline-block;
-    margin-top: 20px;
     padding: 12px 28px;
     background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
     color: white;
@@ -467,289 +532,19 @@ footer {
     text-align: center;
 }
 
-.edit-profile-btn:hover {
+.edit-profile-btn:hover,
+.btn-save:hover,
+.btn-primary:hover,
+.booking-link:hover,
+.banner-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
     background: linear-gradient(135deg, #1b4d3e 0%, #143d31 100%);
 }
 
-.button-wrapper {
-    text-align: center;
-    margin-top: 20px;
-}
-
-/* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-    .profile-container {
-        padding: 20px 15px;
-    }
-
-    .profile-header h1 {
-        font-size: 2rem;
-    }
-
-    .avatar-image,
-    .avatar-placeholder {
-        width: 120px;
-        height: 120px;
-    }
-
-    .avatar-placeholder span {
-        font-size: 48px;
-    }
-
-    .info-card {
-        padding: 20px;
-    }
-
-    .info-row {
-        flex-direction: column;
-        padding: 12px 0;
-    }
-
-    .info-label {
-        width: 100%;
-        margin-bottom: 8px;
-    }
-
-    .navigation-grid {
-        gap: 15px;
-    }
-
-    .nav-card {
-        padding: 15px 20px;
-        min-width: 100px;
-    }
-
-    .nav-icon {
-        font-size: 36px;
-    }
-}
-
-/* Анимация появления страницы */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.profile-container {
-    animation: fadeIn 0.5s ease-out;
-}
-
-/* Дополнительные акценты в зелёной теме */
-.info-card .info-label i {
-    color: #2d6a4f;
-}
-
-.nav-card:active {
-    transform: translateY(-4px);
-}
-
-/* Стили для статусов и бейджей */
-.badge-green {
-    background: #dcfce7;
-    color: #166534;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
-}
-
-/* ========== ЛИЧНАЯ ИНФОРМАЦИЯ ========== */
-.info-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 30px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.info-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.info-header h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #1e293b, #2d6a4f);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    margin-bottom: 10px;
-}
-
-.info-header .subtitle {
-    color: #475569;
-    font-size: 1rem;
-}
-
-/* Карточка информации */
-.info-details-card {
-    background: white;
-    border-radius: 28px;
-    padding: 35px;
-    margin-bottom: 30px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(45, 106, 79, 0.1);
-}
-
-.info-details-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.12);
-    border-color: rgba(45, 106, 79, 0.2);
-}
-
-.info-field {
-    display: flex;
-    align-items: flex-start;
-    padding: 18px 0;
-    border-bottom: 1px solid #e2e8f0;
-    transition: background 0.2s ease;
-}
-
-.info-field:last-child {
-    border-bottom: none;
-}
-
-.info-field:hover {
-    background: #f8fafc;
-    margin: 0 -10px;
-    padding: 18px 10px;
-    border-radius: 12px;
-}
-
-.field-icon {
-    font-size: 28px;
-    min-width: 60px;
-    text-align: center;
-}
-
-.field-content {
-    flex: 1;
-}
-
-.field-label {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #64748b;
-    margin-bottom: 8px;
-}
-
-.field-value {
-    font-size: 18px;
-    font-weight: 600;
-    color: #1e293b;
-    line-height: 1.4;
-}
-
-.field-value.email {
-    font-family: 'Courier New', monospace;
-    background: #f0fdf4;
-    padding: 5px 12px;
-    border-radius: 20px;
-    display: inline-block;
-    font-size: 15px;
-    color: #2d6a4f;
-    border: 1px solid #bbf7d0;
-}
-
-.field-value.username {
-    font-family: 'Courier New', monospace;
-    background: #f0fdf4;
-    padding: 5px 12px;
-    border-radius: 20px;
-    display: inline-block;
-    font-size: 15px;
-    color: #2d6a4f;
-    border: 1px solid #bbf7d0;
-}
-
-.field-value.empty {
-    color: #94a3b8;
-    font-style: italic;
-    font-weight: 400;
-}
-
-.field-value.description {
-    background: #f0fdf4;
-    padding: 12px 15px;
-    border-radius: 16px;
-    margin-top: 5px;
-    line-height: 1.6;
-    font-weight: 400;
-    font-size: 15px;
-    border-left: 3px solid #2d6a4f;
-}
-
-/* Кнопки действий */
-.action-buttons {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin: 30px 0;
-    flex-wrap: wrap;
-}
-
-.action-card {
-    text-align: center;
-    padding: 15px 25px;
-    background: white;
-    border-radius: 28px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    min-width: 120px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(45, 106, 79, 0.1);
-}
-
-.action-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.14);
-    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
-}
-
-.action-card:hover .action-icon {
-    transform: scale(1.1);
-}
-
-.action-card:hover .action-label,
-.action-card:hover .action-subtitle {
-    color: white;
-}
-
-.action-icon {
-    font-size: 42px;
-    display: block;
-    margin-bottom: 10px;
-    transition: transform 0.3s ease;
-}
-
-.action-label {
-    font-size: 14px;
-    font-weight: 700;
-    color: #1e293b;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.action-subtitle {
-    font-size: 11px;
-    color: #64748b;
-    margin-top: 5px;
-}
-
-/* Кнопка назад */
-.back-button {
+.back-button,
+.btn-secondary,
+.btn-cancel {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -762,129 +557,70 @@ footer {
     font-size: 14px;
     transition: all 0.3s ease;
     border: 2px solid #2d6a4f;
-    margin-top: 10px;
 }
 
-.back-button:hover {
+.back-button:hover,
+.btn-secondary:hover,
+.btn-cancel:hover {
     background: #2d6a4f;
     color: white;
     transform: translateX(-5px);
     box-shadow: 0 5px 15px rgba(45, 106, 79, 0.3);
 }
 
-.back-wrapper {
+.back-wrapper,
+.button-wrapper {
     text-align: center;
     margin-top: 20px;
 }
 
-/* Адаптивность */
-@media (max-width: 768px) {
-    .info-container {
-        padding: 20px 15px;
-    }
-
-    .info-header h1 {
-        font-size: 2rem;
-    }
-
-    .info-details-card {
-        padding: 20px;
-    }
-
-    .info-field {
-        flex-direction: column;
-        padding: 15px 0;
-    }
-
-    .info-field:hover {
-        margin: 0;
-        padding: 15px;
-    }
-
-    .field-icon {
-        margin-bottom: 8px;
-        text-align: left;
-    }
-
-    .field-value {
-        font-size: 16px;
-    }
-
-    .action-buttons {
-        gap: 15px;
-    }
-
-    .action-card {
-        padding: 12px 20px;
-        min-width: 100px;
-    }
-
-    .action-icon {
-        font-size: 32px;
-    }
-}
-
-/* Анимация появления */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.info-container {
-    animation: slideIn 0.5s ease-out;
-}
-
-/* ========== РЕДАКТИРОВАНИЕ ПРОФИЛЯ ========== */
-.edit-container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 30px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.edit-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.edit-header h1 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #1e293b, #2d6a4f);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    margin-bottom: 10px;
-}
-
-.edit-header .subtitle {
-    color: #475569;
-    font-size: 1rem;
-}
-
-/* Форма редактирования */
-.edit-form-card {
-    background: white;
-    border-radius: 28px;
-    padding: 35px;
-    margin-bottom: 30px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+/* Кнопка отмены бронирования */
+.btn-cancel-reservation {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
     transition: all 0.3s ease;
-    border: 1px solid rgba(45, 106, 79, 0.1);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+    position: relative;
+    overflow: hidden;
 }
 
-.edit-form-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.12);
-    border-color: rgba(45, 106, 79, 0.2);
+.btn-cancel-reservation:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.35);
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
 }
 
+.btn-cancel-reservation:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+}
+
+.btn-cancel-reservation::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-cancel-reservation:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Формы */
 .form-field {
     margin-bottom: 28px;
 }
@@ -909,7 +645,8 @@ footer {
 .form-field input[type="email"],
 .form-field input[type="password"],
 .form-field textarea,
-.form-field select {
+.form-field select,
+.form-group input {
     width: 100%;
     padding: 14px 16px;
     border: 2px solid #e2e8f0;
@@ -921,11 +658,10 @@ footer {
     box-sizing: border-box;
 }
 
-.form-field input[type="text"]:focus,
-.form-field input[type="email"]:focus,
-.form-field input[type="password"]:focus,
+.form-field input:focus,
 .form-field textarea:focus,
-.form-field select:focus {
+.form-field select:focus,
+.form-group input:focus {
     outline: none;
     border-color: #2d6a4f;
     background: white;
@@ -937,271 +673,20 @@ footer {
     resize: vertical;
 }
 
-/* Текущий аватар */
-.current-avatar {
-    background: #f0fdf4;
-    padding: 20px;
-    border-radius: 20px;
-    margin: 20px 0;
-    border: 1px solid #bbf7d0;
-}
-
-.current-avatar p {
-    margin: 0 0 10px 0;
-    font-weight: 600;
-    color: #2d6a4f;
-}
-
-.current-avatar img {
-    border-radius: 16px;
-    border: 3px solid #2d6a4f;
-    max-width: 120px;
-    height: auto;
-    transition: transform 0.3s ease;
-}
-
-.current-avatar img:hover {
-    transform: scale(1.05);
-}
-
-.delete-avatar-checkbox {
-    margin-top: 12px;
-}
-
-.delete-avatar-checkbox label {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    color: #dc2626;
-    font-weight: 600;
-}
-
-.delete-avatar-checkbox input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: #dc2626;
-}
-
-/* Загрузка файла */
-.file-upload {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-}
-
-.file-upload input[type="file"] {
-    width: 100%;
-    padding: 12px;
-    border: 2px dashed #cbd5e1;
-    border-radius: 16px;
-    background: #f8fafc;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.file-upload input[type="file"]:hover {
-    border-color: #2d6a4f;
-    background: #f0fdf4;
-}
-
-/* Кнопки формы */
-.form-buttons {
+.form-buttons,
+.button-group {
     display: flex;
     gap: 15px;
     margin-top: 30px;
     flex-wrap: wrap;
 }
 
-.btn-save {
+.btn-save,
+.btn-primary {
     flex: 1;
-    padding: 14px 28px;
-    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
-    color: white;
-    border: none;
-    border-radius: 44px;
-    font-weight: 700;
     font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
-}
-
-.btn-save:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
-    background: linear-gradient(135deg, #1b4d3e 0%, #143d31 100%);
-}
-
-.btn-cancel {
-    flex: 1;
-    padding: 14px 28px;
-    background: white;
-    color: #64748b;
-    border: 2px solid #e2e8f0;
-    border-radius: 44px;
-    font-weight: 700;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-    display: inline-block;
-}
-
-.btn-cancel:hover {
-    border-color: #dc2626;
-    color: #dc2626;
-    transform: translateY(-2px);
-}
-
-/* Разделитель */
-.divider {
-    text-align: center;
-    margin: 25px 0;
-    position: relative;
-}
-
-.divider::before,
-.divider::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 45%;
-    height: 1px;
-    background: #e2e8f0;
-}
-
-.divider::before {
-    left: 0;
-}
-
-.divider::after {
-    right: 0;
-}
-
-.divider span {
-    background: white;
-    padding: 0 15px;
-    color: #94a3b8;
-    font-size: 12px;
-    text-transform: uppercase;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .edit-container {
-        padding: 20px 15px;
-    }
-
-    .edit-header h1 {
-        font-size: 1.8rem;
-    }
-
-    .edit-form-card {
-        padding: 20px;
-    }
-
-    .form-buttons {
-        flex-direction: column;
-    }
-
-    .btn-save,
-    .btn-cancel {
-        width: 100%;
-    }
-
-    .current-avatar img {
-        max-width: 100px;
-    }
-}
-
-/* Анимация появления */
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.edit-container {
-    animation: slideUp 0.5s ease-out;
-}
-
-/* Сообщения об ошибках */
-.error-message {
-    color: #dc2626;
-    font-size: 13px;
-    margin-top: 5px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-/* Стили для Django messages */
-.messages {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 20px;
-}
-
-.messages li {
-    padding: 12px 20px;
-    border-radius: 16px;
-    margin-bottom: 10px;
-    font-weight: 500;
-}
-
-.messages li.success {
-    background: #f0fdf4;
-    color: #166534;
-    border-left: 4px solid #2d6a4f;
-}
-
-.messages li.error {
-    background: #fef2f2;
-    color: #dc2626;
-    border-left: 4px solid #dc2626;
-}
-
-.messages li.warning {
-    background: #fffbeb;
-    color: #d97706;
-    border-left: 4px solid #f59e0b;
-}
-
-/* ========== АКТИВНЫЕ БРОНИ ========== */
-.reservations-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 30px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.reservations-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.reservations-header h1 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #1e293b, #2d6a4f);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    margin-bottom: 10px;
-}
-
-.reservations-header .subtitle {
-    color: #475569;
-    font-size: 1rem;
 }
 
 /* Статистика */
@@ -1214,46 +699,29 @@ footer {
 }
 
 .stat-card {
-    background: white;
-    padding: 15px 25px;
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    color: white;
+    padding: 20px;
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(45, 106, 79, 0.1);
     min-width: 150px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
 .stat-number {
-    font-size: 28px;
-    font-weight: 800;
-    color: #2d6a4f;
+    font-size: 32px;
+    font-weight: bold;
 }
 
 .stat-label {
     font-size: 12px;
-    color: #64748b;
+    opacity: 0.9;
+    margin-top: 5px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-top: 5px;
 }
 
 /* Карточка бронирования */
-.reservation-card {
-    background: white;
-    border-radius: 24px;
-    margin-bottom: 20px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(45, 106, 79, 0.1);
-}
-
-.reservation-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-    border-color: rgba(45, 106, 79, 0.2);
-}
-
 .card-header {
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
     padding: 18px 24px;
@@ -1282,6 +750,19 @@ footer {
     border: 1px solid #bbf7d0;
 }
 
+.card-body {
+    padding: 24px;
+}
+
+.card-footer {
+    padding: 16px 24px;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Статусы */
 .status-badge {
     padding: 6px 16px;
     border-radius: 30px;
@@ -1309,115 +790,14 @@ footer {
     border: 1px solid #fecaca;
 }
 
-.card-body {
-    padding: 24px;
-}
-
-.info-grid {
-    display: grid;
-}
-
-/* ========== ПОИСК ПОЕЗДОВ ========== */
-.train-search-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 30px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.train-search-container h2 {
-    text-align: center;
-    font-size: 2.2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #1e293b, #2d6a4f);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    margin-bottom: 30px;
-}
-
-/* Форма поиска */
-.search-form {
-    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-    padding: 25px;
-    border-radius: 28px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-    margin-bottom: 30px;
-    border: 1px solid rgba(45, 106, 79, 0.1);
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    color: #1e293b;
-    font-weight: 700;
-    margin-bottom: 8px;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #e2e8f0;
-    border-radius: 16px;
-    font-size: 16px;
-    background: white;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: #2d6a4f;
-    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
-}
-
-/* Кнопки */
-.button-group {
-    display: flex;
-    gap: 10px;
-    margin-top: 25px;
-}
-
-.btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 44px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
-    color: white;
-    flex: 1;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
-}
-
-.btn-secondary {
-    background: white;
-    color: #2d6a4f;
-    padding: 12px 20px;
-    border: 2px solid #2d6a4f;
-}
-
-.btn-secondary:hover {
-    background: #2d6a4f;
-    color: white;
-    transform: translateY(-2px);
+.badge-green {
+    background: #dcfce7;
+    color: #166534;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
 }
 
 /* Результаты поиска */
@@ -1435,21 +815,26 @@ footer {
     margin: 0;
 }
 
-/* Карточка поезда */
-.train-card {
-    background: white;
-    border-radius: 24px;
-    margin-bottom: 20px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    position: relative;
-    border: 1px solid rgba(45, 106, 79, 0.1);
+.train-header {
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    color: white;
+    padding: 15px 20px;
 }
 
-.train-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+.train-number {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.train-title {
+    font-size: 14px;
+    opacity: 0.9;
+    margin: 5px 0 0 0;
+}
+
+.train-body {
+    padding: 20px;
 }
 
 .train-card.past-train {
@@ -1474,28 +859,6 @@ footer {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-}
-
-.train-header {
-    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
-    color: white;
-    padding: 15px 20px;
-}
-
-.train-number {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0;
-}
-
-.train-title {
-    font-size: 14px;
-    opacity: 0.9;
-    margin: 5px 0 0 0;
-}
-
-.train-body {
-    padding: 20px;
 }
 
 .route-info {
@@ -1576,24 +939,6 @@ footer {
     font-size: 14px;
 }
 
-.booking-link {
-    display: inline-block;
-    margin-top: 15px;
-    padding: 12px 25px;
-    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
-    color: white;
-    text-decoration: none;
-    border-radius: 44px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    text-align: center;
-}
-
-.booking-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(45, 106, 79, 0.3);
-}
-
 .booking-disabled {
     display: inline-block;
     margin-top: 15px;
@@ -1614,13 +959,18 @@ footer {
     border: 1px solid rgba(45, 106, 79, 0.1);
 }
 
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
 .empty-state p {
     font-size: 18px;
     color: #64748b;
     margin: 0;
 }
 
-/* Стили для загрузки */
+/* Загрузка */
 .loading {
     text-align: center;
     padding: 60px 20px;
@@ -1638,67 +988,7 @@ footer {
     margin: 0 auto;
 }
 
-/* Адаптивность */
-@media (max-width: 768px) {
-    .train-search-container {
-        padding: 20px 15px;
-    }
-
-    .train-search-container h2 {
-        font-size: 1.8rem;
-    }
-
-    .search-form {
-        padding: 20px;
-    }
-
-    .route-info {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .route-arrow {
-        transform: rotate(90deg);
-        margin: 10px 0;
-    }
-
-    .station-time {
-        font-size: 20px;
-    }
-
-    .button-group {
-        flex-direction: column;
-    }
-
-    .btn-secondary {
-        width: 100%;
-    }
-
-    .train-body {
-        padding: 15px;
-    }
-}
-
-/* ========== КАРТА ПОЕЗДА ========== */
-.train-map-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 30px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.train-map-container h1 {
-    text-align: center;
-    font-size: 2.2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #1e293b, #2d6a4f);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    margin-bottom: 30px;
-}
-
-/* Панель управления */
+/* Карта поезда */
 .control-panel {
     display: flex;
     flex-wrap: wrap;
@@ -1755,7 +1045,6 @@ footer {
     box-shadow: 0 5px 15px rgba(45, 106, 79, 0.3);
 }
 
-/* Корзина бронирования */
 .booking-summary {
     background: white;
     border: 2px solid #2d6a4f;
@@ -1776,10 +1065,6 @@ footer {
     margin-top: 10px;
     color: #475569;
     line-height: 1.6;
-}
-
-.summary-info div {
-    margin-bottom: 5px;
 }
 
 .selected-seats-list {
@@ -1819,10 +1104,6 @@ footer {
     transform: scale(1.1);
 }
 
-.summary-footer {
-    margin-top: 10px;
-}
-
 .seats-count {
     display: block;
     color: #475569;
@@ -1835,7 +1116,6 @@ footer {
     font-size: 18px;
 }
 
-/* Легенда */
 .legend {
     margin: 20px 0;
     padding: 15px;
@@ -1872,7 +1152,7 @@ footer {
 
 .legend-color.selected {
     background: #FFD700;
-    border: 1px solid #dAA520;
+    border: 1px solid #daa520;
 }
 
 .legend-text {
@@ -1880,7 +1160,6 @@ footer {
     color: #475569;
 }
 
-/* Кнопка бронирования */
 .book-all-btn {
     text-align: center;
     margin: 20px 0;
@@ -1901,6 +1180,19 @@ footer {
 .book-all-btn button:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(45, 106, 79, 0.4);
+}
+
+#my-svg {
+    background: #f8fafc;
+    border-radius: 20px;
+    margin-top: 20px;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.seat-rect {
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 /* Модальное окно */
@@ -1979,20 +1271,6 @@ footer {
     transform: translateY(-2px);
 }
 
-/* SVG стили */
-#my-svg {
-    background: #f8fafc;
-    border-radius: 20px;
-    margin-top: 20px;
-    width: 100%;
-    overflow-x: auto;
-}
-
-.seat-rect {
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
 /* Уведомления */
 .notification {
     position: fixed;
@@ -2015,14 +1293,919 @@ footer {
     background: #dc2626;
 }
 
-.notification.success {
-    background: #2d6a4f;
+/* Django messages */
+.messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
 }
 
-@keyframes slideDown {
+.messages li {
+    padding: 12px 20px;
+    border-radius: 16px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.messages li.success {
+    background: #f0fdf4;
+    color: #166534;
+    border-left: 4px solid #2d6a4f;
+}
+
+.messages li.error {
+    background: #fef2f2;
+    color: #dc2626;
+    border-left: 4px solid #dc2626;
+}
+
+.messages li.warning {
+    background: #fffbeb;
+    color: #d97706;
+    border-left: 4px solid #f59e0b;
+}
+
+.error-message {
+    color: #dc2626;
+    font-size: 13px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ========== СТИЛИ ДЛЯ СТРАНИЦЫ "О НАС" (ABOUT) ========== */
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Header */
+.about-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    padding: 8px 20px;
+    border-radius: 40px;
+    margin-bottom: 20px;
+}
+
+.badge-icon {
+    font-size: 20px;
+}
+
+.badge-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d6a4f;
+    letter-spacing: 1px;
+}
+
+.about-header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: #1e293b;
+}
+
+.about-header h1 .highlight {
+    background: linear-gradient(135deg, #2d6a4f, #1b4d3e);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.about-subtitle {
+    font-size: 1.2rem;
+    color: #475569;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* Статистика */
+.stats-showcase {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 60px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8fafc, #ffffff);
+    border-radius: 60px;
+    border: 1px solid rgba(45, 106, 79, 0.15);
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px 25px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #2d6a4f;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Карточки */
+.about-card {
+    background: white;
+    border-radius: 32px;
+    padding: 35px;
+    margin-bottom: 35px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(45, 106, 79, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.about-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.12);
+    border-color: rgba(45, 106, 79, 0.2);
+}
+
+.card-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.card-badge {
+    display: inline-block;
+    background: #f0fdf4;
+    color: #2d6a4f;
+    padding: 5px 15px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.card-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+.card-text {
+    color: #475569;
+    line-height: 1.7;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.card-text strong {
+    color: #2d6a4f;
+}
+
+/* Возрастные бейджи */
+.age-badge-container {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.age-badge {
+    background: #e2e8f0;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+/* Технологии */
+.tech-list {
+    margin-top: 25px;
+}
+
+.tech-item {
+    display: flex;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tech-item:last-child {
+    border-bottom: none;
+}
+
+.tech-icon {
+    font-size: 32px;
+    min-width: 50px;
+}
+
+.tech-content {
+    flex: 1;
+}
+
+.tech-title {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.tech-description {
+    color: #64748b;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.example-query {
+    background: #f1f5f9;
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-block;
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #2d6a4f;
+    margin-top: 5px;
+}
+
+/* Миссия */
+.mission-card {
+    background: linear-gradient(135deg, #f0fdf4, #ffffff);
+}
+
+.mission-block {
+    background: white;
+    padding: 25px;
+    border-radius: 24px;
+    margin: 20px 0;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #2d6a4f;
+}
+
+.mission-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #1e293b;
+    margin: 0;
+}
+
+.mission-quote {
+    text-align: center;
+    padding: 25px;
+    background: #f8fafc;
+    border-radius: 24px;
+    margin-top: 20px;
+    position: relative;
+}
+
+.quote-mark {
+    font-size: 60px;
+    color: #2d6a4f;
+    opacity: 0.3;
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    font-family: Georgia, serif;
+}
+
+.mission-quote p {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #1e293b;
+    margin: 0 0 10px 0;
+}
+
+.quote-author {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Преимущества */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.feature {
+    text-align: center;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 24px;
+    transition: all 0.3s ease;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+    background: #f0fdf4;
+}
+
+.feature-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.feature-title {
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.feature-desc {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+/* Команда */
+.team-card {
+    background: linear-gradient(135deg, #1e293b, #2d6a4f);
+    color: white;
+}
+
+.team-card .card-badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.team-card .card-title {
+    color: white;
+}
+
+.team-card .card-text {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.team-values {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+.team-values span {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 18px;
+    border-radius: 40px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Призыв к действию */
+.cta-section {
+    background: linear-gradient(135deg, #2d6a4f, #1b4d3e);
+    border-radius: 48px;
+    padding: 50px 40px;
+    margin-top: 40px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.cta-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.cta-content p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 30px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-btn {
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.cta-primary {
+    background: white;
+    color: #2d6a4f;
+}
+
+.cta-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.cta-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.cta-secondary:hover {
+    background: white;
+    color: #2d6a4f;
+    transform: translateY(-3px);
+}
+
+/* Адаптивность для страницы "О нас" */
+@media (max-width: 768px) {
+    .about-container {
+        padding: 20px 15px;
+    }
+
+    .about-header h1 {
+        font-size: 2rem;
+    }
+
+    .about-subtitle {
+        font-size: 1rem;
+    }
+
+    .stats-showcase {
+        gap: 15px;
+        border-radius: 30px;
+    }
+
+    .stat-item {
+        padding: 10px 15px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .about-card {
+        padding: 25px;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+    }
+
+    .tech-item {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .tech-icon {
+        min-width: auto;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .cta-section {
+        padding: 35px 25px;
+    }
+
+    .cta-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cta-btn {
+        width: 100%;
+        max-width: 250px;
+        text-align: center;
+    }
+}
+
+/* ========== СТИЛИ ДЛЯ СТРАНИЦЫ ПОПОЛНЕНИЯ БАЛАНСА ========== */
+
+.recharge-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.recharge-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.recharge-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e293b, #2d6a4f);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 10px;
+}
+
+.recharge-header .subtitle {
+    color: #475569;
+    font-size: 1.1rem;
+}
+
+/* Карточка текущего баланса */
+.balance-card {
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    border-radius: 28px;
+    padding: 30px;
+    margin-bottom: 40px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.balance-label {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 10px;
+}
+
+.balance-amount {
+    font-size: 48px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.balance-currency {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Сетка карточек */
+.recharge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.recharge-card {
+    background: white;
+    border-radius: 28px;
+    padding: 30px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(45, 106, 79, 0.1);
+}
+
+.recharge-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.12);
+    border-color: rgba(45, 106, 79, 0.2);
+}
+
+.card-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* QR код */
+.qr-wrapper {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.qr-img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    background: white;
+    padding: 10px;
+    border-radius: 20px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.qr-img:hover {
+    transform: scale(1.05);
+    border-color: #2d6a4f;
+}
+
+/* Адрес кошелька */
+.wallet-address-box {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 15px;
+    margin: 20px 0;
+    word-break: break-all;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #2d6a4f;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.wallet-address-box:hover {
+    background: #f0fdf4;
+    border-color: #2d6a4f;
+    transform: translateY(-2px);
+}
+
+/* Информация о сети */
+.network-info {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.network-badge {
+    background: #f0fdf4;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2d6a4f;
+    border: 1px solid #bbf7d0;
+}
+
+/* Кнопки */
+.btn-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    color: white;
+    border: none;
+    border-radius: 44px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-copy:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
+    background: linear-gradient(135deg, #1b4d3e 0%, #143d31 100%);
+}
+
+.btn-copy:active {
+    transform: translateY(0);
+}
+
+/* Карточка инструкции */
+.instruction-card {
+    background: white;
+    border-radius: 28px;
+    padding: 35px;
+    margin-bottom: 30px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(45, 106, 79, 0.1);
+}
+
+.instruction-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 25px;
+}
+
+.instruction-list {
+    list-style: none;
+    padding: 0;
+}
+
+.instruction-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+    color: #475569;
+    line-height: 1.6;
+}
+
+.instruction-list li:last-child {
+    border-bottom: none;
+}
+
+.instruction-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: #2d6a4f;
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* Блок с ID пользователя */
+.user-id-block {
+    text-align: center;
+    margin: 20px 0;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 20px;
+}
+
+.user-id-label {
+    color: #475569;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.user-id-display {
+    background: white;
+    padding: 15px 25px;
+    border-radius: 16px;
+    display: inline-block;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2d6a4f;
+    border: 2px solid #2d6a4f;
+}
+
+.btn-copy-small {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 24px;
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    color: white;
+    border: none;
+    border-radius: 44px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-copy-small:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
+    background: linear-gradient(135deg, #1b4d3e 0%, #143d31 100%);
+}
+
+/* Карточка предупреждения */
+.warning-card {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    border-radius: 28px;
+    padding: 35px;
+    margin-bottom: 30px;
+    border: 1px solid #fecaca;
+    text-align: center;
+}
+
+.warning-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.warning-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #991b1b;
+    margin-bottom: 15px;
+}
+
+.warning-text {
+    color: #991b1b;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.comment-example {
+    background: #2d6a4f;
+    color: #ffd700;
+    padding: 12px 20px;
+    border-radius: 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    display: inline-block;
+    margin: 10px 0;
+}
+
+.warning-note {
+    color: #7f1d1d;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+/* Карточка поддержки */
+.support-card {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border-radius: 28px;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid #bbf7d0;
+}
+
+.support-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.support-text {
+    color: #475569;
+    margin-bottom: 15px;
+}
+
+.support-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 44px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.support-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
+    background: linear-gradient(135deg, #1b4d3e 0%, #143d31 100%);
+}
+
+/* Toast уведомление */
+.toast-msg {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2d6a4f;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 500;
+    z-index: 10000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease;
+}
+
+/* Анимации */
+@keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateX(-50%) translateY(-20px);
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
     }
     to {
         opacity: 1;
@@ -2030,38 +2213,49 @@ footer {
     }
 }
 
-/* Адаптивность */
+/* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
-    .train-map-container {
+    .recharge-container {
         padding: 20px 15px;
     }
 
-    .control-panel {
-        flex-direction: column;
+    .recharge-header h1 {
+        font-size: 1.8rem;
     }
 
-    .booking-summary {
-        width: 100%;
+    .balance-amount {
+        font-size: 36px;
     }
 
-    .carriage-selector {
-        width: 100%;
+    .recharge-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
-    .carriage-selector select {
-        width: calc(100% - 120px);
+    .instruction-card,
+    .warning-card {
+        padding: 25px;
     }
 
-    .modal-content {
-        width: 90%;
-        margin: 30% auto;
+    .user-id-display {
+        font-size: 1rem;
+        word-break: break-all;
     }
 
-    .legend {
-        gap: 15px;
+    .qr-img {
+        width: 160px;
+        height: 160px;
     }
 
-    #my-svg {
-        overflow-x: scroll;
+    .card-title {
+        font-size: 1.3rem;
+    }
+
+    .instruction-title {
+        font-size: 1.3rem;
+    }
+
+    .warning-title {
+        font-size: 1.1rem;
     }
 }
