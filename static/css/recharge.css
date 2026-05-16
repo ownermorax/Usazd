@@ -1,0 +1,460 @@
+/* ========== СТИЛИ ДЛЯ СТРАНИЦЫ ПОПОЛНЕНИЯ БАЛАНСА ========== */
+
+.recharge-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.recharge-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.recharge-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e293b, #2d6a4f);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 10px;
+}
+
+.recharge-header .subtitle {
+    color: #475569;
+    font-size: 1.1rem;
+}
+
+/* Карточка текущего баланса */
+.balance-card {
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    border-radius: 28px;
+    padding: 30px;
+    margin-bottom: 40px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.balance-label {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 10px;
+}
+
+.balance-amount {
+    font-size: 48px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.balance-currency {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Сетка карточек */
+.recharge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.recharge-card {
+    background: white;
+    border-radius: 28px;
+    padding: 30px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(45, 106, 79, 0.1);
+}
+
+.recharge-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.12);
+    border-color: rgba(45, 106, 79, 0.2);
+}
+
+.card-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* QR код */
+.qr-wrapper {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.qr-img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    background: white;
+    padding: 10px;
+    border-radius: 20px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.qr-img:hover {
+    transform: scale(1.05);
+    border-color: #2d6a4f;
+}
+
+/* Адрес кошелька */
+.wallet-address-box {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 15px;
+    margin: 20px 0;
+    word-break: break-all;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #2d6a4f;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.wallet-address-box:hover {
+    background: #f0fdf4;
+    border-color: #2d6a4f;
+    transform: translateY(-2px);
+}
+
+/* Информация о сети */
+.network-info {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.network-badge {
+    background: #f0fdf4;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2d6a4f;
+    border: 1px solid #bbf7d0;
+}
+
+/* Кнопки */
+.btn-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    color: white;
+    border: none;
+    border-radius: 44px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-copy:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
+    background: linear-gradient(135deg, #1b4d3e 0%, #143d31 100%);
+}
+
+.btn-copy:active {
+    transform: translateY(0);
+}
+
+/* Карточка инструкции */
+.instruction-card {
+    background: white;
+    border-radius: 28px;
+    padding: 35px;
+    margin-bottom: 30px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(45, 106, 79, 0.1);
+}
+
+.instruction-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 25px;
+}
+
+.instruction-list {
+    list-style: none;
+    padding: 0;
+}
+
+.instruction-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e8f0;
+    color: #475569;
+    line-height: 1.6;
+}
+
+.instruction-list li:last-child {
+    border-bottom: none;
+}
+
+.instruction-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: #2d6a4f;
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* Блок с ID пользователя */
+.user-id-block {
+    text-align: center;
+    margin: 20px 0;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 20px;
+}
+
+.user-id-label {
+    color: #475569;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.user-id-display {
+    background: white;
+    padding: 15px 25px;
+    border-radius: 16px;
+    display: inline-block;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2d6a4f;
+    border: 2px solid #2d6a4f;
+}
+
+.btn-copy-small {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 24px;
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    color: white;
+    border: none;
+    border-radius: 44px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-copy-small:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
+    background: linear-gradient(135deg, #1b4d3e 0%, #143d31 100%);
+}
+
+/* Карточка предупреждения */
+.warning-card {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    border-radius: 28px;
+    padding: 35px;
+    margin-bottom: 30px;
+    border: 1px solid #fecaca;
+    text-align: center;
+}
+
+.warning-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.warning-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #991b1b;
+    margin-bottom: 15px;
+}
+
+.warning-text {
+    color: #991b1b;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.comment-example {
+    background: #2d6a4f;
+    color: #ffd700;
+    padding: 12px 20px;
+    border-radius: 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    display: inline-block;
+    margin: 10px 0;
+}
+
+.warning-note {
+    color: #7f1d1d;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+/* Карточка поддержки */
+.support-card {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border-radius: 28px;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid #bbf7d0;
+}
+
+.support-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.support-text {
+    color: #475569;
+    margin-bottom: 15px;
+}
+
+.support-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 44px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.support-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
+    background: linear-gradient(135deg, #1b4d3e 0%, #143d31 100%);
+}
+
+/* Toast уведомление */
+.toast-msg {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2d6a4f;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 500;
+    z-index: 10000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .recharge-container {
+        padding: 20px 15px;
+    }
+
+    .recharge-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .balance-amount {
+        font-size: 36px;
+    }
+
+    .recharge-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .instruction-card,
+    .warning-card {
+        padding: 25px;
+    }
+
+    .user-id-display {
+        font-size: 1rem;
+        word-break: break-all;
+    }
+
+    .qr-img {
+        width: 160px;
+        height: 160px;
+    }
+
+    .card-title {
+        font-size: 1.3rem;
+    }
+
+    .instruction-title {
+        font-size: 1.3rem;
+    }
+
+    .warning-title {
+        font-size: 1.1rem;
+    }
+}
