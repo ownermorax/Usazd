@@ -135,7 +135,7 @@ function getCookie(name) {
 
 function cancelReservation(reservationId) {
     if (confirm('Вы уверены, что хотите отменить это бронирование?')) {
-        fetch(`/api/cancel-reservation/${reservationId}/`, {
+        fetch(`/api/cancel/${reservationId}/`, {
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
