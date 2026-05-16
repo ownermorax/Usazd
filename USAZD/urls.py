@@ -20,6 +20,7 @@ from django.contrib import admin
 from django.urls import path
 from main import views
 from django.contrib.auth.views import LogoutView, LoginView
+from main.views.cancel_reservation import cancel_reservation
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,4 +39,15 @@ urlpatterns = [
     path('train/', views.train, name='train'),
     path('balance/', views.update_balance, name='balance'),
     path('api/create/reservation/', views.reservation_handler, name='create_reservation'),
+<<<<<<< HEAD
 ]+ static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+=======
+    path('cancel/<int:reservation_id>/', cancel_reservation, name='cancel_reservation'),
+    path('<str:username>/vip/', views.vip, name='vip'),
+    path('api/vip/pay', views.vip_handler, name='vip_api'),
+    path('schedule/<str:from_station>/<str:to_station>/', views.schedule_card, name='schedule_card'),
+    path('quick-booking/', views.quick_booking, name='quick_booking'),
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+>>>>>>> a9735afe9629eae97638e8d088b8f195664f7244

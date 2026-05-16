@@ -27,3 +27,25 @@ workflows:
             artifacts:
                 paths:
                   - docs/build/html/
+      - name: tests
+        cubes:
+          - name: pytest-with-coverage
+            image: docker.io/library/python:3.13.3-alpine3.20
+            script:
+              - cd "$SOURCECRAFT_WORKSPACE"
+              - python -m pip install --upgrade pip
+              - python -m pip install pytest coverage
+              - coverage run -m pytest -v
+              - coverage html
+
+          - name: coverage-report
+            image: docker.io/library/python:3.13.3-alpine3.20
+            needs: [ pytest-with-coverage ]
+            script:
+              - cd "$SOURCECRAFT_WORKSPACE"
+              - python -m pip install --upgrade pip
+              - python -m pip install coverage
+              - coverage report -m
+            artifacts:
+              paths:
+                - htmlcov/

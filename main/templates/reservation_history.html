@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<<<<<<< HEAD
 <div class="history-container">
     <div class="history-header">
         <h1>История бронирований</h1>
@@ -151,4 +152,34 @@ function filterHistory(status) {
     });
 }
 </script>
+=======
+<h1>История броней</h1>
+<div style="margin-top: 20px;">
+    {% if reservations %}
+        {% for reservation in reservations %}
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: #f9f9f9;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; color: #006241;">Бронь #{{ reservation.reservation_id }}</h3>
+                    <span style="background: {% if reservation.status == 'cancelled' %}#dc3545{% else %}#6c757d{% endif %}; color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px;">
+                        {% if reservation.status == 'cancelled' %}Отменено{% elif reservation.status == 'completed' %}Завершено{% else %}{{ reservation.status }}{% endif %}
+                    </span>
+                </div>
+
+                <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div><strong>🚂 Поезд:</strong> {{ reservation.train.train_id }}</div>
+                    <div><strong>📅 Дата бронирования:</strong> {{ reservation.reservation_date|date:"d.m.Y H:i" }}</div>
+                    <div><strong>📍 Отправление:</strong> {{ reservation.station_in.name }}</div>
+                    <div><strong>🎯 Назначение:</strong> {{ reservation.station_out.name }}</div>
+                    <div><strong>💺 Место:</strong> {{ reservation.place_num }}</div>
+                    <div><strong>🕒 Время отправления:</strong> {{ reservation.train.station_at_time|date:"d.m.Y H:i" }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: #999; text-align: center; padding: 40px;">
+            У вас пока нет завершённых или отменённых бронирований
+        </p>
+    {% endif %}
+</div>
+>>>>>>> a9735afe9629eae97638e8d088b8f195664f7244
 {% endblock %}

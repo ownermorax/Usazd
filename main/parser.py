@@ -11,9 +11,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'coffee_project.settings')
 django.setup()
 
 from main.models import Profile
+import datetime
 
-
-class UsdtParser:
+class Parser:
     def __init__(self):
         self.usdt_contract = '0:b113a994b5024a16719f69139328eb759596c38a25f59028b146fecdc3621dfe'
         self.wallet_address = '0:aa88cd18b7ecd64165209f83dd795e290e9d1ceb2a9e68b2e322e250d80d2534'
@@ -40,8 +40,6 @@ class UsdtParser:
             pass
 
     def start(self):
-        print(f"Loaded {len(self.seen)} transactions")
-
         while True:
             try:
                 response = requests.get(self.url, timeout=30)
@@ -75,18 +73,27 @@ class UsdtParser:
                                 try:
                                     profile = Profile.objects.get(user_id=user_id)
                                     profile.update_balance(amount)
-                                    print(f"{amount} USDT to user {user_id} (tx: {event_id[:8]}...)")
                                     self.seen.add(event_id)
                                     self.save_seen_transactions()
                                 except Profile.DoesNotExist:
-                                    print(f"User {user_id} not found")
-                                except Exception as e:
-                                    print(f"Error: {e}")
+                                    pass
+                                except Exception:
+                                    pass
                             else:
-                                print(f"No user ID in comment: {comment}")
+                                pass
 
-            except Exception as e:
-                print(f"Error: {e}")
+            except Exception:
+                pass
             sleep(10)
 
-parser = UsdtParser()
+    def check_premium(self):
+        while True:
+            for profile in Profile.objects.filter(is_vip=True):
+                if profile.vip_expire and profile.vip_expire < datetime.datetime.now():
+                    profile.is_vip = False
+                    profile.vip_data = ''
+                    profile.save()
+                    print(f"VIP expired for user {profile.user.id}")
+            sleep(10)
+
+parser = Parser()

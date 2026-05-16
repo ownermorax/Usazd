@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from djmoney.models.fields import MoneyField
 from djmoney.money import Money
-
+import datetime
+from decimal import Decimal
 
 class Profile(models.Model):
     """Модель профиля"""
@@ -11,6 +12,8 @@ class Profile(models.Model):
     role = models.CharField(max_length=20, default='user')
     description = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    is_vip = models.BooleanField(default=False)
+    vip_data = models.TextField(blank=True)
 
     balance = MoneyField(
         max_digits=10,
@@ -23,10 +26,16 @@ class Profile(models.Model):
         return self.user.username
 
     def update_balance(self, money):
-        if isinstance(money, (int, float)):
+        if isinstance(money, (int, float, Decimal)):
             money = Money(money, self.balance.currency)
         self.balance += money
         self.save()
+
+    @property
+    def vip_expire(self):
+        if self.vip_data:
+            return datetime.datetime.fromisoformat(self.vip_data)
+        return None
 
 
 class Station(models.Model):

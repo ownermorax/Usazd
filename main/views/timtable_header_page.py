@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from main.api_instance import yandex_api as yandexAPI
-import datetime
+from datetime import datetime
 from main.utils import logger
 
 
@@ -89,7 +89,7 @@ def timetable_handler(request):
     from_name = request.GET.get('from_code', '')
     to_name = request.GET.get('to_code', '')
     
-    logger.debug(f"Маршрут: {from_name} -> {to_name}ю")
+    logger.debug(f"Маршрут: {from_name} -> {to_name}.")
     
     date = request.GET.get('date', '')
     lang = request.GET.get('lang', 'ru_RU')
