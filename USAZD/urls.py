@@ -39,9 +39,6 @@ urlpatterns = [
     path('train/', views.train, name='train'),
     path('balance/', views.update_balance, name='balance'),
     path('api/create/reservation/', views.reservation_handler, name='create_reservation'),
-<<<<<<< HEAD
-]+ static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
-=======
     path('cancel/<int:reservation_id>/', cancel_reservation, name='cancel_reservation'),
     path('<str:username>/vip/', views.vip, name='vip'),
     path('api/vip/pay', views.vip_handler, name='vip_api'),
@@ -50,4 +47,4 @@ urlpatterns = [
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
->>>>>>> a9735afe9629eae97638e8d088b8f195664f7244
+
