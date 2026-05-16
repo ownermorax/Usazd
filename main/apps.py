@@ -29,17 +29,8 @@ class MainConfig(AppConfig):
             from main.parser import parser
             parser.check_premium()
 
-        def run_bot():
-            import time
-            time.sleep(2)
-            from main.bot import start_bot
-            start_bot()
-
         thread_usdt = threading.Thread(target=run_usdt_parser, daemon=True)
         thread_usdt .start()
 
         thread_premium = threading.Thread(target=run_premium_parser, daemon=True)
         thread_premium.start()
-
-        thread_bot = threading.Thread(target=run_bot, daemon=True)
-        thread_bot.start()

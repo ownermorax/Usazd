@@ -73,7 +73,7 @@
                             <button type="button" class="btn btn-warning" onclick="window.location.href='/{{ user.username }}/vip'">Премиум</button>
                         {% endif %}
                         <button class="btn btn-warning" onclick="window.location.href='/balance'"> {{ user.profile.balance }} </button>
-                        <button class="btn btn-success" onclick="window.open('https://t.me/USAZD_support_bot', '_blank')">Поддержка</button>
+                        <button class="btn btn-success" onclick="window.open('https://t.me/USAZD_support', '_blank')">Поддержка</button>
                         <form action="{% url 'logout' %}" method="post" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Выйти</button>
@@ -142,9 +142,9 @@
             if (typing) typing.style.display = 'none';
         }, 2000);
     }
+</script>
 
     {% block js_code %} {% endblock %}
-</script>
 
 </body>
 </html>
