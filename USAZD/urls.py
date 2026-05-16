@@ -21,7 +21,7 @@ from django.urls import path
 from main import views
 from django.contrib.auth.views import LogoutView, LoginView
 from main.views.cancel_reservation import cancel_reservation
-
+from main.views.custom_404 import custom_404
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.main, name='main'),
@@ -45,6 +45,7 @@ urlpatterns = [
     path('schedule/<str:from_station>/<str:to_station>/', views.schedule_card, name='schedule_card'),
     path('quick-booking/', views.quick_booking, name='quick_booking'),
 ]
+handler404 = custom_404
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

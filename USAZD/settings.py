@@ -29,9 +29,9 @@ import os
 SECRET_KEY = 'SECRET_KEY_REPLACED'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 import os
 from pathlib import Path
 
@@ -43,7 +43,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Для разработки
-DEBUG = True
+DEBUG = False
 
 # Application definition
 
