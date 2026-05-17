@@ -68,6 +68,12 @@
     border: 1px solid #fecaca;
 }
 
+.status-expired {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
 .badge-green {
     background: #dcfce7;
     color: #166534;

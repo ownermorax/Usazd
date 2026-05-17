@@ -112,7 +112,7 @@
 .info-card:hover,
 .info-details-card:hover,
 .edit-form-card:hover,
-.reservation-card:hover,
+.reservation-card:hover:not(.history-card),
 .train-card:hover,
 .search-form:hover {
     transform: translateY(-5px);
@@ -246,6 +246,14 @@
 }
 
 /* Кнопки */
+button.btn-primary,
+button.btn-secondary,
+button.back-button {
+    font-family: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
 .edit-profile-btn,
 .btn-save,
 .btn-primary,
@@ -452,4 +460,57 @@
     margin-top: 5px;
     text-transform: uppercase;
     letter-spacing: 1px;
+}
+
+/* Сетка информации в карточках бронирований */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.info-icon {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.info-content .info-label {
+    width: auto;
+    font-size: 11px;
+    color: #64748b;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-content .info-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.departure-time {
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: #f0fdf4;
+    border-radius: 16px;
+    border-left: 3px solid #2d6a4f;
+}
+
+.departure-time .info-label {
+    width: auto;
+    margin-bottom: 4px;
+}
+
+.departure-time .info-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2d6a4f;
 }
