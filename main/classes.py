@@ -3,14 +3,26 @@ import json
 import datetime
 
 class Train:
+    """Класс, представляющий поезд с вагонами и местами.
+
+    Создает поезд с 11 вагонами, каждый из которых содержит 100 мест.
+    """
     def __init__(self):
         self.carriages = [Carriage(i) for i in range(1,12)]
 class Carriage:
+    """Класс, представляющий вагон поезда.
+
+    :param number: Номер вагона
+    """
     def __init__(self, number):
         self.number = number
         self.seats = [Seat(i) for i in range(1,101)]
 
 class Seat:
+    """Класс, представляющий место в вагоне.
+
+    :param number: Номер места
+    """
     def __init__(self,number):
         self.number = number
         self.is_taken = False

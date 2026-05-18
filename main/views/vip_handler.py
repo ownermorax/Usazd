@@ -2,6 +2,14 @@ from main.vip import Vip
 from django.http import JsonResponse
 
 def vip_handler(request):
+    """Обработчик запроса на добавление VIP статуса.
+
+    Принимает параметры длительности и ID пользователя, добавляет VIP статус.
+
+    :param request: HTTP запрос
+    :return: JSON ответ со статусом ok
+    :rtype: JsonResponse
+    """
     duration_str = request.GET.get('duration')
     user_id = request.GET.get('userid')
     vip = Vip()
