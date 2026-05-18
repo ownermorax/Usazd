@@ -7,12 +7,14 @@ import os
 import sys
 import django
 
-# ИСПРАВЛЕНО: Корень проекта находится на ОДИН уровень выше папки docs/
-sys.path.insert(0, os.path.abspath(".."))
 
-# ДОБАВЛЕНО: Указываем Django, где искать настройки, и инициализируем его
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "usazd.settings") # Замени usazd на имя папки, если нужно
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, BASE_DIR)
+
+os.environ["DJANGO_SETTINGS_MODULE"] = "usazd.settings"
+
 django.setup()
+
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
