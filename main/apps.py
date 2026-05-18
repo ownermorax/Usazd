@@ -21,16 +21,16 @@ class MainConfig(AppConfig):
             import time
             time.sleep(2)
             from main.parser import parser
-            parser.start()
+            parser.start_parser('usdt')
 
         def run_premium_parser():
             import time
             time.sleep(2)
             from main.parser import parser
-            parser.check_premium()
+            parser.start_parser('vip')
 
         thread_usdt = threading.Thread(target=run_usdt_parser, daemon=True)
-        thread_usdt .start()
+        thread_usdt.start()
 
         thread_premium = threading.Thread(target=run_premium_parser, daemon=True)
         thread_premium.start()
