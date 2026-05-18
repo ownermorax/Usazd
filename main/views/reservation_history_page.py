@@ -3,7 +3,6 @@ from main.utils import logger
 from main.models import Reservation
 
 
-@login_required
 def reservation_history(request):
     """
     Страница с историей броней пользователя.
