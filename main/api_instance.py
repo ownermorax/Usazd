@@ -1,3 +1,7 @@
+"""Модуль для создания экземпляра API Яндекс.Расписания.
+
+Создает глобальный экземпляр YandexAPI и загружает данные станций.
+"""
 from .classes import YandexAPI
 
 yandex_api = YandexAPI()

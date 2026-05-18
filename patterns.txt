@@ -1,0 +1,19 @@
+1. Singleton (порождающий)
+Где:main/api_instance.py
+from .classes import YandexAPI
+yandex_api = YandexAPI()
+yandex_api.load_stations_to_json()
+yandex_api.load_stations_to_memory()
+Суть: один общий экземпляр YandexAPI на всё приложение; views и тесты берут его через main.api_instance.yandex_api, а не создают клиент заново.
+Обоснование: единая точка доступа к API и кэшу станций, без дублирования загрузки stations.json.
+
+Strategy (поведенческий) — обязателен для 5 баллов
+Где: те же UsdtParser, PremiumParser и Parser.start_parser
+Суть: разные алгоритмы фоновой работы (start()): пополнение баланса по USDT vs проверка истечения VIP. Общий интерфейс — метод start(), выбор реализации — в фабрике.
+Обоснование: поведение меняется без правки MainConfig.ready() — достаточно передать другой mode.
+Замечание: формально нет абстрактного базового класса, но для учебного проекта Strategy обычно принимают по «взаимозаменяемым алгоритмам + выбор в рантайме».*
+
+Facade (структурный)
+Где: main/classes.py, класс YandexAPI
+Суть: скрывает HTTP, ключ из config.json, эндпоинты stations_list и search за методами load_stations_to_memory(), get_station_id(), station_request().
+Обоснование: views и context_processors не работают с URL и статус-кодами напрямую.

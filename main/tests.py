@@ -7,40 +7,82 @@ from django.urls import reverse
 from djmoney.money import Money
 from main.models import Profile, Reservation, Station, Train
 
+
 # ========== Фикстуры ==========
 
 
 @pytest.fixture
 def user():
-    return User.objects.create_user(username="testuser", password="123456")
+    """Создает тестового пользователя.
+
+    :return: Объект пользователя
+    :rtype: User
+    """
+    return User.objects.create_user(
+        username="testuser",
+        password="123456"
+    )
 
 
 @pytest.fixture
 def auth_client(client, user):
+    """Создает авторизованный тестовый клиент.
+
+    :param client: Тестовый клиент
+    :param user: Тестовый пользователь
+    :return: Авторизованный клиент
+    :rtype: Client
+    """
     client.login(username="testuser", password="123456")
     return client
 
 
 @pytest.fixture
 def profile(user):
-    return Profile.objects.create(user=user, balance=Money(100, "USD"))
+    """Создает профиль для тестового пользователя.
+
+    :param user: Тестовый пользователь
+    :return: Объект профиля
+    :rtype: Profile
+    """
+    return Profile.objects.create(
+        user=user,
+        balance=Money(100, "USD")
+    )
 
 
 @pytest.fixture
 def stations():
-    station1 = Station.objects.create(station_id=1, name="Москва")
-    station2 = Station.objects.create(station_id=2, name="СПб")
+    """Создает тестовые станции.
+
+    :return: Кортеж из двух станций
+    :rtype: tuple
+    """
+    station1 = Station.objects.create(
+        station_id=1,
+        name="Москва"
+    )
+    station2 = Station.objects.create(
+        station_id=2,
+        name="СПб"
+    )
     return station1, station2
 
 
 @pytest.fixture
 def train(stations):
+    """Создает тестовый поезд.
+
+    :param stations: Тестовые станции
+    :return: Объект поезда
+    :rtype: Train
+    """
     station1, station2 = stations
     return Train.objects.create(
         id_station_start=station1,
         id_station_stop=station2,
         station_at_time="2026-01-01 10:00:00",
-        path=json.dumps({"number": "777"}),
+        path=json.dumps({"number": "777"})
     )
 
 
@@ -118,7 +160,9 @@ def test_edit_user_info_get(auth_client, profile):
 
 @pytest.mark.django_db
 def test_edit_user_info_post(auth_client, profile):
-    response = auth_client.post(reverse("edit_user_info"), {"name": "NewName"})
+    response = auth_client.post(reverse("edit_user_info"), {
+        "name": "NewName"
+    })
     assert response.status_code == 302
 
 
@@ -161,15 +205,21 @@ def test_reservation_missing_data(client):
 
 @pytest.mark.django_db
 def test_reservation_user_not_found(client):
-    response = client.get(reverse("create_reservation"), {"username": 999, "train_id": "777", "seats": "1x1"})
+    response = client.get(reverse("create_reservation"), {
+        "username": 999,
+        "train_id": "777",
+        "seats": "1x1"
+    })
     assert response.status_code == 400
 
 
 @pytest.mark.django_db
 def test_reservation_no_station(client, profile):
-    response = client.get(
-        reverse("create_reservation"), {"username": profile.user.id, "train_id": "777", "seats": "1x1"}
-    )
+    response = client.get(reverse("create_reservation"), {
+        "username": profile.user.id,
+        "train_id": "777",
+        "seats": "1x1"
+    })
     assert response.status_code == 400
 
 
@@ -177,16 +227,13 @@ def test_reservation_no_station(client, profile):
 def test_reservation_success(client, profile, stations):
     station1, station2 = stations
 
-    response = client.get(
-        reverse("create_reservation"),
-        {
-            "username": profile.user.id,
-            "train_id": "777",
-            "seats": "1x1",
-            "station_in": station1.station_id,
-            "station_out": station2.station_id,
-        },
-    )
+    response = client.get(reverse("create_reservation"), {
+        "username": profile.user.id,
+        "train_id": "777",
+        "seats": "1x1",
+        "station_in": station1.station_id,
+        "station_out": station2.station_id
+    })
 
     assert response.status_code == 200
 
@@ -195,16 +242,13 @@ def test_reservation_success(client, profile, stations):
 def test_reservation_created(client, profile, stations):
     station1, station2 = stations
 
-    client.get(
-        reverse("create_reservation"),
-        {
-            "username": profile.user.id,
-            "train_id": "777",
-            "seats": "1x1",
-            "station_in": station1.station_id,
-            "station_out": station2.station_id,
-        },
-    )
+    client.get(reverse("create_reservation"), {
+        "username": profile.user.id,
+        "train_id": "777",
+        "seats": "1x1",
+        "station_in": station1.station_id,
+        "station_out": station2.station_id
+    })
 
     assert Reservation.objects.exists()
 
@@ -214,16 +258,13 @@ def test_reservation_balance_decreased(client, profile, stations):
     station1, station2 = stations
     old_balance = profile.balance
 
-    client.get(
-        reverse("create_reservation"),
-        {
-            "username": profile.user.id,
-            "train_id": "777",
-            "seats": "1x1",
-            "station_in": station1.station_id,
-            "station_out": station2.station_id,
-        },
-    )
+    client.get(reverse("create_reservation"), {
+        "username": profile.user.id,
+        "train_id": "777",
+        "seats": "1x1",
+        "station_in": station1.station_id,
+        "station_out": station2.station_id
+    })
 
     profile.refresh_from_db()
     assert profile.balance < old_balance
@@ -231,19 +272,19 @@ def test_reservation_balance_decreased(client, profile, stations):
 
 @pytest.mark.django_db
 def test_reservation_not_enough_money(client, user, stations):
-    profile = Profile.objects.create(user=user, balance=Money(0, "USD"))
+    profile = Profile.objects.create(
+        user=user,
+        balance=Money(0, "USD")
+    )
     station1, station2 = stations
 
-    response = client.get(
-        reverse("create_reservation"),
-        {
-            "username": user.id,
-            "train_id": "777",
-            "seats": "1x1",
-            "station_in": station1.station_id,
-            "station_out": station2.station_id,
-        },
-    )
+    response = client.get(reverse("create_reservation"), {
+        "username": user.id,
+        "train_id": "777",
+        "seats": "1x1",
+        "station_in": station1.station_id,
+        "station_out": station2.station_id
+    })
 
     assert response.status_code == 400
 
@@ -253,19 +294,21 @@ def test_reservation_duplicate_seat(client, profile, stations, train):
     station1, station2 = stations
 
     Reservation.objects.create(
-        user=profile.user, train=train, place_num="1-1", station_in=station1, station_out=station2, status="active"
+        user=profile.user,
+        train=train,
+        place_num="1-1",
+        station_in=station1,
+        station_out=station2,
+        status="active"
     )
 
-    response = client.get(
-        reverse("create_reservation"),
-        {
-            "username": profile.user.id,
-            "train_id": "777",
-            "seats": "1x1",
-            "station_in": station1.station_id,
-            "station_out": station2.station_id,
-        },
-    )
+    response = client.get(reverse("create_reservation"), {
+        "username": profile.user.id,
+        "train_id": "777",
+        "seats": "1x1",
+        "station_in": station1.station_id,
+        "station_out": station2.station_id
+    })
 
     assert response.status_code == 400
 
@@ -274,16 +317,13 @@ def test_reservation_duplicate_seat(client, profile, stations, train):
 def test_reservation_multiple_seats(client, profile, stations):
     station1, station2 = stations
 
-    response = client.get(
-        reverse("create_reservation"),
-        {
-            "username": profile.user.id,
-            "train_id": "777",
-            "seats": "1x1W1x2W1x3",
-            "station_in": station1.station_id,
-            "station_out": station2.station_id,
-        },
-    )
+    response = client.get(reverse("create_reservation"), {
+        "username": profile.user.id,
+        "train_id": "777",
+        "seats": "1x1W1x2W1x3",
+        "station_in": station1.station_id,
+        "station_out": station2.station_id
+    })
 
     assert response.status_code == 200
 
@@ -302,7 +342,10 @@ def test_timetable_missing_params(client):
 def test_timetable_invalid_station(mock_station, client):
     mock_station.return_value = None
 
-    response = client.get(reverse("timetable_api"), {"from_code": "A", "to_code": "B"})
+    response = client.get(reverse("timetable_api"), {
+        "from_code": "A",
+        "to_code": "B"
+    })
 
     assert response.status_code == 400
 
@@ -312,9 +355,16 @@ def test_timetable_invalid_station(mock_station, client):
 @patch("main.api_instance.yandex_api.get_station_id")
 def test_timetable_success(mock_station, mock_request, client):
     mock_station.return_value = "c123"
-    mock_request.return_value = {"search": {}, "segments": [], "pagination": {}}
+    mock_request.return_value = {
+        "search": {},
+        "segments": [],
+        "pagination": {}
+    }
 
-    response = client.get(reverse("timetable"), {"from_code": "Москва", "to_code": "СПб"})
+    response = client.get(reverse("timetable"), {
+        "from_code": "Москва",
+        "to_code": "СПб"
+    })
 
     assert response.status_code == 200
 
@@ -324,9 +374,16 @@ def test_timetable_success(mock_station, mock_request, client):
 @patch("main.api_instance.yandex_api.get_station_id")
 def test_timetable_json(mock_station, mock_request, client):
     mock_station.return_value = "c123"
-    mock_request.return_value = {"search": {}, "segments": [], "pagination": {}}
+    mock_request.return_value = {
+        "search": {},
+        "segments": [],
+        "pagination": {}
+    }
 
-    response = client.get(reverse("timetable_api"), {"from_code": "Москва", "to_code": "СПб"})
+    response = client.get(reverse("timetable_api"), {
+        "from_code": "Москва",
+        "to_code": "СПб"
+    })
 
     assert response.json()["status"] == "ok"
 
@@ -336,9 +393,16 @@ def test_timetable_json(mock_station, mock_request, client):
 @patch("main.api_instance.yandex_api.get_station_id")
 def test_timetable_contains_data(mock_station, mock_request, client):
     mock_station.return_value = "c123"
-    mock_request.return_value = {"search": {}, "segments": [], "pagination": {}}
+    mock_request.return_value = {
+        "search": {},
+        "segments": [],
+        "pagination": {}
+    }
 
-    response = client.get(reverse("timetable_api"), {"from_code": "Москва", "to_code": "СПб"})
+    response = client.get(reverse("timetable_api"), {
+        "from_code": "Москва",
+        "to_code": "СПб"
+    })
 
     assert "data" in response.json()
 
@@ -348,7 +412,10 @@ def test_timetable_contains_data(mock_station, mock_request, client):
 
 @pytest.mark.django_db
 def test_create_station():
-    station = Station.objects.create(station_id=1, name="Казань")
+    station = Station.objects.create(
+        station_id=1,
+        name="Казань"
+    )
     assert station.name == "Казань"
 
 
@@ -356,7 +423,10 @@ def test_create_station():
 def test_create_train(stations):
     station1, station2 = stations
     train = Train.objects.create(
-        id_station_start=station1, id_station_stop=station2, station_at_time="2026-01-01 10:00:00", path="{}"
+        id_station_start=station1,
+        id_station_stop=station2,
+        station_at_time="2026-01-01 10:00:00",
+        path='{}'
     )
     assert train is not None
 
@@ -365,7 +435,12 @@ def test_create_train(stations):
 def test_create_reservation(user, stations, train):
     station1, station2 = stations
     reservation = Reservation.objects.create(
-        user=user, train=train, place_num="1-1", station_in=station1, station_out=station2, status="active"
+        user=user,
+        train=train,
+        place_num="1-1",
+        station_in=station1,
+        station_out=station2,
+        status="active"
     )
     assert reservation.status == "active"
 
@@ -379,6 +454,12 @@ def test_main_page(client):
 @pytest.mark.django_db
 def test_info_page(client):
     response = client.get(reverse("info"))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_reservation_history_page(client):
+    response = client.get(reverse("reservation_history"))
     assert response.status_code == 200
 
 
