@@ -52,15 +52,3 @@ workflows:
             artifacts:
               paths:
                 - htmlcov/
-
-          - name: coverage-report
-            image: docker.io/library/python:3.13.3-alpine3.20
-            needs: [ pytest-with-coverage ]
-            script:
-              - cd "$SOURCECRAFT_WORKSPACE"
-              - python -m pip install --upgrade pip
-              - python -m pip install coverage
-              - coverage report -m
-            artifacts:
-              paths:
-                - htmlcov/
