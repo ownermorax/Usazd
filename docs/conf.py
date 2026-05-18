@@ -2,29 +2,28 @@ import os
 import sys
 import django
 
-# Получаем абсолютный путь к корню репозитория (на один уровень выше папки docs)
+# 1. Получаем абсолютный путь к корню репозитория
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, BASE_DIR)
 
-# Автоматически ищем папку, внутри которой лежит settings.py
+# 2. ИСПРАВЛЕНИЕ: Меняем рабочую директорию процесса на корень,
+# чтобы сработал `with open('main/config.json')`
+os.chdir(BASE_DIR)
+
+# 3. Автоматически ищем папку, внутри которой лежит settings.py
 settings_module_name = None
 for item in os.listdir(BASE_DIR):
     item_path = os.path.join(BASE_DIR, item)
-    # Если это папка и внутри неё есть settings.py
     if os.path.isdir(item_path) and os.path.exists(os.path.join(item_path, "settings.py")):
         settings_module_name = f"{item}.settings"
         break
 
-# Если вдруг автоматом не нашли, ставим дефолтный 'main.settings' или 'config.settings'
 if not settings_module_name:
     settings_module_name = "main.settings"
 
-# Передаем правильное имя модуля в Django
+# 4. Передаем настройки и стартуем
 os.environ["DJANGO_SETTINGS_MODULE"] = settings_module_name
-
-# Запускаем Django
 django.setup()
-
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
