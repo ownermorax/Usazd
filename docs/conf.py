@@ -7,14 +7,21 @@ import os
 import sys
 import django
 
+# Получаем абсолютный путь к папке docs/
+DOCS_DIR = os.path.dirname(os.path.abspath(__file__))
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.insert(0, BASE_DIR)
+# Получаем абсолютный путь к корню проекта (на один уровень выше docs/)
+BASE_DIR = os.path.dirname(DOCS_DIR)
 
+# Принудительно добавляем корень проекта в самое начало путей поиска Python
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
+# Задаем переменную окружения для настроек Django
 os.environ["DJANGO_SETTINGS_MODULE"] = "usazd.settings"
 
+# Инициализируем Django
 django.setup()
-
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
