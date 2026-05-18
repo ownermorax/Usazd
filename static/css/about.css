@@ -1,0 +1,465 @@
+/* ========== СТИЛИ ДЛЯ СТРАНИЦЫ "О НАС" (ABOUT) ========== */
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Header */
+.about-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    padding: 8px 20px;
+    border-radius: 40px;
+    margin-bottom: 20px;
+}
+
+.badge-icon {
+    font-size: 20px;
+}
+
+.badge-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d6a4f;
+    letter-spacing: 1px;
+}
+
+.about-header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: #1e293b;
+}
+
+.about-header h1 .highlight {
+    background: linear-gradient(135deg, #2d6a4f, #1b4d3e);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.about-subtitle {
+    font-size: 1.2rem;
+    color: #475569;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* Статистика */
+.stats-showcase {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 60px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8fafc, #ffffff);
+    border-radius: 60px;
+    border: 1px solid rgba(45, 106, 79, 0.15);
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px 25px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #2d6a4f;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Карточки */
+.about-card {
+    background: white;
+    border-radius: 32px;
+    padding: 35px;
+    margin-bottom: 35px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(45, 106, 79, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.about-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.12);
+    border-color: rgba(45, 106, 79, 0.2);
+}
+
+.card-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.card-badge {
+    display: inline-block;
+    background: #f0fdf4;
+    color: #2d6a4f;
+    padding: 5px 15px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.card-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+.card-text {
+    color: #475569;
+    line-height: 1.7;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.card-text strong {
+    color: #2d6a4f;
+}
+
+/* Возрастные бейджи */
+.age-badge-container {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.age-badge {
+    background: #e2e8f0;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+/* Технологии */
+.tech-list {
+    margin-top: 25px;
+}
+
+.tech-item {
+    display: flex;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tech-item:last-child {
+    border-bottom: none;
+}
+
+.tech-icon {
+    font-size: 32px;
+    min-width: 50px;
+}
+
+.tech-content {
+    flex: 1;
+}
+
+.tech-title {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.tech-description {
+    color: #64748b;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.example-query {
+    background: #f1f5f9;
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-block;
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #2d6a4f;
+    margin-top: 5px;
+}
+
+/* Миссия */
+.mission-card {
+    background: linear-gradient(135deg, #f0fdf4, #ffffff);
+}
+
+.mission-block {
+    background: white;
+    padding: 25px;
+    border-radius: 24px;
+    margin: 20px 0;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #2d6a4f;
+}
+
+.mission-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #1e293b;
+    margin: 0;
+}
+
+.mission-quote {
+    text-align: center;
+    padding: 25px;
+    background: #f8fafc;
+    border-radius: 24px;
+    margin-top: 20px;
+    position: relative;
+}
+
+.quote-mark {
+    font-size: 60px;
+    color: #2d6a4f;
+    opacity: 0.3;
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    font-family: Georgia, serif;
+}
+
+.mission-quote p {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #1e293b;
+    margin: 0 0 10px 0;
+}
+
+.quote-author {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Преимущества */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.feature {
+    text-align: center;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 24px;
+    transition: all 0.3s ease;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+    background: #f0fdf4;
+}
+
+.feature-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.feature-title {
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.feature-desc {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+/* Команда */
+.team-card {
+    background: linear-gradient(135deg, #1e293b, #2d6a4f);
+    color: white;
+}
+
+.team-card .card-badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.team-card .card-title {
+    color: white;
+}
+
+.team-card .card-text {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.team-values {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+.team-values span {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 18px;
+    border-radius: 40px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Призыв к действию */
+.cta-section {
+    background: linear-gradient(135deg, #2d6a4f, #1b4d3e);
+    border-radius: 48px;
+    padding: 50px 40px;
+    margin-top: 40px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.cta-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.cta-content p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 30px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-btn {
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.cta-primary {
+    background: white;
+    color: #2d6a4f;
+}
+
+.cta-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.cta-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.cta-secondary:hover {
+    background: white;
+    color: #2d6a4f;
+    transform: translateY(-3px);
+}
+
+/* Адаптивность для страницы "О нас" */
+@media (max-width: 768px) {
+    .about-container {
+        padding: 20px 15px;
+    }
+
+    .about-header h1 {
+        font-size: 2rem;
+    }
+
+    .about-subtitle {
+        font-size: 1rem;
+    }
+
+    .stats-showcase {
+        gap: 15px;
+        border-radius: 30px;
+    }
+
+    .stat-item {
+        padding: 10px 15px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .about-card {
+        padding: 25px;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+    }
+
+    .tech-item {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .tech-icon {
+        min-width: auto;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .cta-section {
+        padding: 35px 25px;
+    }
+
+    .cta-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cta-btn {
+        width: 100%;
+        max-width: 250px;
+        text-align: center;
+    }
+}
+

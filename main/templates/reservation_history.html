@@ -2,184 +2,172 @@
 
 {% block content %}
 
-<div class="history-container">
-    <div class="history-header">
+<div class="reservations-container">
+    <div class="reservations-header">
         <h1>История бронирований</h1>
         <p class="subtitle">Список завершенных и прошлых поездок</p>
     </div>
 
     {% if reservations %}
-    <div class="history-stats">
-        <div class="history-stat-card">
-            <div class="history-stat-number">{{ reservations|length }}</div>
-            <div class="history-stat-label">Всего поездок</div>
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="stat-number">{{ reservations|length }}</div>
+            <div class="stat-label">Всего поездок</div>
         </div>
-        <div class="history-stat-card">
-            <div class="history-stat-number">
-                {% with completed=0 %}
-                    {% for r in reservations %}
-                        {% if r.status == 'completed' %}
-                            {% widthratio 1 1 1 as completed %}
-                        {% endif %}
-                    {% endfor %}
-                {% endwith %}
-                {{ reservations|length }}
-            </div>
-            <div class="history-stat-label">Завершено</div>
+        <div class="stat-card">
+            <div class="stat-number" id="completed-count">{{ reservations|length }}</div>
+            <div class="stat-label">Завершено</div>
         </div>
     </div>
 
-    <div class="history-filters">
-        <button class="filter-btn active" onclick="filterHistory('all')">Все</button>
-        <button class="filter-btn" onclick="filterHistory('completed')">Завершены</button>
-        <button class="filter-btn" onclick="filterHistory('cancelled')">Отменены</button>
+    <div class="history-filters" role="group" aria-label="Фильтр по статусу">
+        <button type="button" class="filter-btn btn-primary" data-filter="all" onclick="filterHistory('all', this)">Все</button>
+        <button type="button" class="filter-btn btn-secondary" data-filter="completed" onclick="filterHistory('completed', this)">Завершены</button>
+        <button type="button" class="filter-btn btn-secondary" data-filter="cancelled" onclick="filterHistory('cancelled', this)">Отменены</button>
     </div>
 
+    <div class="history-spacer" aria-hidden="true"></div>
+
+    <div class="history-cards">
     {% for reservation in reservations %}
-    <div class="history-card" data-status="{{ reservation.status }}">
-        <div class="history-card-header">
+    <div class="reservation-card history-card" data-status="{{ reservation.status }}">
+        <div class="card-header">
             <div>
                 <h3>Бронирование</h3>
-                <div class="history-reservation-id">№{{ reservation.reservation_id }}</div>
+                <div class="reservation-id">№{{ reservation.reservation_id }}</div>
             </div>
-            <span class="history-status-badge
+            <span class="status-badge
                 {% if reservation.status == 'completed' %}status-completed
                 {% elif reservation.status == 'cancelled' %}status-cancelled
                 {% else %}status-expired{% endif %}">
-                {{ reservation.status }}
+                {% if reservation.status == 'cancelled' %}Отменено
+                {% elif reservation.status == 'completed' %}Завершено
+                {% else %}{{ reservation.status }}{% endif %}
             </span>
         </div>
 
-        <div class="history-card-body">
-            <div class="history-info-grid">
-                <div class="history-info-item">
-                    <div class="history-info-icon">🚂</div>
-                    <div class="history-info-content">
-                        <div class="history-info-label">Номер поезда</div>
-                        <div class="history-info-value train-number">{{ reservation.train.train_id }}</div>
+        <div class="card-body">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-icon">🚂</div>
+                    <div class="info-content">
+                        <div class="info-label">Номер поезда</div>
+                        <div class="info-value train-number">{{ reservation.train.train_id }}</div>
                     </div>
                 </div>
 
-                <div class="history-info-item">
-                    <div class="history-info-icon">📅</div>
-                    <div class="history-info-content">
-                        <div class="history-info-label">Дата бронирования</div>
-                        <div class="history-info-value">{{ reservation.reservation_date|date:"d.m.Y H:i" }}</div>
+                <div class="info-item">
+                    <div class="info-icon">📅</div>
+                    <div class="info-content">
+                        <div class="info-label">Дата бронирования</div>
+                        <div class="info-value">{{ reservation.reservation_date|date:"d.m.Y H:i" }}</div>
                     </div>
                 </div>
 
-                <div class="history-info-item">
-                    <div class="history-info-icon">📍</div>
-                    <div class="history-info-content">
-                        <div class="history-info-label">Станция отправления</div>
-                        <div class="history-info-value">{{ reservation.station_in.name }}</div>
+                <div class="info-item">
+                    <div class="info-icon">📍</div>
+                    <div class="info-content">
+                        <div class="info-label">Станция отправления</div>
+                        <div class="info-value">{{ reservation.station_in.name }}</div>
                     </div>
                 </div>
 
-                <div class="history-info-item">
-                    <div class="history-info-icon">🎯</div>
-                    <div class="history-info-content">
-                        <div class="history-info-label">Станция назначения</div>
-                        <div class="history-info-value">{{ reservation.station_out.name }}</div>
+                <div class="info-item">
+                    <div class="info-icon">🎯</div>
+                    <div class="info-content">
+                        <div class="info-label">Станция назначения</div>
+                        <div class="info-value">{{ reservation.station_out.name }}</div>
                     </div>
                 </div>
 
-                <div class="history-info-item">
-                    <div class="history-info-icon">💺</div>
-                    <div class="history-info-content">
-                        <div class="history-info-label">Номера мест</div>
-                        <div class="history-info-value places">{{ reservation.place_num }}</div>
+                <div class="info-item">
+                    <div class="info-icon">💺</div>
+                    <div class="info-content">
+                        <div class="info-label">Номера мест</div>
+                        <div class="info-value places">{{ reservation.place_num }}</div>
                     </div>
                 </div>
 
-                <div class="history-info-item">
-                    <div class="history-info-icon">🕐</div>
-                    <div class="history-info-content">
-                        <div class="history-info-label">Дата отправления</div>
-                        <div class="history-info-value">{{ reservation.train.station_at_time|date:"d.m.Y H:i" }}</div>
+                <div class="info-item">
+                    <div class="info-icon">🕐</div>
+                    <div class="info-content">
+                        <div class="info-label">Дата отправления</div>
+                        <div class="info-value">{{ reservation.train.station_at_time|date:"d.m.Y H:i" }}</div>
                     </div>
                 </div>
             </div>
 
-            <div class="history-departure-info">
-                <div class="history-info-label">Время отправления</div>
-                <div class="history-info-value">{{ reservation.train.station_at_time|date:"H:i" }}</div>
+            <div class="departure-time">
+                <div class="info-label">Время отправления</div>
+                <div class="info-value">{{ reservation.train.station_at_time|date:"H:i" }}</div>
             </div>
         </div>
 
-        <div class="history-card-footer">
-            <div class="history-completed-badge">
-                ✓ Поездка завершена
-            </div>
+        <div class="card-footer">
+            {% if reservation.status == 'completed' %}
+            <div class="history-completed-badge is-completed">✓ Поездка завершена</div>
+            {% elif reservation.status == 'cancelled' %}
+            <div class="history-completed-badge is-cancelled">✕ Бронирование отменено</div>
+            {% endif %}
         </div>
     </div>
     {% endfor %}
+    </div>
 
     {% else %}
-    <div class="history-empty-state">
-        <div class="history-empty-icon">📭</div>
+    <div class="empty-state history-empty-state">
+        <div class="empty-icon">📭</div>
         <p>У вас пока нет завершенных бронирований</p>
         <div class="hint">Забронируйте поезд, чтобы увидеть историю здесь</div>
+        <a href="/" class="btn-primary">Забронировать поезд</a>
     </div>
     {% endif %}
 
-    <!-- Кнопка возврата в профиль -->
-    <div class="history-back-wrapper">
-        <a href="{% url 'profile' user.username %}" class="history-back-button">
+    <div class="history-actions">
+        <a href="{% url 'profile' user.username %}" class="back-button">
             ← Вернуться в профиль
+        </a>
+        <a href="{% url 'active_reservations' %}" class="btn-secondary">
+            Активные брони →
         </a>
     </div>
 </div>
 
 <script>
-function filterHistory(status) {
+(function () {
+    const cards = document.querySelectorAll('.history-card[data-status="completed"]');
+    const counter = document.getElementById('completed-count');
+    if (counter) {
+        counter.textContent = cards.length;
+    }
+})();
+
+function filterHistory(status, button) {
     const cards = document.querySelectorAll('.history-card');
     const buttons = document.querySelectorAll('.filter-btn');
 
-    buttons.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    buttons.forEach(btn => {
+        btn.classList.remove('btn-primary', 'btn-secondary');
+        btn.classList.add('btn-secondary');
+    });
+    button.classList.remove('btn-secondary');
+    button.classList.add('btn-primary');
 
     cards.forEach(card => {
-        if (status === 'all') {
-            card.style.display = 'block';
+        if (status === 'all' || card.dataset.status === status) {
+            card.style.display = '';
         } else {
-            if (card.dataset.status === status) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
+            card.style.display = 'none';
         }
     });
 }
 </script>
 
-<h1>История броней</h1>
-<div style="margin-top: 20px;">
-    {% if reservations %}
-        {% for reservation in reservations %}
-            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: #f9f9f9;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="margin: 0; color: #006241;">Бронь #{{ reservation.reservation_id }}</h3>
-                    <span style="background: {% if reservation.status == 'cancelled' %}#dc3545{% else %}#6c757d{% endif %}; color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px;">
-                        {% if reservation.status == 'cancelled' %}Отменено{% elif reservation.status == 'completed' %}Завершено{% else %}{{ reservation.status }}{% endif %}
-                    </span>
-                </div>
-
-                <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                    <div><strong>🚂 Поезд:</strong> {{ reservation.train.train_id }}</div>
-                    <div><strong>📅 Дата бронирования:</strong> {{ reservation.reservation_date|date:"d.m.Y H:i" }}</div>
-                    <div><strong>📍 Отправление:</strong> {{ reservation.station_in.name }}</div>
-                    <div><strong>🎯 Назначение:</strong> {{ reservation.station_out.name }}</div>
-                    <div><strong>💺 Место:</strong> {{ reservation.place_num }}</div>
-                    <div><strong>🕒 Время отправления:</strong> {{ reservation.train.station_at_time|date:"d.m.Y H:i" }}</div>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p style="color: #999; text-align: center; padding: 40px;">
-            У вас пока нет завершённых или отменённых бронирований
-        </p>
-    {% endif %}
-</div>
+<style>
+    .reservations-container .reservation-card.history-card,
+    .reservations-container .reservation-card.history-card:hover {
+        transform: none !important;
+    }
+</style>
 
 {% endblock %}
