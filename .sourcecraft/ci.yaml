@@ -34,20 +34,21 @@ workflows:
             script:
               - cd "$SOURCECRAFT_WORKSPACE"
               - python -m pip install --upgrade pip --root-user-action=ignore
-              - python -m pip install pytest coverage pytest-cov pytest-django django --root-user-action=ignore
+              - python -m pip install -r requirements.txt --root-user-action=ignore
+              - python -m pip install pytest pytest-cov --root-user-action=ignore
               - pytest -v
+              - coverage report -m
             artifacts:
               paths:
                 - htmlcov/
-                - .coverage
 
           - name: coverage-report
             image: docker.io/library/python:3.13.3-alpine3.20
             needs: [ pytest-with-coverage ]
             script:
               - cd "$SOURCECRAFT_WORKSPACE"
-              - python -m pip install --upgrade pip --root-user-action=ignore
-              - python -m pip install coverage --root-user-action=ignore
+              - python -m pip install --upgrade pip
+              - python -m pip install coverage
               - coverage report -m
             artifacts:
               paths:
