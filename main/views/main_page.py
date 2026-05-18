@@ -10,4 +10,4 @@ def main(request):
     :returns: HttpResponse с шаблоном index.html
     """
     logger.info("Пользователь зашел на главную страницу.")
-    return render(request, 'main.html')
+    return render(request, "main.html")

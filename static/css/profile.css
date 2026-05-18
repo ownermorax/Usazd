@@ -1,0 +1,516 @@
+/* ========== ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ ========== */
+.profile-container,
+.info-container,
+.edit-container,
+.reservations-container,
+.train-search-container,
+.train-map-container {
+    animation: fadeIn 0.5s ease-out;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.profile-header,
+.info-header,
+.edit-header,
+.reservations-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.profile-header h1,
+.info-header h1,
+.edit-header h1,
+.reservations-header h1,
+.train-search-container h2,
+.train-map-container h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e293b, #2d6a4f);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 10px;
+}
+
+.profile-header .subtitle,
+.info-header .subtitle,
+.edit-header .subtitle,
+.reservations-header .subtitle {
+    color: #475569;
+    font-size: 1.1rem;
+}
+
+/* Аватар */
+.avatar-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.avatar-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.avatar-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #2d6a4f;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.avatar-image:hover {
+    transform: scale(1.05);
+    border-color: #1b4d3e;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.avatar-placeholder {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.avatar-placeholder:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.avatar-placeholder span {
+    font-size: 60px;
+    color: white;
+}
+
+/* Карточки информации */
+.info-card,
+.info-details-card,
+.edit-form-card,
+.reservation-card,
+.train-card,
+.search-form {
+    background: white;
+    border-radius: 28px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(45, 106, 79, 0.1);
+}
+
+.info-card:hover,
+.info-details-card:hover,
+.edit-form-card:hover,
+.reservation-card:hover:not(.history-card),
+.train-card:hover,
+.search-form:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.12);
+    border-color: rgba(45, 106, 79, 0.2);
+}
+
+.info-row {
+    display: flex;
+    padding: 15px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    width: 140px;
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    flex: 1;
+    color: #475569;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.info-value.username,
+.field-value.email,
+.field-value.username {
+    font-family: 'Courier New', monospace;
+    background: #f0fdf4;
+    padding: 5px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    font-size: 14px;
+    color: #2d6a4f;
+    border: 1px solid #bbf7d0;
+}
+
+.description,
+.field-value.description {
+    background: #f0fdf4;
+    padding: 15px;
+    border-radius: 16px;
+    margin-top: 5px;
+    line-height: 1.6;
+    color: #1e293b;
+    border-left: 3px solid #2d6a4f;
+}
+
+.empty-description,
+.field-value.empty {
+    color: #94a3b8;
+    font-style: italic;
+    padding: 10px 0;
+}
+
+/* Навигационные карточки */
+.navigation-grid,
+.action-buttons {
+    margin-top: 40px;
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.nav-card,
+.action-card {
+    text-align: center;
+    padding: 20px 30px;
+    background: white;
+    border-radius: 28px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    flex: 1;
+    min-width: 120px;
+    max-width: 160px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(45, 106, 79, 0.1);
+}
+
+.nav-card:hover,
+.action-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.14);
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+}
+
+.nav-card:hover .nav-label,
+.action-card:hover .action-label,
+.nav-card:hover .nav-subtitle,
+.action-card:hover .action-subtitle {
+    color: white;
+}
+
+.nav-icon,
+.action-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 12px;
+    transition: transform 0.3s ease;
+}
+
+.nav-card:hover .nav-icon,
+.action-card:hover .action-icon {
+    transform: scale(1.1);
+}
+
+.nav-label,
+.action-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-subtitle,
+.action-subtitle {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 5px;
+}
+
+/* Кнопки */
+button.btn-primary,
+button.btn-secondary,
+button.back-button {
+    font-family: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.edit-profile-btn,
+.btn-save,
+.btn-primary,
+.booking-link,
+.banner-btn {
+    display: inline-block;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 44px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.edit-profile-btn:hover,
+.btn-save:hover,
+.btn-primary:hover,
+.booking-link:hover,
+.banner-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
+    background: linear-gradient(135deg, #1b4d3e 0%, #143d31 100%);
+}
+
+.back-button,
+.btn-secondary,
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: white;
+    color: #2d6a4f;
+    text-decoration: none;
+    border-radius: 44px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: 2px solid #2d6a4f;
+}
+
+.back-button:hover,
+.btn-secondary:hover,
+.btn-cancel:hover {
+    background: #2d6a4f;
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 5px 15px rgba(45, 106, 79, 0.3);
+}
+
+.back-wrapper,
+.button-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Кнопка отмены бронирования */
+.btn-cancel-reservation {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-cancel-reservation:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.35);
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+}
+
+.btn-cancel-reservation:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+}
+
+.btn-cancel-reservation::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-cancel-reservation:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Формы */
+.form-field {
+    margin-bottom: 28px;
+}
+
+.form-field label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-field label .label-icon {
+    font-size: 20px;
+}
+
+.form-field input[type="text"],
+.form-field input[type="email"],
+.form-field input[type="password"],
+.form-field textarea,
+.form-field select,
+.form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    box-sizing: border-box;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus,
+.form-group input:focus {
+    outline: none;
+    border-color: #2d6a4f;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
+}
+
+.form-field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-buttons,
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.btn-save,
+.btn-primary {
+    flex: 1;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Статистика */
+.stats-bar {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #2d6a4f 0%, #1b4d3e 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    min-width: 150px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.stat-number {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.stat-label {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Сетка информации в карточках бронирований */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.info-icon {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.info-content .info-label {
+    width: auto;
+    font-size: 11px;
+    color: #64748b;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-content .info-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.departure-time {
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: #f0fdf4;
+    border-radius: 16px;
+    border-left: 3px solid #2d6a4f;
+}
+
+.departure-time .info-label {
+    width: auto;
+    margin-bottom: 4px;
+}
+
+.departure-time .info-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2d6a4f;
+}

@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from main.models import Reservation
 from main.utils import logger
 
+
 @login_required
 def cancel_reservation(request, reservation_id):
     """
@@ -15,8 +16,8 @@ def cancel_reservation(request, reservation_id):
     :return: перенаправление на страницу активных броней
     """
     reservation = get_object_or_404(Reservation, reservation_id=reservation_id, user=request.user)
-    if reservation.status == 'active':
-        reservation.status = 'cancelled'
+    if reservation.status == "active":
+        reservation.status = "cancelled"
         reservation.save()
         logger.info(f"Пользователь {request.user.username} отменил бронь #{reservation_id}")
-    return redirect('active_reservations')
+    return redirect("active_reservations")

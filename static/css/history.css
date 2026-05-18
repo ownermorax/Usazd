@@ -1,0 +1,115 @@
+/* ========== ИСТОРИЯ БРОНИРОВАНИЙ ========== */
+
+.history-filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 28px;
+    width: 100%;
+    margin: 0;
+    padding: 12px 0 20px;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    background: #ffffff;
+}
+
+.history-filters .filter-btn {
+    font-family: inherit;
+}
+
+.history-filters .filter-btn:hover,
+.history-filters .filter-btn.btn-primary:hover,
+.history-filters .filter-btn.btn-secondary:hover {
+    transform: none !important;
+}
+
+.history-filters .filter-btn.btn-primary:hover {
+    box-shadow: 0 10px 25px rgba(45, 106, 79, 0.3);
+}
+
+.history-filters .filter-btn.btn-secondary:hover {
+    box-shadow: 0 5px 15px rgba(45, 106, 79, 0.25);
+}
+
+.history-spacer {
+    display: block;
+    height: 72px;
+    pointer-events: none;
+}
+
+.history-cards {
+    position: relative;
+    z-index: 1;
+}
+
+.reservations-container .reservation-card.history-card {
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.reservations-container .reservation-card.history-card:hover {
+    transform: none !important;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.1);
+    border-color: rgba(45, 106, 79, 0.2);
+}
+
+.history-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 40px;
+    padding-top: 8px;
+}
+
+.history-empty-state .hint {
+    color: #94a3b8;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.history-empty-state .btn-primary {
+    margin-top: 24px;
+}
+
+.history-actions .btn-secondary:hover {
+    transform: translateX(5px);
+}
+
+.history-card .card-footer {
+    justify-content: flex-start;
+}
+
+.history-completed-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.history-completed-badge.is-completed {
+    background: #e2e8f0;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+.history-completed-badge.is-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+@media (max-width: 576px) {
+    .history-filters {
+        gap: 20px;
+    }
+
+    .history-spacer {
+        height: 56px;
+    }
+}

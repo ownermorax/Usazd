@@ -1,6 +1,7 @@
 import datetime
 from .models import Profile
 
+
 class Vip:
     """Класс для управления VIP статусами пользователей.
 
