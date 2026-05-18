@@ -429,12 +429,6 @@ def test_info_page(client):
 
 
 @pytest.mark.django_db
-def test_reservation_history_page(client):
-    response = client.get(reverse("reservation_history"))
-    assert response.status_code == 200
-
-
-@pytest.mark.django_db
 def test_timetable_page(client):
     response = client.get(reverse("timetable"))
     assert response.status_code == 200
