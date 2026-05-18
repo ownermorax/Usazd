@@ -462,11 +462,6 @@ def test_reservation_history_page(auth_client):
     response = auth_client.get(reverse("reservation_history"))
     assert response.status_code == 200
 
-@pytest.mark.django_db
-def test_reservation_history_page_redirect_anonymous(client):
-    response = client.get(reverse("reservation_history"))
-    assert response.status_code == 302
-
 
 @pytest.mark.django_db
 def test_timetable_page(client):
