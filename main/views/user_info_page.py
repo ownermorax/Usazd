@@ -16,4 +16,4 @@ def user_info(request):
     """
     logger.info(f"Пользователь #{request.user.id} зашел на страницу с личной информацией.")
     profile, _ = Profile.objects.get_or_create(user=request.user)
-    return render(request, 'user_info.html', {'profile': profile})
+    return render(request, "user_info.html", {"profile": profile})

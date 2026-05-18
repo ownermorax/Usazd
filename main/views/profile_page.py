@@ -23,8 +23,5 @@ def profile(request, username):
     profile, created = Profile.objects.get_or_create(user=user)
     if created:
         logger.info(f"Создан новый профиль для пользователя {user.username}.")
-    context = {
-        "user": user,
-        "profile": profile
-    }
+    context = {"user": user, "profile": profile}
     return render(request, "profile.html", context)

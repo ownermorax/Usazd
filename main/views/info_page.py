@@ -12,4 +12,4 @@ def info(request):
     :rtype: HttpResponse
     """
     logger.info("Пользователь зашел на информационную страницу.")
-    return render(request, 'info.html')
+    return render(request, "info.html")

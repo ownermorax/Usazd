@@ -12,4 +12,4 @@ def update_balance(request):
     :rtype: HttpResponse
     """
     logger.info("Пользователь зашел на страницу пополнения баланса.")
-    return render(request, 'balance.html')
+    return render(request, "balance.html")

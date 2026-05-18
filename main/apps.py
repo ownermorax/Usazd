@@ -4,30 +4,35 @@ import threading
 import sys
 import os
 
+
 class MainConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'main'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "main"
     print(f"станций: {len(yandex_api.stations_id)}")
 
     def ready(self):
-        if 'migrate' in sys.argv or 'makemigrations' in sys.argv:
+        if "migrate" in sys.argv or "makemigrations" in sys.argv:
             return
-        if 'shell' in sys.argv:
+        if "shell" in sys.argv:
             return
-        if os.environ.get('RUN_MAIN') != 'true':
+        if os.environ.get("RUN_MAIN") != "true":
             return
 
         def run_usdt_parser():
             import time
+
             time.sleep(2)
             from main.parser import parser
-            parser.start_parser('usdt')
+
+            parser.start_parser("usdt")
 
         def run_premium_parser():
             import time
+
             time.sleep(2)
             from main.parser import parser
-            parser.start_parser('vip')
+
+            parser.start_parser("vip")
 
         thread_usdt = threading.Thread(target=run_usdt_parser, daemon=True)
         thread_usdt.start()

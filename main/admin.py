@@ -11,9 +11,11 @@ from djmoney.models.fields import MoneyField
 class UnfoldUserAdmin(BaseUserAdmin, ModelAdmin):
     pass
 
+
 @admin.register(Reservation)
 class ReservationAdmin(ModelAdmin):
-    actions_detail = ['cancel_reservation']
+    actions_detail = ["cancel_reservation"]
+
     @action(description="Отменить", attrs={"class": "bg-red-600 text-white"})
     def cancel_reservation(self, request, obj):
         obj.status = "cancelled"
@@ -24,20 +26,23 @@ class ReservationAdmin(ModelAdmin):
 class ProfileInline(StackedInline):
     model = Profile
     can_delete = False
-    fk_name = 'user'
+    fk_name = "user"
     formfield_overrides = {
-        MoneyField: {'widget': UnfoldAdminMoneyWidget},
+        MoneyField: {"widget": UnfoldAdminMoneyWidget},
     }
-    fields = ('name', 'balance')
+    fields = ("name", "balance")
 
 
 class ReservationInline(StackedInline):
     model = Reservation
     extra = 0
-    readonly_fields = ('station_in', 'station_out', 'reservation_date', 'place_num', 'train', 'user', 'reservation_id')
+    readonly_fields = ("station_in", "station_out", "reservation_date", "place_num", "train", "user", "reservation_id")
     can_delete = True
 
 
-UnfoldUserAdmin.inlines = (ProfileInline, ReservationInline,)
+UnfoldUserAdmin.inlines = (
+    ProfileInline,
+    ReservationInline,
+)
 admin.site.unregister(User)
 admin.site.register(User, UnfoldUserAdmin)

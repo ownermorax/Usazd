@@ -1,6 +1,7 @@
 import datetime
 from .models import Profile
 
+
 class Vip:
     def __init__(self):
         pass

@@ -1,29 +1,88 @@
-<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-    <div class="col-md-4 d-flex align-items-center">
-        <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1" aria-label="Bootstrap">
-            <svg class="bi" width="30" height="24" aria-hidden="true">
-                <use xlink:href="#bootstrap">
+<style>
+.crazy-neon-footer {
+    background: linear-gradient(45deg, #ff00ff, #00ffff, #00ff00, #ffff00, #ff0000, #ff00ff);
+    background-size: 400% 400%;
+    animation: rainbowBackground 1.5s linear infinite !important;
+    border-top: 10px dashed #00ff00 !important;
+    box-shadow: 0 0 50px #ff00ff, inset 0 0 30px #00ffff;
+    padding: 25px !important;
+    overflow: hidden;
+}
 
-            </use>
+.crazy-text {
+    font-family: "Impact", "Arial Black", sans-serif !important;
+    font-size: 1.8rem !important;
+    font-weight: bold !important;
+    color: #fff !important;
+    text-shadow: 0 0 10px #00ff00, 0 0 20px #ff0000, 0 0 30px #ffff00;
+    animation: blinkText 0.3s ease-in-out infinite alternate;
+    display: inline-block;
+}
+
+.crazy-logo svg {
+    fill: #ffff00 !important;
+    filter: drop-shadow(0 0 15px #00ffff) drop-shadow(0 0 30px #ff00ff);
+    animation: spin 0.8s linear infinite;
+}
+
+.crazy-icon svg {
+    filter: drop-shadow(0 0 20px #ff00ff) drop-shadow(0 0 40px #00ffff);
+    animation: spinReverse 0.5s infinite linear, changeColor 0.8s infinite linear;
+}
+
+
+@keyframes rainbowBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes blinkText {
+    0% { opacity: 0.3; transform: scale(0.9) skewX(-15deg); color: #ff00ff; }
+    100% { opacity: 1; transform: scale(1.2) skewX(15deg); color: #ffff00; }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes spinReverse {
+    0% { transform: rotate(360deg) scale(0.8); }
+    50% { transform: rotate(180deg) scale(1.6); }
+    100% { transform: rotate(0deg) scale(0.8); }
+}
+
+@keyframes changeColor {
+    0% { fill: #00ffff; }
+    25% { fill: #ff00ff; }
+    50% { fill: #ffff00; }
+    75% { fill: #00ff00; }
+    100% { fill: #ff0000; }
+}
+</style>
+
+<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top crazy-neon-footer">
+    <div class="col-md-4 d-flex align-items-center">
+        <a href="/" class="mb-3 me-2 mb-md-0 text-decoration-none lh-1 crazy-logo" aria-label="Bootstrap">
+            <svg class="bi" width="30" height="24" aria-hidden="true">
+                <use xlink:href="#bootstrap"></use>
             </svg>
         </a>
-        <span class="mb-3 mb-md-0 text-body-secondary">©since 2009 Dmitriy, ZXC</span>
+        <span class="mb-3 mb-md-0 crazy-text">©since 2009 Dmitriy, ZXC</span>
     </div>
     <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-        <li class="ms-3"><a class="text-body-secondary" href="#" aria-label="Instagram">
-            <svg class="bi" width="24" height="24" aria-hidden="true">
-                <use xlink:href="#telegram">
-
-            </use>
-            </svg>
-        </a>
+        <li class="ms-3">
+            <a class="crazy-icon" href="#" aria-label="Instagram">
+                <svg class="bi" width="24" height="24" aria-hidden="true">
+                    <use xlink:href="#telegram"></use>
+                </svg>
+            </a>
         </li>
         <li class="ms-3">
-            <a class="text-body-secondary" href="#" aria-label="Facebook">
+            <a class="crazy-icon" href="#" aria-label="Facebook">
                 <svg class="bi" width="24" height="24">
-                    <use xlink:href="#facebook">
-
-                    </use>
+                    <use xlink:href="#facebook"></use>
                 </svg>
             </a>
         </li>

@@ -7,13 +7,8 @@ def active_reservations(request):  # TODO: переделать docstring ком
     """Отображение активных бронирований пользователя"""
     logger.info("Пользователь зашел на страницу с активными бронированиями.")
     if not request.user.is_authenticated:
-        return redirect('auth')
+        return redirect("auth")
 
-    reservations = Reservation.objects.filter(
-        user=request.user,
-        status='active'
-    ).order_by('-reservation_date')
+    reservations = Reservation.objects.filter(user=request.user, status="active").order_by("-reservation_date")
     logger.debug(f"Найдено бронирований: {reservations.count()} для пользователя #{request.user.id}.")
-    return render(request, 'active_reservations.html', {
-        'reservations': reservations
-    })
+    return render(request, "active_reservations.html", {"reservations": reservations})

@@ -10,4 +10,4 @@ def timetable(request):
     :returns: HttpResponse с шаблоном timetable.html
     """
     logger.info("Пользователь зашел на страницу с расписанием.")
-    return render(request, 'timetable.html')
+    return render(request, "timetable.html")

@@ -3,7 +3,6 @@ from main.utils import logger
 from main.models import Reservation
 
 
-
 def reservation_history(request):
     """
     Страница с историей броней пользователя.
@@ -15,6 +14,8 @@ def reservation_history(request):
     :returns: HTTP ответ с шаблоном reservation_history.html
     :rtype: HttpResponse
     """
-    reservations = Reservation.objects.filter(user=request.user, status__in=['cancelled', 'completed']).select_related('train', 'station_in', 'station_out')
+    reservations = Reservation.objects.filter(user=request.user, status__in=["cancelled", "completed"]).select_related(
+        "train", "station_in", "station_out"
+    )
     logger.info("Пользователь зашел на страницу с историей брони.")
-    return render(request, 'reservation_history.html', {'reservations': reservations})
+    return render(request, "reservation_history.html", {"reservations": reservations})
