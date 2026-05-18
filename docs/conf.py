@@ -1,27 +1,30 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
-
 import os
 import sys
 import django
 
-# Получаем абсолютный путь к папке docs/
-DOCS_DIR = os.path.dirname(os.path.abspath(__file__))
+# Получаем абсолютный путь к корню репозитория (на один уровень выше папки docs)
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, BASE_DIR)
 
-# Получаем абсолютный путь к корню проекта (на один уровень выше docs/)
-BASE_DIR = os.path.dirname(DOCS_DIR)
+# Автоматически ищем папку, внутри которой лежит settings.py
+settings_module_name = None
+for item in os.listdir(BASE_DIR):
+    item_path = os.path.join(BASE_DIR, item)
+    # Если это папка и внутри неё есть settings.py
+    if os.path.isdir(item_path) and os.path.exists(os.path.join(item_path, "settings.py")):
+        settings_module_name = f"{item}.settings"
+        break
 
-# Принудительно добавляем корень проекта в самое начало путей поиска Python
-if BASE_DIR not in sys.path:
-    sys.path.insert(0, BASE_DIR)
+# Если вдруг автоматом не нашли, ставим дефолтный 'main.settings' или 'config.settings'
+if not settings_module_name:
+    settings_module_name = "main.settings"
 
-# Задаем переменную окружения для настроек Django
-os.environ["DJANGO_SETTINGS_MODULE"] = "usazd.settings"
+# Передаем правильное имя модуля в Django
+os.environ["DJANGO_SETTINGS_MODULE"] = settings_module_name
 
-# Инициализируем Django
+# Запускаем Django
 django.setup()
+
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
