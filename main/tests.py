@@ -430,6 +430,11 @@ def test_info_page(client):
 
 @pytest.mark.django_db
 def test_reservation_history_page(client):
+    user = django_user_model.objects.create_user(
+        username="testuser",
+        password="testpass123"
+    )
+    client.force_login(user)
     response = client.get(reverse("reservation_history"))
     assert response.status_code == 200
 
