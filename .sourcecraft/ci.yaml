@@ -19,14 +19,17 @@ workflows:
             image: docker.io/library/python:3.13.3-alpine3.20
             script:
               - cd "$SOURCECRAFT_WORKSPACE"
-              - python -m pip install --upgrade pip --root-user-action=ignore
-              - python -m pip install sphinx django --root-user-action=ignore
               - apk add --no-cache make
+              - python -m pip install --upgrade pip --root-user-action=ignore
+              - python -m pip install -r requirements.txt --root-user-action=ignore
+              - python -m pip install sphinx sphinx-rtd-theme --root-user-action=ignore
+              - export DJANGO_SETTINGS_MODULE=usazd.settings
               - cd docs
               - sphinx-build -M html . _build -v
             artifacts:
-                paths:
-                  - docs/build/html/
+              paths:
+                - docs/_build/html/
+
       - name: tests
         cubes:
           - name: pytest-with-coverage

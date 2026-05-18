@@ -3,14 +3,19 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
 import os
 import sys
 import django
 
-sys.path.insert(0, os.path.abspath("../.."))
+# ИСПРАВЛЕНО: Корень проекта находится на ОДИН уровень выше папки docs/
+sys.path.insert(0, os.path.abspath(".."))
+
+# ДОБАВЛЕНО: Указываем Django, где искать настройки, и инициализируем его
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "usazd.settings") # Замени usazd на имя папки, если нужно
+django.setup()
+
+# -- Project information -----------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 autodoc_default_options = {"members": True, "undoc-members": True}
 
