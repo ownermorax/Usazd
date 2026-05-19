@@ -27,9 +27,11 @@
 
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 28px;
     margin-bottom: 48px;
+    justify-items: center;
+    align-items: stretch;
 }
 
 .tour-card {
@@ -38,8 +40,11 @@
     overflow: hidden;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
-    cursor: pointer;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 340px;
 }
 
 .tour-card:hover {
@@ -52,6 +57,7 @@
     background-size: cover;
     background-position: center;
     position: relative;
+    flex-shrink: 0;
 }
 
 .badge {
@@ -66,19 +72,25 @@
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.5px;
+    z-index: 1;
 }
 
 .card-content {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .route {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     font-weight: 700;
     font-size: 1.2rem;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    text-align: center;
 }
 
 .route i {
@@ -88,24 +100,34 @@
 
 .transport-type {
     display: flex;
-    gap: 12px;
+    justify-content: center;
+    gap: 10px;
     margin: 12px 0;
     font-size: 0.8rem;
     color: #5b6e8c;
+    flex-wrap: wrap;
 }
 
 .transport-type span {
     background: #eef2ff;
     padding: 4px 12px;
     border-radius: 30px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.transport-type span i {
+    font-size: 0.75rem;
 }
 
 .price-row {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-top: 16px;
-    padding-top: 12px;
+    margin-top: auto;
+    padding-top: 16px;
     border-top: 1px solid #e2e8f0;
 }
 
@@ -113,6 +135,7 @@
     font-size: 1.6rem;
     font-weight: 800;
     color: #1e6f5c;
+    text-align: left;
 }
 
 .price small {
@@ -128,6 +151,9 @@
     font-weight: 600;
     cursor: pointer;
     transition: 0.2s;
+    padding: 8px 0;
+    font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 .book-btn:hover {
@@ -167,6 +193,7 @@
     font-size: 1rem;
     cursor: pointer;
     transition: 0.2s;
+    white-space: nowrap;
 }
 
 .banner-btn:hover {
@@ -174,3 +201,40 @@
     transform: scale(1.02);
 }
 
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    .tour-card {
+        max-width: 100%;
+    }
+
+    .transport-type span {
+        white-space: normal;
+        font-size: 0.7rem;
+    }
+
+    .price-row {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .price {
+        text-align: center;
+    }
+
+    .banner-bottom {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+    }
+
+    .banner-text h3 {
+        font-size: 1.3rem;
+    }
+}
