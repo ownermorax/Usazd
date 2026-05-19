@@ -163,6 +163,9 @@ LOG_DIR = os.path.join(BASE_DIR, "logs")
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
 
+# Уровень логирования в зависимости от DEBUG
+LOG_LEVEL = 'DEBUG' if DEBUG else 'INFO'
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -178,7 +181,7 @@ LOGGING = {
             "formatter": "main_formatter",
         },
         "file": {
-            "level": "INFO",
+            "level": LOG_LEVEL,
             "class": "logging.FileHandler",
             "filename": os.path.join(LOG_DIR, "info.log"),
             "formatter": "main_formatter",
@@ -187,6 +190,6 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console", "file"],
-        "level": "INFO",
+        "level": LOG_LEVEL,
     },
 }
