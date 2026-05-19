@@ -6,17 +6,11 @@ from main.utils import logger
 
 @login_required
 def cancel_reservation(request, reservation_id):
-    """
-    Отмена активного бронирования.
-
-    Изменяет статус бронирования на 'cancelled'.
-
-    :param request: HTTP запрос
-    :param reservation_id: ID бронирования
-    :return: перенаправление на страницу активных броней
-    """
     reservation = get_object_or_404(Reservation, reservation_id=reservation_id, user=request.user)
     if reservation.status == "active":
-        reservation.cancel()  # вместо ручного reservation.status = "cancelled" + save()
+        if reservation.order:
+            reservation.order.cancel()
+        else:
+            reservation.cancel()
         logger.info(f"Пользователь {request.user.username} отменил бронь #{reservation_id}")
     return redirect("active_reservations")

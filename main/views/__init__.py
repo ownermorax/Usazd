@@ -19,3 +19,4 @@ from .active_reservations import *
 from .vip_page import *
 from .vip_handler import *
 from .neural_network import *
+from .cancel_order import *

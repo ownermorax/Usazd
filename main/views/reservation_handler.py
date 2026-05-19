@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from djmoney.money import Money
-from main.models import Train, Profile, Reservation, Station
+from main.models import Train, Profile, Reservation, Station, Order
 import json
 from main.utils import logger
 from decimal import Decimal
@@ -100,16 +100,26 @@ def do_reservation(place_nums, profile, station_in, station_out, total_price, tr
         cashback = total_price.amount * Decimal("0.05")
         profile.update_balance(cashback)
     profile.save()
-    reservation = Reservation.objects.create(
-        user=user,
-        train=train,
-        place_num=", ".join(place_nums),
-        station_in=station_in,
-        station_out=station_out,
-        status="active",
-    )
-    logger.info(f"Успешное бронирование #{reservation.reservation_id}.")
+
+    # Создаём Order
+    order = Order.objects.create(user=user)
+
+    # Создаём отдельную Reservation на каждое место
+    for place_num in place_nums:
+        Reservation.objects.create(
+            user=user,
+            train=train,
+            place_num=place_num,
+            station_in=station_in,
+            station_out=station_out,
+            status="active",
+            order=order,
+        )
+
+    logger.info(f"Успешное бронирование, заказ #{order.id}, мест: {len(place_nums)}.")
     seats_list = ", ".join(place_nums)
+    # Возвращаем первую бронь для обратной совместимости с get_last_response
+    reservation = order.reservations.first()
     return reservation, seats_list
 
 

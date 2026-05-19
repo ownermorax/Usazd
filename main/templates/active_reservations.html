@@ -7,10 +7,10 @@
         <p class="subtitle">Ваши текущие и предстоящие поездки</p>
     </div>
 
-    {% if reservations %}
+    {% if orders %}
     <div class="stats-bar">
         <div class="stat-card">
-            <div class="stat-number">{{ reservations|length }}</div>
+            <div class="stat-number">{{ orders|length }}</div>
             <div class="stat-label">Активных броней</div>
         </div>
         <div class="stat-card">
@@ -26,79 +26,58 @@
         </div>
     </div>
 
-    {% for reservation in reservations %}
-    <div class="reservation-card">
-        <div class="card-header">
-            <div>
-                <h3>Бронирование</h3>
-                <div class="reservation-id">№{{ reservation.reservation_id }}</div>
+    {% for order in orders %}
+        <div class="reservation-card">
+            <div class="card-header">
+                <div>
+                    <h3>Заказ</h3>
+                    <div class="reservation-id">№{{ order.id }}</div>
+                </div>
+                <span class="status-badge status-active">{{ order.status }}</span>
             </div>
-            <span class="status-badge status-active">{{ reservation.status }}</span>
-        </div>
 
-        <div class="card-body">
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-icon">🚂</div>
-                    <div class="info-content">
-                        <div class="info-label">Номер поезда</div>
-                        <div class="info-value train-number">{{ reservation.train.train_id }}</div>
+            <div class="card-body">
+                {% for reservation in order.reservations.all %}
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-icon">🚂</div>
+                        <div class="info-content">
+                            <div class="info-label">Поезд</div>
+                            <div class="info-value">{{ reservation.train.train_id }}</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">💺</div>
+                        <div class="info-content">
+                            <div class="info-label">Место</div>
+                            <div class="info-value">{{ reservation.place_num }}</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">📍</div>
+                        <div class="info-content">
+                            <div class="info-label">Маршрут</div>
+                            <div class="info-value">{{ reservation.station_in.name }} → {{ reservation.station_out.name }}</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">🕐</div>
+                        <div class="info-content">
+                            <div class="info-label">Отправление</div>
+                            <div class="info-value">{{ reservation.train.station_at_time|date:"d.m.Y H:i" }}</div>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
+            </div>
 
-                <div class="info-item">
-                    <div class="info-icon">📅</div>
-                    <div class="info-content">
-                        <div class="info-label">Дата бронирования</div>
-                        <div class="info-value">{{ reservation.reservation_date|date:"d.m.Y H:i" }}</div>
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-icon">📍</div>
-                    <div class="info-content">
-                        <div class="info-label">Станция отправления</div>
-                        <div class="info-value">{{ reservation.station_in.name }}</div>
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-icon">🎯</div>
-                    <div class="info-content">
-                        <div class="info-label">Станция назначения</div>
-                        <div class="info-value">{{ reservation.station_out.name }}</div>
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-icon">💺</div>
-                    <div class="info-content">
-                        <div class="info-label">Номера мест</div>
-                        <div class="info-value places">{{ reservation.place_num }}</div>
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-icon">🕐</div>
-                    <div class="info-content">
-                        <div class="info-label">Дата отправления</div>
-                        <div class="info-value">{{ reservation.train.station_at_time|date:"d.m.Y H:i" }}</div>
-                    </div>
-                </div>
-
-            <div class="departure-time">
-                <div class="info-label">Время отправления</div>
-                <div class="info-value">{{ reservation.train.station_at_time|date:"H:i" }}</div>
+            <div class="card-footer">
+                <button class="btn-cancel-reservation" onclick="cancelOrder({{ order.id }})">
+                    Отменить заказ
+                </button>
             </div>
         </div>
-
-        <div class="card-footer">
-            <button class="btn-cancel-reservation" onclick="cancelReservation({{ reservation.reservation_id }})">
-                Отменить бронь
-            </button>
-        </div>
-    </div>
-    {% endfor %}
+        {% endfor %}
 
     {% else %}
     <div class="empty-state">
@@ -133,9 +112,9 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function cancelReservation(reservationId) {
-    if (confirm('Вы уверены, что хотите отменить это бронирование?')) {
-        fetch(`/api/cancel/${reservationId}/`, {
+function cancelOrder(orderId) {
+    if (confirm('Вы уверены, что хотите отменить весь заказ?')) {
+        fetch(`/api/cancel-order/${orderId}/`, {
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -147,7 +126,7 @@ function cancelReservation(reservationId) {
             if (data.status === 'ok') {
                 location.reload();
             } else {
-                alert('Ошибка при отмене бронирования');
+                alert('Ошибка при отмене заказа');
             }
         });
     }

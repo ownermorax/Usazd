@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from main.utils import logger
-from main.models import Reservation
+from main.models import Order
 
 
 def active_reservations(request):
@@ -14,8 +14,10 @@ def active_reservations(request):
     :returns: HTTP ответ с шаблоном active_reservations.html
     :rtype: HttpResponse
     """
-    reservations = Reservation.objects.filter(user=request.user, status="active").select_related(
-        "train", "station_in", "station_out"
-    )
+    orders = Order.objects.filter(
+        user=request.user,
+        status="active"
+    ).prefetch_related("reservations__train", "reservations__station_in", "reservations__station_out")
+
     logger.info("Пользователь зашел на страницу с активными бронями пользователя.")
-    return render(request, "active_reservations.html", {"reservations": reservations})
+    return render(request, "active_reservations.html", {"orders": orders})
