@@ -163,7 +163,6 @@ LOG_DIR = os.path.join(BASE_DIR, "logs")
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
 
-# Уровень логирования в зависимости от DEBUG
 LOG_LEVEL = 'DEBUG' if DEBUG else 'INFO'
 
 LOGGING = {
