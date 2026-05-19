@@ -52,6 +52,15 @@
             </div>
         </div>
     </div>
+    {% if user.is_staff or user.is_superuser %}
+    <div class="admin-button-container">
+        <a href="{% url 'admin:index' %}" class="admin-button">
+            <div class="admin-button-content">
+                <div class="admin-text">Панель администратора</div>
+            </div>
+        </a>
+    </div>
+    {% endif %}
 
     <div class="navigation-grid">
         <a href="{% url 'user_info' %}" class="nav-card">
