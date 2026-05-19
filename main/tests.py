@@ -104,7 +104,7 @@ def test_active_reservations_template(auth_client):
 @pytest.mark.django_db
 def test_active_reservations_context(auth_client):
     response = auth_client.get(reverse("active_reservations"))
-    assert "reservations" in response.context
+    assert "orders" in response.context
 
 
 @pytest.mark.django_db
