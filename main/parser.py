@@ -113,7 +113,6 @@ class Parser:
                     profile.is_vip = False
                     profile.vip_data = ''
                     profile.save()
-                    print(f"VIP expired for user {profile.user.id}")
             sleep(10)
 
 parser = Parser()

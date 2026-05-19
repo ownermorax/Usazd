@@ -8,7 +8,6 @@ from djmoney.money import Money
 from main.models import Profile, Reservation, Station, Train
 
 
-# ========== Фикстуры ==========
 
 
 @pytest.fixture
@@ -97,7 +96,6 @@ def factory():
     return RequestFactory()
 
 
-# ========== Test active reservation page ==========
 
 
 @pytest.mark.django_db
@@ -124,7 +122,6 @@ def test_active_reservations_context(auth_client):
     assert "reservations" in response.context
 
 
-# ========== Test profile page ==========
 
 
 @pytest.mark.django_db
@@ -145,7 +142,6 @@ def test_profile_404(client):
     assert response.status_code == 404
 
 
-# ========== Test user info page ==========
 
 
 @pytest.mark.django_db
@@ -160,7 +156,6 @@ def test_user_info_profile_created(auth_client, user):
     assert Profile.objects.filter(user=user).exists()
 
 
-# ========== Test edit user info page ==========
 
 
 @pytest.mark.django_db
@@ -184,7 +179,6 @@ def test_edit_user_info_name_changed(auth_client, profile):
     assert profile.name == "Changed"
 
 
-# ========== Test train page ==========
 
 
 @pytest.mark.django_db
@@ -205,7 +199,6 @@ def test_train_context(client):
     assert "carriages" in response.context
 
 
-# ========== Test reservation handle ==========
 
 
 @pytest.mark.django_db
@@ -339,7 +332,6 @@ def test_reservation_multiple_seats(client, profile, stations):
     assert response.status_code == 200
 
 
-# ========== Test timetable ==========
 
 
 @pytest.mark.django_db
@@ -418,7 +410,6 @@ def test_timetable_contains_data(mock_station, mock_request, client):
     assert "data" in response.json()
 
 
-# ========== Extra model tests ==========
 
 
 @pytest.mark.django_db

@@ -15,8 +15,8 @@ response = requests.post(
     headers={
         "Authorization": OPENROUTER_API_KEY,
         "Content-Type": "application/json",
-        "HTTP-Referer": "<YOUR_SITE_URL>",  # Optional. Site URL for rankings on openrouter.ai.
-        "X-OpenRouter-Title": "<YOUR_SITE_NAME>",  # Optional. Site title for rankings on openrouter.ai.
+        "HTTP-Referer": "<YOUR_SITE_URL>",
+        "X-OpenRouter-Title": "<YOUR_SITE_NAME>",
     },
     data=json.dumps(
         {
@@ -37,5 +37,3 @@ response = requests.post(
 if response.status_code == 200:
     res = response.json()
     ans = res["choices"][0]["message"]["content"]
-    print("Ответ модели:")
-    print(ans)

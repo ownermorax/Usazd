@@ -149,7 +149,6 @@ def load_train_stations():
     stations_path = project_root / "stations.json"
 
     if not stations_path.exists():
-        print(f"Файл stations.json не найден в {project_root}")
         return {}
 
     try:
@@ -183,7 +182,6 @@ def load_train_stations():
             stations.update(simplified_stations)
             return stations
     except Exception as e:
-        print(f"Ошибка загрузки станций: {e}")
         return {}
 
 
@@ -496,10 +494,6 @@ def search_form(request):
                 )
 
             except Exception as e:
-                print(f"Ошибка получения расписания: {e}")
-                import traceback
-
-                traceback.print_exc()
                 search_answer = f"Ошибка при получении расписания: {str(e)}"
         else:
             search_answer = if_not_atr_in_question(from_station, search_answer, stations_dict, to_station)
