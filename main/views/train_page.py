@@ -5,9 +5,6 @@ from main.utils import logger
 
 
 def train(request):
-    """
-    Отображает страницу поезда с вагонами и местами.
-    """
     train_number = request.GET.get("id", "")
     logger.info(f"Пользователь зашел на страницу поезда: {train_number}.")
     station_from = request.GET.get("from", "")
@@ -18,15 +15,19 @@ def train(request):
     train_obj = None
     train_obj = find_train(train_number, train_obj)
 
+    reserved_places = set()
+    if train_obj:
+        reservations = Reservation.objects.filter(train=train_obj, status="active")
+        for res in reservations:
+            places = res.place_num.split(", ")
+            for place in places:
+                reserved_places.add(place.strip())
+
     for carriage_num in range(1, 12):
         seats_data = []
         for seat_num in range(1, 101):
-            is_taken = False
-            if train_obj:
-                place_num = f"{carriage_num}-{seat_num}"
-                is_taken = Reservation.objects.filter(
-                    train=train_obj, place_num__icontains=place_num, status="active"
-                ).exists()
+            place_num = f"{carriage_num}-{seat_num}"
+            is_taken = place_num in reserved_places
 
             seats_data.append(
                 {

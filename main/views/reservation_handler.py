@@ -31,7 +31,7 @@ def reservation_handler(request):
             station_out, _ = Station.objects.get_or_create(name=station_out_name)
         else:
             return JsonResponse({"status": "error", "message": "Не указана станция назначения"}, status=400)
-        logger.debug(f"Станции: {station_in} -> {station_out}.")
+        logger.error(f"Станции: {station_in} -> {station_out}.")
         train = None
         train = search_train(departure_time, station_in, station_out, train, train_number)
     except Exception as e:

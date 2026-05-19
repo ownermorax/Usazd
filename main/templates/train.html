@@ -322,10 +322,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (stationTo) url += `&station_out_name=${encodeURIComponent(stationTo)}`;
             if (departureTime) url += `&departure_time=${encodeURIComponent(departureTime)}`;
 
-            url += `&seats=`;
-            selectedSeatsArray.forEach(seat => {
-                url += `W${seat.carriage}x${seat.seat}`;
-            });
+            const seatsParam = Object.keys(selectedSeats).map(key => {
+                const [carriage, seat] = key.split('-');
+                return `W${carriage}x${seat}`;
+            }).join('');
+            url += `&seats=${seatsParam}`;
 
             const xhr = new XMLHttpRequest();
             xhr.open("GET", url);
