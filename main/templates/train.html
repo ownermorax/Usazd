@@ -9,6 +9,7 @@
     <input type="hidden" id="train-number" value="{{ train_number }}">
     <input type="hidden" id="station-from" value="{{ station_from }}">
     <input type="hidden" id="station-to" value="{{ station_to }}">
+    <input type="hidden" id="departure-time" value="{{ departure_time }}">
 
     <div class="control-panel">
         <div class="carriage-selector">
@@ -97,7 +98,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return {
             trainNumber: params.get('id') || document.getElementById('train-number').value,
             stationFrom: params.get('from') || document.getElementById('station-from').value,
-            stationTo: params.get('to') || document.getElementById('station-to').value
+            stationTo: params.get('to') || document.getElementById('station-to').value,
+            departureTime: params.get('departure_time') || document.getElementById('departure-time').value
         };
     }
 
@@ -105,6 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const trainNumber = urlParams.trainNumber;
     const stationFrom = urlParams.stationFrom;
     const stationTo = urlParams.stationTo;
+    const departureTime = urlParams.departureTime;
 
     document.getElementById('display-train-number').textContent = trainNumber || 'Не указан';
     document.getElementById('display-station-from').textContent = stationFrom || 'Не указана';
@@ -317,6 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (stationFrom) url += `&station_in_name=${encodeURIComponent(stationFrom)}`;
             if (stationTo) url += `&station_out_name=${encodeURIComponent(stationTo)}`;
+            if (departureTime) url += `&departure_time=${encodeURIComponent(departureTime)}`;
 
             url += `&seats=`;
             selectedSeatsArray.forEach(seat => {

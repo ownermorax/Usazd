@@ -58,6 +58,21 @@ class Train(models.Model):
         return f"Поезд #{self.train_id}"
 
 
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default="active")
+
+    def cancel(self):
+        if self.status != "cancelled":
+            self.status = "cancelled"
+            self.save()
+            reservations = self.reservations.filter(status="active")
+            total = Money(2 * reservations.count(), "USD")
+            self.user.profile.update_balance(total)
+            reservations.update(status="cancelled")
+
+
 class Reservation(models.Model):
     """Модель бронирования"""
 
@@ -69,11 +84,15 @@ class Reservation(models.Model):
     station_out = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="station_out")
     reservation_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default="active")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="reservations", null=True, blank=True)
 
     def cancel(self):
         if self.status != "cancelled":
             self.status = "cancelled"
             self.save()
+            # Возвращаем деньги на баланс
+            profile = self.user.profile
+            profile.update_balance(Money(2, "USD"))
 
     def __str__(self):
         return f"Бронь #{self.reservation_id}"

@@ -17,7 +17,6 @@ def cancel_reservation(request, reservation_id):
     """
     reservation = get_object_or_404(Reservation, reservation_id=reservation_id, user=request.user)
     if reservation.status == "active":
-        reservation.status = "cancelled"
-        reservation.save()
+        reservation.cancel()  # вместо ручного reservation.status = "cancelled" + save()
         logger.info(f"Пользователь {request.user.username} отменил бронь #{reservation_id}")
     return redirect("active_reservations")
