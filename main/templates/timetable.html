@@ -227,10 +227,7 @@ function renderResults() {
         }
 
         if (!isPast) {
-            html += '<a href="/train/?id=' + encodeURIComponent(s.thread?.number || '') +
-                   '&from=' + encodeURIComponent(s.from?.title || '') +
-                   '&to=' + encodeURIComponent(s.to?.title || '') +
-                   '" class="booking-link">✅ Забронировать билет</a>'
+            html += '<a href="/train/?id=' + (s.thread?.number || '') + '&from=' + (s.from?.title || '') + '&to=' + (s.to?.title || '') + '&departure_time=' + encodeURIComponent(s.departure || '') + '" style="display:inline-block; margin-top:10px; padding:5px 10px; background:#007bff; color:white; text-decoration:none; border-radius:5px;">Забронировать</a>'
         } else {
             html += '<div class="booking-disabled">❌ Бронирование недоступно</div>'
         }
