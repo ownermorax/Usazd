@@ -9,7 +9,7 @@ def train(request):
     logger.info(f"Пользователь зашел на страницу поезда: {train_number}.")
     station_from = request.GET.get("from", "")
     station_to = request.GET.get("to", "")
-    departure_time = request.GET.get('departure_time', '')
+    departure_time = request.GET.get("departure_time", "")
     carriages_data = []
 
     train_obj = None
@@ -48,7 +48,7 @@ def train(request):
         "train_number": train_number,
         "station_from": station_from,
         "station_to": station_to,
-        'departure_time': departure_time
+        "departure_time": departure_time,
     }
     return render(request, "train.html", context)
 

@@ -26,11 +26,22 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Profile",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 ("name", models.CharField(default="username", max_length=20)),
                 ("role", models.CharField(default="user", max_length=20)),
                 ("description", models.TextField(blank=True)),
-                ("avatar", models.ImageField(blank=True, null=True, upload_to="avatars/")),
+                (
+                    "avatar",
+                    models.ImageField(blank=True, null=True, upload_to="avatars/"),
+                ),
                 (
                     "balance_currency",
                     djmoney.models.fields.CurrencyField(
@@ -359,21 +370,38 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "user",
-                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
                 ),
             ],
         ),
         migrations.CreateModel(
             name="Roles",
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
                 (
                     "role",
-                    models.CharField(choices=[("admin", "Admin"), ("user", "User"), ("VIP", "VIP")], max_length=10),
+                    models.CharField(
+                        choices=[("admin", "Admin"), ("user", "User"), ("VIP", "VIP")],
+                        max_length=10,
+                    ),
                 ),
                 (
                     "user",
-                    models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
                 ),
             ],
         ),
@@ -386,13 +414,17 @@ class Migration(migrations.Migration):
                 (
                     "id_station_start",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="station_start", to="main.station"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="station_start",
+                        to="main.station",
                     ),
                 ),
                 (
                     "id_station_stop",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="station_stop", to="main.station"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="station_stop",
+                        to="main.station",
                     ),
                 ),
             ],
@@ -407,25 +439,33 @@ class Migration(migrations.Migration):
                 (
                     "user",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="user", to=settings.AUTH_USER_MODEL
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="user",
+                        to=settings.AUTH_USER_MODEL,
                     ),
                 ),
                 (
                     "station_in",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="station_in", to="main.station"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="station_in",
+                        to="main.station",
                     ),
                 ),
                 (
                     "station_out",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="station_out", to="main.station"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="station_out",
+                        to="main.station",
                     ),
                 ),
                 (
                     "train",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, related_name="train", to="main.train"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="train",
+                        to="main.train",
                     ),
                 ),
             ],

@@ -15,9 +15,10 @@ def reservation_history(request):
     :rtype: HttpResponse
     """
     orders = Order.objects.filter(
-        user=request.user,
-        status__in=["cancelled", "completed"]
-    ).prefetch_related("reservations__train", "reservations__station_in", "reservations__station_out")
+        user=request.user, status__in=["cancelled", "completed"]
+    ).prefetch_related(
+        "reservations__train", "reservations__station_in", "reservations__station_out"
+    )
 
     logger.info("Пользователь зашел на страницу с историей брони.")
     return render(request, "reservation_history.html", {"orders": orders})

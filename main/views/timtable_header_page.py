@@ -88,7 +88,13 @@ def timetable_handler(request):
     date, from_code, lang, to_code = get_atributes(request)
     if not from_code or not to_code:
         logger.error("Пользователь не указал станции отправления и назначения.")
-        return JsonResponse({"status": "error", "message": "Не указаны станции отправления и назначения"}, status=400)
+        return JsonResponse(
+            {
+                "status": "error",
+                "message": "Не указаны станции отправления и назначения",
+            },
+            status=400,
+        )
     if not date:
         date = datetime.now().strftime("%Y-%m-%d")
     result = yandexAPI.station_request(from_code, to_code, date, lang)
@@ -106,12 +112,20 @@ def timetable_handler(request):
             "title": thread.get("title", ""),
             "transport_type": thread.get("transport_type", ""),
             "departure_station": from_info.get("title", ""),
-            "departure_time": segment.get("departure", "")[11:16] if segment.get("departure") else "",
-            "departure_date": segment.get("departure", "")[:10] if segment.get("departure") else "",
+            "departure_time": (
+                segment.get("departure", "")[11:16] if segment.get("departure") else ""
+            ),
+            "departure_date": (
+                segment.get("departure", "")[:10] if segment.get("departure") else ""
+            ),
             "departure_full": segment.get("departure", ""),
             "arrival_station": to_info.get("title", ""),
-            "arrival_time": segment.get("arrival", "")[11:16] if segment.get("arrival") else "",
-            "arrival_date": segment.get("arrival", "")[:10] if segment.get("arrival") else "",
+            "arrival_time": (
+                segment.get("arrival", "")[11:16] if segment.get("arrival") else ""
+            ),
+            "arrival_date": (
+                segment.get("arrival", "")[:10] if segment.get("arrival") else ""
+            ),
             "arrival_full": segment.get("arrival", ""),
             "duration_seconds": duration,
             "duration_hours": hours,

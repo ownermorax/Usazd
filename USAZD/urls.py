@@ -39,11 +39,21 @@ urlpatterns = [
     path("auth/", LoginView.as_view(), name="auth"),
     path("train/", views.train, name="train"),
     path("balance/", views.update_balance, name="balance"),
-    path("api/create/reservation/", views.reservation_handler, name="create_reservation"),
-    path("api/cancel/<int:reservation_id>/", cancel_reservation, name="cancel_reservation"),
+    path(
+        "api/create/reservation/", views.reservation_handler, name="create_reservation"
+    ),
+    path(
+        "api/cancel/<int:reservation_id>/",
+        cancel_reservation,
+        name="cancel_reservation",
+    ),
     path("<str:username>/vip/", views.vip, name="vip"),
     path("api/vip/pay", views.vip_handler, name="vip_api"),
-    path("schedule/<str:from_station>/<str:to_station>/", views.schedule_card, name="schedule_card"),
+    path(
+        "schedule/<str:from_station>/<str:to_station>/",
+        views.schedule_card,
+        name="schedule_card",
+    ),
     path("quick-booking/", views.quick_booking, name="quick_booking"),
     path("api/cancel-order/<int:order_id>/", views.cancel_order, name="cancel_order"),
 ]

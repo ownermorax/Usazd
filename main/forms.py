@@ -9,14 +9,15 @@ class RegistrationForm(UserCreationForm):
 
     Расширяет стандартную форму регистрации Django с кастомной валидацией пароля.
     """
+
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ("username",)
-        labels = {'username': 'Введите имя'}
+        labels = {"username": "Введите имя"}
         help_texts = {
-            'username': '',
-            'password1': '',
-            'password2': '',
+            "username": "",
+            "password1": "",
+            "password2": "",
         }
 
 
@@ -28,25 +29,31 @@ def clean_password(self):
     :return: Валидный пароль
     :raises forms.ValidationError: Если пароль не соответствует требованиям
     """
-    password = self.cleaned_data.get('password1')
+    password = self.cleaned_data.get("password1")
     validate_password(password, self.instance)
 
     if password.islower() or password.isupper() or password.isdigit():
-        raise forms.ValidationError("Пароль должен содержать буквы различного регистра и цифры")
+        raise forms.ValidationError(
+            "Пароль должен содержать буквы различного регистра и цифры"
+        )
 
     return password
+
 
 class NeuralNetworkForm(forms.Form):
     """Форма для ввода запроса к нейросети.
 
     Используется для поиска расписания и билетов с помощью ИИ.
     """
+
     text = forms.CharField(
         max_length=100,
-        label='Введите запрос',
-        widget=forms.TextInput(attrs={
-            'class': 'form-control form-control-dark text-bg-dark',
-            'placeholder': 'Поиск...',
-            'type': 'search'
-        })
+        label="Введите запрос",
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control form-control-dark text-bg-dark",
+                "placeholder": "Поиск...",
+                "type": "search",
+            }
+        ),
     )

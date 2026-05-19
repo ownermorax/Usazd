@@ -9,10 +9,11 @@ def active_reservations(request):
     if not request.user.is_authenticated:
         return redirect("auth")
 
-    orders = Order.objects.filter(
-        user=request.user,
-        status="active"
-    ).prefetch_related("reservations__train", "reservations__station_in", "reservations__station_out")
+    orders = Order.objects.filter(user=request.user, status="active").prefetch_related(
+        "reservations__train", "reservations__station_in", "reservations__station_out"
+    )
 
-    logger.debug(f"Найдено заказов: {orders.count()} для пользователя #{request.user.id}.")
+    logger.debug(
+        f"Найдено заказов: {orders.count()} для пользователя #{request.user.id}."
+    )
     return render(request, "active_reservations.html", {"orders": orders})

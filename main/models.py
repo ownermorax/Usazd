@@ -17,7 +17,9 @@ class Profile(models.Model):
     is_vip = models.BooleanField(default=False)
     vip_data = models.TextField(blank=True)
 
-    balance = MoneyField(max_digits=10, decimal_places=2, default_currency="USD", default=1000)
+    balance = MoneyField(
+        max_digits=10, decimal_places=2, default_currency="USD", default=1000
+    )
 
     def __str__(self):
         return self.user.username
@@ -49,8 +51,12 @@ class Train(models.Model):
     """Модель поездов"""
 
     train_id = models.AutoField(primary_key=True)
-    id_station_start = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="station_start")
-    id_station_stop = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="station_stop")
+    id_station_start = models.ForeignKey(
+        Station, on_delete=models.CASCADE, related_name="station_start"
+    )
+    id_station_stop = models.ForeignKey(
+        Station, on_delete=models.CASCADE, related_name="station_stop"
+    )
     station_at_time = models.DateTimeField()
     path = models.TextField(blank=True)
 
@@ -80,17 +86,26 @@ class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     train = models.ForeignKey(Train, on_delete=models.CASCADE, related_name="train")
     place_num = models.CharField(max_length=10)
-    station_in = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="station_in")
-    station_out = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="station_out")
+    station_in = models.ForeignKey(
+        Station, on_delete=models.CASCADE, related_name="station_in"
+    )
+    station_out = models.ForeignKey(
+        Station, on_delete=models.CASCADE, related_name="station_out"
+    )
     reservation_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default="active")
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="reservations", null=True, blank=True)
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name="reservations",
+        null=True,
+        blank=True,
+    )
 
     def cancel(self):
         if self.status != "cancelled":
             self.status = "cancelled"
             self.save()
-            # Возвращаем деньги на баланс
             profile = self.user.profile
             profile.update_balance(Money(2, "USD"))
 

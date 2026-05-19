@@ -38,6 +38,14 @@
                 <span id="seats-count" class="seats-count">Выбрано: 0 мест</span>
                 <span id="seats-total" class="seats-total">Сумма: $0</span>
             </div>
+            <div class="repetitive-selector" style="margin-top: 10px;">
+                <label for="repetitive-select">Повторять:</label>
+                <select id="repetitive-select">
+                    <option value="0">Никогда</option>
+                    <option value="1">Каждый день</option>
+                    <option value="2">Раз в неделю</option>
+                </select>
+            </div>
         </div>
     </div>
 
@@ -316,6 +324,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const usernameInput = document.getElementById('username');
+            const repetitiveSelect = document.getElementById('repetitive-select');
+            const repetitive = repetitiveSelect ? repetitiveSelect.value : '0';
+
             let url = `/api/create/reservation/?username=${usernameInput ? usernameInput.value : ''}&train_id=${trainNumber}`;
 
             if (stationFrom) url += `&station_in_name=${encodeURIComponent(stationFrom)}`;
@@ -327,6 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return `W${carriage}x${seat}`;
             }).join('');
             url += `&seats=${seatsParam}`;
+            url += `&repetitive=${repetitive}`;
 
             const xhr = new XMLHttpRequest();
             xhr.open("GET", url);

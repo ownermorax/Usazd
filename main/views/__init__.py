@@ -2,6 +2,7 @@
 
 Содержит все функции-представления для обработки HTTP запросов.
 """
+
 from .active_reservation_page import *
 from .info_page import *
 from .main_page import *

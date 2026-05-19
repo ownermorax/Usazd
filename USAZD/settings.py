@@ -87,7 +87,8 @@ TEMPLATES = [
     },
 ]
 OPENROUTER_API_KEY = os.environ.get(
-    "OPENROUTER_API_KEY", "OPENROUTER_API_KEY_REPLACED"
+    "OPENROUTER_API_KEY",
+    "OPENROUTER_API_KEY_REPLACED",
 )
 WSGI_APPLICATION = "USAZD.wsgi.application"
 
@@ -110,7 +111,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", "OPTIONS": {"min_length": 8}},
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {"min_length": 8},
+    },
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
@@ -163,7 +167,7 @@ LOG_DIR = os.path.join(BASE_DIR, "logs")
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
 
-LOG_LEVEL = 'DEBUG' if DEBUG else 'INFO'
+LOG_LEVEL = "DEBUG" if DEBUG else "INFO"
 
 LOGGING = {
     "version": 1,

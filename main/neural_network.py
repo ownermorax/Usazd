@@ -2,6 +2,7 @@
 
 Отправляет запросы к API OpenRouter для обработки текстовых запросов.
 """
+
 import requests
 import json
 

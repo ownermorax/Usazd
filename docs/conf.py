@@ -14,7 +14,9 @@ os.chdir(BASE_DIR)
 settings_module_name = None
 for item in os.listdir(BASE_DIR):
     item_path = os.path.join(BASE_DIR, item)
-    if os.path.isdir(item_path) and os.path.exists(os.path.join(item_path, "settings.py")):
+    if os.path.isdir(item_path) and os.path.exists(
+        os.path.join(item_path, "settings.py")
+    ):
         settings_module_name = f"{item}.settings"
         break
 

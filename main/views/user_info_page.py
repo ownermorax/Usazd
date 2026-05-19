@@ -14,6 +14,8 @@ def user_info(request):
     :returns: HTTP ответ с шаблоном user_info.html
     :rtype: HttpResponse
     """
-    logger.info(f"Пользователь #{request.user.id} зашел на страницу с личной информацией.")
+    logger.info(
+        f"Пользователь #{request.user.id} зашел на страницу с личной информацией."
+    )
     profile, _ = Profile.objects.get_or_create(user=request.user)
     return render(request, "user_info.html", {"profile": profile})
