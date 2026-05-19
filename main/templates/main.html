@@ -85,8 +85,11 @@
             <h3><i class="fas fa-gem"></i> Путешествуйте с кэшбэком</h3>
             <p>До 10% баллами на карту USAZD — копите на следующие поездки</p>
         </div>
+        {% if user.is_authenticated %}
         <button class="banner-btn" onclick="window.location.href='{% url 'vip' username=user.username %}'">Активировать кэшбэк →</button>
-
+        {% else %}
+        <button class="banner-btn" onclick="window.location.href='{% url 'auth' %}'">Активировать кэшбэк →</button>
+        {% endif %}
     </div>
 </section>
 

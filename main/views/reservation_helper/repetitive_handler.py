@@ -1,21 +1,5 @@
-from .get_attributes import *
-from .repetitive_handler import *
-from .get_attributes import *
-from .get_some_atr import *
-from .search_train import *
-from .do_reservation import *
-from .get_response import *
-
-from django.http import JsonResponse
+from .get_attributes import get_attributes
 from djmoney.money import Money
-from main.models import Profile, Station
-from .get_attributes import *
-from .repetitive_handler import *
-from .get_attributes import *
-from .get_some_atr import *
-from .search_train import *
-from .do_reservation import *
-from .get_response import *
 
 
 def repetitive_handler(request):
