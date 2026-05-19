@@ -1,6 +1,6 @@
 from django.test import RequestFactory
 import json
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, PropertyMock
 import pytest
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -695,20 +695,22 @@ def test_post_invalid_form_returns_200(mock_form_class, factory):
     assert response.status_code == 200
 
 @pytest.mark.django_db
-@patch('main.views.cancel_reservation.get_object_or_404')
-def test_active_reservation_gets_cancelled(mock_get, factory, user):
-    mock_reservation = MagicMock()
-    mock_reservation.status = 'active'
-    mock_get.return_value = mock_reservation
+def test_active_reservation_gets_cancelled(client, user, profile, train, stations):
+    station1, station2 = stations
+    reservation = Reservation.objects.create(
+        user=user,
+        train=train,
+        place_num="1-1",
+        station_in=station1,
+        station_out=station2,
+        status="active"
+    )
 
-    request = factory.post('/cancel/1/')
-    request.user = user
+    client.force_login(user)
+    client.post(reverse("cancel_reservation", args=[reservation.pk]))
 
-    from main.views.cancel_reservation import cancel_reservation
-    cancel_reservation(request, reservation_id=1)
-
-    assert mock_reservation.status == 'cancelled'
-    mock_reservation.save.assert_called_once()
+    reservation.refresh_from_db()
+    assert reservation.status == 'cancelled'
 
 @pytest.mark.django_db
 @patch('main.views.cancel_reservation.get_object_or_404')
