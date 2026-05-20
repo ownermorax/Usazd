@@ -19,7 +19,10 @@ from main.utils import logger
 
 
 class UsdtParser:
+    """Парсер для обработки USDT транзакций."""
+
     def __init__(self):
+        """Инициализирует парсер USDT транзакций."""
         self.usdt_contract = (
             "0:b113a994b5024a16719f69139328eb759596c38a25f59028b146fecdc3621dfe"
         )
@@ -33,6 +36,7 @@ class UsdtParser:
         self.seen = self.load_seen_transactions()
 
     def load_seen_transactions(self):
+        """Загружает список обработанных транзакций из файла."""
         if self.seen_file.exists():
             try:
                 with open(self.seen_file, "r", encoding="utf-8") as f:
@@ -43,6 +47,7 @@ class UsdtParser:
         return set()
 
     def save_seen_transactions(self):
+        """Сохраняет список обработанных транзакций в файл."""
         try:
             data = {"processed_events": list(self.seen)}
             with open(self.seen_file, "w", encoding="utf-8") as f:
@@ -51,6 +56,7 @@ class UsdtParser:
             pass
 
     def start(self):
+        """Запускает бесконечный цикл обработки USDT транзакций."""
         while True:
             try:
                 response = requests.get(self.url, timeout=30)
@@ -101,10 +107,14 @@ class UsdtParser:
 
 
 class PremiumParser:
+    """Парсер для проверки истечения VIP статусов."""
+
     def __init__(self):
+        """Инициализирует парсер VIP статусов."""
         pass
 
     def start(self):
+        """Запускает бесконечный цикл проверки VIP статусов."""
         while True:
             try:
                 for profile in Profile.objects.filter(is_vip=True):
@@ -123,10 +133,14 @@ class PremiumParser:
 
 
 class ReservationParser:
+    """Парсер для обработки повторяющихся бронирований."""
+
     def __init__(self):
+        """Инициализирует парсер повторяющихся бронирований."""
         pass
 
     def start(self):
+        """Запускает бесконечный цикл обработки повторяющихся бронирований."""
         from main.views.reservation_helper.repetitive_handler import (
             add_repetitive_reservation,
         )
@@ -199,10 +213,14 @@ class ReservationParser:
 
 
 class Parser:
+    """Главный класс для управления парсерами."""
+
     def __init__(self):
+        """Инициализирует главный парсер."""
         pass
 
     def start_parser(self, mode):
+        """Запускает парсер в указанном режиме."""
         mods = {
             "usdt": UsdtParser,
             "vip": PremiumParser,

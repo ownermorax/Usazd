@@ -12,6 +12,7 @@ from .get_response import *
 
 
 def search_train(departure_time, station_in, station_out, train, train_number):
+    """Ищет поезд по номеру или создает новый."""
     all_trains = Train.objects.all()
     for t in all_trains:
         try:

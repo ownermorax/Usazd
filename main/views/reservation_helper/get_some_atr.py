@@ -9,6 +9,7 @@ from .get_response import *
 
 
 def get_some_atr():
+    """Возвращает начальные атрибуты для бронирования."""
     booked_seats = []
     place_nums = []
     PRICE_PER_SEAT = Money(2, "USD")

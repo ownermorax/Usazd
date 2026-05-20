@@ -6,6 +6,7 @@ from main.utils import logger
 
 
 def reservation_handler(request):
+    """Обрабатывает запрос на бронирование мест."""
     (
         departure_time,
         seats,

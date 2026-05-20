@@ -1,3 +1,5 @@
+"""Вспомогательные функции для обработки бронирований."""
+
 from .get_attributes import *
 from .repetitive_handler import *
 from .get_attributes import *

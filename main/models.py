@@ -7,7 +7,7 @@ from decimal import Decimal
 
 
 class Profile(models.Model):
-    """Модель профиля"""
+    """Модель профиля пользователя."""
 
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, default="username")
@@ -22,9 +22,11 @@ class Profile(models.Model):
     )
 
     def __str__(self):
+        """Возвращает имя пользователя."""
         return self.user.username
 
     def update_balance(self, money):
+        """Обновляет баланс пользователя."""
         if isinstance(money, (int, float, Decimal)):
             money = Money(money, self.balance.currency)
         self.balance += money
@@ -32,23 +34,25 @@ class Profile(models.Model):
 
     @property
     def vip_expire(self):
+        """Возвращает дату истечения VIP статуса."""
         if self.vip_data:
             return datetime.datetime.fromisoformat(self.vip_data)
         return None
 
 
 class Station(models.Model):
-    """Модель станций"""
+    """Модель железнодорожных станций."""
 
     station_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
+        """Возвращает название станции."""
         return self.name
 
 
 class Train(models.Model):
-    """Модель поездов"""
+    """Модель поездов."""
 
     train_id = models.AutoField(primary_key=True)
     id_station_start = models.ForeignKey(
@@ -61,15 +65,18 @@ class Train(models.Model):
     path = models.TextField(blank=True)
 
     def __str__(self):
+        """Возвращает идентификатор поезда."""
         return f"Поезд #{self.train_id}"
 
 
 class Order(models.Model):
+    """Модель заказа."""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default="active")
 
     def cancel(self):
+        """Отменяет заказ и возвращает средства."""
         if self.status != "cancelled":
             self.status = "cancelled"
             self.save()
@@ -80,7 +87,7 @@ class Order(models.Model):
 
 
 class Reservation(models.Model):
-    """Модель бронирования"""
+    """Модель бронирования."""
 
     reservation_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
@@ -105,6 +112,7 @@ class Reservation(models.Model):
     last_repeat = models.DateTimeField(null=True, blank=True)
 
     def cancel(self):
+        """Отменяет бронирование и возвращает средства."""
         if self.status != "cancelled":
             self.status = "cancelled"
             self.save()
@@ -112,11 +120,12 @@ class Reservation(models.Model):
             profile.update_balance(Money(2, "USD"))
 
     def __str__(self):
+        """Возвращает идентификатор бронирования."""
         return f"Бронь #{self.reservation_id}"
 
 
 class Roles(models.Model):
-    """Модель ролей"""
+    """Модель ролей пользователей."""
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     ROLE_CHOICES = (("admin", "Admin"), ("user", "User"), ("VIP", "VIP"))

@@ -11,6 +11,7 @@ from .get_response import *
 
 
 def get_bad_response(profile, total_price, user_id):
+    """Возвращает ответ об ошибке при недостатке средств."""
     logger.warning(f"Недостаточно средств у пользователя: #{user_id}.")
     response = JsonResponse(
         {
@@ -23,6 +24,7 @@ def get_bad_response(profile, total_price, user_id):
 
 
 def get_last_response(place_nums, profile, reservation, seats_list, total_price):
+    """Возвращает успешный ответ после бронирования."""
     response = JsonResponse(
         {
             "status": "success",

@@ -5,6 +5,7 @@ from main.utils import logger
 
 
 def train(request):
+    """Отображает страницу поезда с вагонами и местами."""
     train_number = request.GET.get("id", "")
     logger.info(f"Пользователь зашел на страницу поезда: {train_number}.")
     station_from = request.GET.get("from", "")
@@ -54,6 +55,7 @@ def train(request):
 
 
 def find_train(train_number, train_obj):
+    """Находит поезд по номеру или создает новый."""
     if train_number:
         all_trains = TrainModel.objects.all()
         for t in all_trains:

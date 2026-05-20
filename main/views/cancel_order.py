@@ -8,6 +8,7 @@ from main.utils import logger
 @login_required
 @require_POST
 def cancel_order(request, order_id):
+    """Отменяет заказ пользователя."""
     try:
         order = Order.objects.get(id=order_id, user=request.user)
         order.cancel()

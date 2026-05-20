@@ -10,6 +10,7 @@ from datetime import timedelta
 
 
 def repetitive_handler(request):
+    """Обрабатывает запрос на повторяющееся бронирование."""
     from .get_attributes import get_attributes
     from .do_reservation import do_reservation
 
@@ -111,6 +112,7 @@ def get_some_atr(
     station_out: Station,
     train_number,
 ) -> tuple[Any, list[Any], Train | Any, str, datetime]:
+    """Извлекает атрибуты для повторяющегося бронирования."""
     from .search_train import search_train
 
     train = None
@@ -145,6 +147,7 @@ def get_some_atr(
 
 
 def add_repetitive_reservation(reservation):
+    """Добавляет новое повторяющееся бронирование."""
     from .do_reservation import do_reservation
 
     profile = Profile.objects.get(user=reservation.user)

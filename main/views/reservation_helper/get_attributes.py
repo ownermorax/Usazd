@@ -3,6 +3,7 @@ from main.utils import logger
 
 
 def get_attributes(request):
+    """Извлекает атрибуты бронирования из запроса."""
     logger.info("Пользователь отправил запрос на бронирование.")
     user_id = request.GET.get("username", "")
     train_number = request.GET.get("train_id", "")

@@ -6,6 +6,7 @@ from main.utils import logger
 
 @login_required
 def cancel_reservation(request, reservation_id):
+    """Отменяет бронирование пользователя."""
     reservation = get_object_or_404(
         Reservation, reservation_id=reservation_id, user=request.user
     )

@@ -147,6 +147,7 @@ def timetable_handler(request):
 
 
 def get_atributes(request):
+    """Извлекает атрибуты из запроса для поиска расписания."""
     logger.info("Пользователь запросил расписание.")
     from_name = request.GET.get("from_code", "")
     to_name = request.GET.get("to_code", "")
@@ -159,6 +160,7 @@ def get_atributes(request):
 
 
 def get_context(result):
+    """Формирует контекст для ответа с расписанием."""
     context = {
         "status": "ok",
         "data": {

@@ -15,6 +15,7 @@ def do_reservation(
     repeat="0",
     last_repeat=None,
 ):
+    """Создает бронирование для указанных мест."""
 
     for place_num in place_nums:
         if Reservation.objects.filter(
