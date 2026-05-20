@@ -9,11 +9,20 @@ def active_reservations(request):
     if not request.user.is_authenticated:
         return redirect("auth")
 
-    orders = Order.objects.filter(user=request.user, status="active").prefetch_related(
-        "reservations__train", "reservations__station_in", "reservations__station_out"
+    orders = list(
+        Order.objects.filter(user=request.user, status="active").prefetch_related(
+            "reservations__train", "reservations__station_in", "reservations__station_out"
+        )
     )
 
+    total_places = sum(order.reservations.count() for order in orders)
+
     logger.debug(
-        f"Найдено заказов: {orders.count()} для пользователя #{request.user.id}."
+        f"Найдено заказов: {len(orders)} для пользователя #{request.user.id}."
     )
-    return render(request, "active_reservations.html", {"orders": orders})
+    logger.info(f"total_places = {total_places}")
+
+    return render(request, "active_reservations.html", {
+        "orders": orders,
+        "total_places": total_places,
+    })

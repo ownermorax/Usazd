@@ -514,3 +514,48 @@ button.back-button {
     font-weight: 700;
     color: #2d6a4f;
 }
+.admin-button-container {
+    margin: 1.5rem 0;
+}
+
+.admin-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: #2d6a4f;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admin-button:hover {
+    background: #1b4332;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.admin-icon {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.admin-text {
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.admin-arrow {
+    color: white;
+    font-size: 1.2rem;
+    opacity: 0.8;
+    transition: transform 0.3s ease;
+}
+
+.admin-button:hover .admin-arrow {
+    transform: translateX(5px);
+}

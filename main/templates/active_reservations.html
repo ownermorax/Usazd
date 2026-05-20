@@ -14,14 +14,7 @@
             <div class="stat-label">Активных броней</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">
-                {% with total=0 %}
-                    {% for r in reservations %}
-                        {% widthratio r.place_num|length|default:0 1 1 as add %}
-                    {% endfor %}
-                {% endwith %}
-                {{ reservations|length }}
-            </div>
+            <div class="stat-number">{{ total_places }}</div>
             <div class="stat-label">Всего мест</div>
         </div>
     </div>
