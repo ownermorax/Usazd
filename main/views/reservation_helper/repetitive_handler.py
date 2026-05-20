@@ -146,6 +146,7 @@ def get_some_atr(
 
 def add_repetitive_reservation(reservation):
     from .do_reservation import do_reservation
+
     profile = Profile.objects.get(user=reservation.user)
     places = reservation.place_num.split(", ")
     total_price = Money(len(places) * 2, "USD")
@@ -155,16 +156,26 @@ def add_repetitive_reservation(reservation):
         new_departure_time = reservation.last_repeat + timedelta(hours=repeat_hours)
 
         new_reservation, seats_list = do_reservation(
-            places, profile, reservation.station_in, reservation.station_out,
-            total_price, reservation.train, reservation.user, reservation.repeat, new_departure_time
+            places,
+            profile,
+            reservation.station_in,
+            reservation.station_out,
+            total_price,
+            reservation.train,
+            reservation.user,
+            reservation.repeat,
+            new_departure_time,
         )
 
         reservation.repeat = "0"
         reservation.save()
 
         logger.info(
-            f"Повторяющаяся бронь #{reservation.reservation_id}: создана новая резервация на {new_departure_time}")
+            f"Повторяющаяся бронь #{reservation.reservation_id}: создана новая резервация на {new_departure_time}"
+        )
         return True
     else:
-        logger.warning(f"Повторяющаяся бронь #{reservation.reservation_id}: недостаточно средств")
+        logger.warning(
+            f"Повторяющаяся бронь #{reservation.reservation_id}: недостаточно средств"
+        )
         return False
