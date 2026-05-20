@@ -3,11 +3,12 @@
 Отправляет запросы к API OpenRouter для обработки текстовых запросов.
 """
 
-import requests
 import json
 
-from USAZD.settings import OPENROUTER_API_KEY
+import requests
+
 from main.forms import NeuralNetworkForm
+from USAZD.settings import OPENROUTER_API_KEY
 
 OPENROUTER_API_KEY
 

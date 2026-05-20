@@ -1,8 +1,10 @@
 def load_train_stations():
     """Загружает данные о железнодорожных станциях из JSON файла."""
-    from pathlib import Path
-    from django.conf import settings
     import json
+    from pathlib import Path
+
+    from django.conf import settings
+
     from .small_func import simplify_station_name
 
     project_root = Path(settings.BASE_DIR)
@@ -25,31 +27,19 @@ def load_train_stations():
                                 for settlement in region["settlements"]:
                                     if "stations" in settlement:
                                         for station in settlement["stations"]:
-                                            transport_type = station.get(
-                                                "transport_type", ""
-                                            )
+                                            transport_type = station.get("transport_type", "")
                                             if transport_type == "train":
                                                 title = station.get("title", "")
-                                                yandex_code = station.get(
-                                                    "codes", {}
-                                                ).get("yandex_code", "")
+                                                yandex_code = station.get("codes", {}).get("yandex_code", "")
                                                 if title and yandex_code:
                                                     stations[title.lower()] = {
                                                         "title": title,
                                                         "code": yandex_code,
                                                     }
 
-                                                    simplified = simplify_station_name(
-                                                        title
-                                                    )
-                                                    if (
-                                                        simplified
-                                                        and simplified
-                                                        not in simplified_stations
-                                                    ):
-                                                        simplified_stations[
-                                                            simplified
-                                                        ] = {
+                                                    simplified = simplify_station_name(title)
+                                                    if simplified and simplified not in simplified_stations:
+                                                        simplified_stations[simplified] = {
                                                             "title": title,
                                                             "code": yandex_code,
                                                         }

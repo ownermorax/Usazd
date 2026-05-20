@@ -1,5 +1,6 @@
 from django.contrib.auth import login
 from django.shortcuts import redirect, render
+
 from main.forms import RegistrationForm
 from main.utils import logger
 
@@ -21,9 +22,7 @@ def reg(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            logger.warning(
-                f"Пользователь {user.username} успешно смог зарегистрироваться и войти в аккаунт."
-            )
+            logger.warning(f"Пользователь {user.username} успешно смог зарегистрироваться и войти в аккаунт.")
             return redirect("/")
         else:
             logger.warning("Пользователь не смог зарегистрироваться.")

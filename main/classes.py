@@ -1,6 +1,7 @@
-import requests
-import json
 import datetime
+import json
+
+import requests
 
 
 class Train:
@@ -89,9 +90,7 @@ class YandexAPI:
                 for region in country.get("regions", []):
                     for settlement in region.get("settlements", []):
                         for station in settlement.get("stations", []):
-                            station_code = str(
-                                station.get("codes", {}).get("yandex_code")
-                            )
+                            station_code = str(station.get("codes", {}).get("yandex_code"))
                             station_name = str(station.get("title"))
                             if station_code and station_name:
                                 self.stations_id[station_name.lower()] = station_code
@@ -134,7 +133,8 @@ class YandexAPI:
         :return: JSON-объект с результатами поиска или сообщение об ошибке
         :rtype: dict or str
         """
-        url = f"https://api.rasp.yandex-net.ru/v3.0/search/?apikey={self.YandexAPI_Key}&format=json&from={id_station_from}&to={id_station_to}&lang={lang}&page=1&date={date}&limit=500"
+        url = f"https://api.rasp.yandex-net.ru/v3.0/search/?apikey={
+            self.YandexAPI_Key}&format=json&from={id_station_from}&to={id_station_to}&lang={lang}&page=1&date={date}&limit=500"
         response = requests.get(url)
         if response.status_code == 200:
             return response.json()

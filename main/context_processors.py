@@ -1,6 +1,5 @@
-from .forms import NeuralNetworkForm
-from .classes import YandexAPI
 from .context_processor_helper import *
+from .forms import NeuralNetworkForm
 
 
 def search_form(request):
@@ -25,9 +24,7 @@ def search_form(request):
             stations_dict,
             to_code,
             to_station,
-        ) = get_atr(
-            booking_link, form, from_station, schedule_link, search_query, to_station
-        )
+        ) = get_atr(booking_link, form, from_station, schedule_link, search_query, to_station)
 
         if from_code and to_code:
             try:
@@ -44,9 +41,7 @@ def search_form(request):
             except Exception as e:
                 search_answer = f"Ошибка при получении расписания: {str(e)}"
         else:
-            search_answer = if_not_atr_in_question(
-                from_station, search_answer, stations_dict, to_station
-            )
+            search_answer = if_not_atr_in_question(from_station, search_answer, stations_dict, to_station)
 
     return {
         "search_form": form,
@@ -88,22 +83,16 @@ def get_atr(booking_link, form, from_station, schedule_link, search_query, to_st
 def if_not_atr_in_question(from_station, search_answer, stations_dict, to_station):
     """Формирует ответ, если станции не найдены в запросе."""
     if not from_station and not to_station:
-        search_answer = (
-            "Укажите станции отправления и назначения. Например: 'Долгопрудная Москва'"
-        )
+        search_answer = "Укажите станции отправления и назначения. Например: 'Долгопрудная Москва'"
     elif not from_station:
-        search_answer = (
-            f"Найдена станция назначения: {to_station}. Укажите станцию отправления."
-        )
+        search_answer = f"Найдена станция назначения: {to_station}. Укажите станцию отправления."
     elif not to_station:
-        search_answer = (
-            f"Найдена станция отправления: {from_station}. Укажите станцию назначения."
-        )
+        search_answer = f"Найдена станция отправления: {from_station}. Укажите станцию назначения."
     else:
         if stations_dict:
-            search_answer = (
-                f"Не удалось найти коды станций для {from_station} -> {to_station}"
-            )
+            search_answer = f"Не удалось найти коды станций для {from_station} -> {to_station}"
         else:
-            search_answer = "Для поиска билетов и расписания укажите конкретные станции. Например: 'билеты от Новодачной до Лобни'"
+            search_answer = (
+                "Для поиска билетов и расписания укажите конкретные станции. Например: 'билеты от Новодачной до Лобни'"
+            )
     return search_answer

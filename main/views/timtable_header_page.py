@@ -1,6 +1,8 @@
-from django.http import JsonResponse
-from main.api_instance import yandex_api as yandexAPI
 from datetime import datetime
+
+from django.http import JsonResponse
+
+from main.api_instance import yandex_api as yandexAPI
 from main.utils import logger
 
 
@@ -112,20 +114,12 @@ def timetable_handler(request):
             "title": thread.get("title", ""),
             "transport_type": thread.get("transport_type", ""),
             "departure_station": from_info.get("title", ""),
-            "departure_time": (
-                segment.get("departure", "")[11:16] if segment.get("departure") else ""
-            ),
-            "departure_date": (
-                segment.get("departure", "")[:10] if segment.get("departure") else ""
-            ),
+            "departure_time": (segment.get("departure", "")[11:16] if segment.get("departure") else ""),
+            "departure_date": (segment.get("departure", "")[:10] if segment.get("departure") else ""),
             "departure_full": segment.get("departure", ""),
             "arrival_station": to_info.get("title", ""),
-            "arrival_time": (
-                segment.get("arrival", "")[11:16] if segment.get("arrival") else ""
-            ),
-            "arrival_date": (
-                segment.get("arrival", "")[:10] if segment.get("arrival") else ""
-            ),
+            "arrival_time": (segment.get("arrival", "")[11:16] if segment.get("arrival") else ""),
+            "arrival_date": (segment.get("arrival", "")[:10] if segment.get("arrival") else ""),
             "arrival_full": segment.get("arrival", ""),
             "duration_seconds": duration,
             "duration_hours": hours,

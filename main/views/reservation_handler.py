@@ -1,8 +1,4 @@
-from django.http import JsonResponse
-from djmoney.money import Money
-from main.models import Profile, Station
 from .reservation_helper import *
-from main.utils import logger
 
 
 def reservation_handler(request):
@@ -52,14 +48,10 @@ def reservation_handler(request):
             )
         logger.error(f"Станции: {station_in} -> {station_out}.")
         train = None
-        train = search_train(
-            departure_time, station_in, station_out, train, train_number
-        )
+        train = search_train(departure_time, station_in, station_out, train, train_number)
     except Exception as e:
         logger.exception("Ошибка при обработке бронирования.")
-        return JsonResponse(
-            {"status": "error", "message": f"Ошибка: {str(e)}"}, status=400
-        )
+        return JsonResponse({"status": "error", "message": f"Ошибка: {str(e)}"}, status=400)
 
     PRICE_PER_SEAT, booked_seats, place_nums, total_price = get_some_atr()
     for item in seats.split("W"):
@@ -67,9 +59,7 @@ def reservation_handler(request):
             carriage_num = item.split("x")[0]
             seat_num = item.split("x")[1]
             place_num = f"{carriage_num}-{seat_num}"
-            if Reservation.objects.filter(
-                train=train, place_num=place_num, status="active"
-            ).exists():
+            if Reservation.objects.filter(train=train, place_num=place_num, status="active").exists():
                 logger.warning(f"Место занято: {place_num}.")
                 return JsonResponse(
                     {
@@ -78,9 +68,7 @@ def reservation_handler(request):
                     },
                     status=400,
                 )
-            booked_seats.append(
-                {"carriage": carriage_num, "seat": seat_num, "place_num": place_num}
-            )
+            booked_seats.append({"carriage": carriage_num, "seat": seat_num, "place_num": place_num})
             place_nums.append(place_num)
             total_price += PRICE_PER_SEAT
 
@@ -88,10 +76,6 @@ def reservation_handler(request):
         response = get_bad_response(profile, total_price, user_id)
         return response
 
-    reservation, seats_list = do_reservation(
-        place_nums, profile, station_in, station_out, total_price, train, user
-    )
-    response = get_last_response(
-        place_nums, profile, reservation, seats_list, total_price
-    )
+    reservation, seats_list = do_reservation(place_nums, profile, station_in, station_out, total_price, train, user)
+    response = get_last_response(place_nums, profile, reservation, seats_list, total_price)
     return response

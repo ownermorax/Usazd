@@ -1,6 +1,7 @@
-from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+
 from main.models import Order
 from main.utils import logger
 
@@ -15,6 +16,4 @@ def cancel_order(request, order_id):
         logger.info(f"Пользователь {request.user.username} отменил заказ #{order_id}")
         return JsonResponse({"status": "ok"})
     except Order.DoesNotExist:
-        return JsonResponse(
-            {"status": "error", "message": "Заказ не найден"}, status=404
-        )
+        return JsonResponse({"status": "error", "message": "Заказ не найден"}, status=404)

@@ -1,6 +1,5 @@
 def format_trains_response(trains_data, from_station_title, to_station_title, date):
     """Форматирует данные о поездах в текстовый ответ."""
-    from .get_last_result import get_last_result
     from .small_func import simplify_station_name_for_display
 
     if not trains_data or isinstance(trains_data, str):
@@ -15,9 +14,7 @@ def format_trains_response(trains_data, from_station_title, to_station_title, da
         return f"На {date} поездов из {from_station_title} в {to_station_title} не найдено."
 
     max_trains = 3
-    response_parts = [
-        f"Расписание поездов из {from_station_title} в {to_station_title} на {date}:"
-    ]
+    response_parts = [f"Расписание поездов из {from_station_title} в {to_station_title} на {date}:"]
     response_parts.append("")
 
     for i, segment in enumerate(segments[:max_trains], 1):
@@ -39,21 +36,13 @@ def format_trains_response(trains_data, from_station_title, to_station_title, da
         from_station_display = simplify_station_name_for_display(
             segment.get("from", {}).get("title", from_station_title)
         )
-        to_station_display = simplify_station_name_for_display(
-            segment.get("to", {}).get("title", to_station_title)
-        )
+        to_station_display = simplify_station_name_for_display(segment.get("to", {}).get("title", to_station_title))
 
-        response_parts.append(
-            f"{i}. {train_name} {number}: {from_station_display} -> {to_station_display}"
-        )
-        response_parts.append(
-            f"   Отправление: {dep_time}, Прибытие: {arr_time}, В пути: {duration_str}"
-        )
+        response_parts.append(f"{i}. {train_name} {number}: {from_station_display} -> {to_station_display}")
+        response_parts.append(f"   Отправление: {dep_time}, Прибытие: {arr_time}, В пути: {duration_str}")
         response_parts.append("")
 
     if len(segments) > max_trains:
-        response_parts.append(
-            f"* Показаны первые {max_trains} поезда из {len(segments)}"
-        )
+        response_parts.append(f"* Показаны первые {max_trains} поезда из {len(segments)}")
 
     return "\n".join(response_parts)

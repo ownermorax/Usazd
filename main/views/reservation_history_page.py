@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from main.utils import logger
+
 from main.models import Order
+from main.utils import logger
 
 
 def reservation_history(request):
@@ -14,9 +15,7 @@ def reservation_history(request):
     :returns: HTTP ответ с шаблоном reservation_history.html
     :rtype: HttpResponse
     """
-    orders = Order.objects.filter(
-        user=request.user, status__in=["cancelled", "completed"]
-    ).prefetch_related(
+    orders = Order.objects.filter(user=request.user, status__in=["cancelled", "completed"]).prefetch_related(
         "reservations__train", "reservations__station_in", "reservations__station_out"
     )
 

@@ -1,11 +1,12 @@
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from unfold.admin import ModelAdmin, StackedInline
-from unfold.widgets import UnfoldAdminMoneyWidget
-from unfold.decorators import action
-from main.models import Profile, Reservation
 from djmoney.models.fields import MoneyField
+from unfold.admin import ModelAdmin, StackedInline
+from unfold.decorators import action
+from unfold.widgets import UnfoldAdminMoneyWidget
+
+from main.models import Profile, Reservation
 
 
 class UnfoldUserAdmin(BaseUserAdmin, ModelAdmin):

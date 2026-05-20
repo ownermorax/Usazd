@@ -1,4 +1,3 @@
-from djmoney.money import Money
 from main.utils import logger
 
 

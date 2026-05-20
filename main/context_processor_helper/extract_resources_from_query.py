@@ -1,19 +1,20 @@
 def extract_resources_from_query(query, stations_dict):
     """Извлекает ресурсы (станции, дату) из текстового запроса."""
+    import re
+
     from .get_last_result import get_last_result
     from .small_func import (
-        get_stop_words,
-        get_init_result,
-        get_word_matches,
-        if_second_matches,
-        get_second_atr,
-        get_best_result,
-        if_first_matches,
-        get_date_patterns,
-        get_time,
         get_another_result,
+        get_best_result,
+        get_date_patterns,
+        get_init_result,
+        get_second_atr,
+        get_stop_words,
+        get_time,
+        get_word_matches,
+        if_first_matches,
+        if_second_matches,
     )
-    import re
 
     query_lower = query.lower()
     query_words = query_lower.split()

@@ -1,8 +1,10 @@
-from django.apps import AppConfig
-from main.api_instance import yandex_api
-import threading
-import sys
 import os
+import sys
+import threading
+
+from django.apps import AppConfig
+
+from main.api_instance import yandex_api
 from main.utils import logger
 
 

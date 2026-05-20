@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
+
 from main.models import Profile
 from main.utils import logger
 

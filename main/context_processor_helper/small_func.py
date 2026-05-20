@@ -39,10 +39,7 @@ def get_another_result(query_lower, result):
         ]
     ):
         result["resource_type"] = "schedule"
-    elif any(
-        word in query_lower
-        for word in ["свободн", "есть место", "билет", "забронировать", "купить"]
-    ):
+    elif any(word in query_lower for word in ["свободн", "есть место", "билет", "забронировать", "купить"]):
         result["resource_type"] = "availability"
         result["has_tickets"] = True
     else:
@@ -165,9 +162,7 @@ def get_word_matches(query_words, stations_dict, word_matches):
     from .find_best_matching_stations import find_best_matching_stations
 
     for query_word in query_words:
-        matching_stations = find_best_matching_stations(
-            query_word, stations_dict, min_score=0.5
-        )
+        matching_stations = find_best_matching_stations(query_word, stations_dict, min_score=0.5)
         if matching_stations:
             word_matches[query_word] = matching_stations
 

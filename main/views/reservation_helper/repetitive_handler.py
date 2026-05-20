@@ -1,18 +1,18 @@
+from datetime import datetime, timedelta
 from typing import Any
 
 from django.http import JsonResponse
-from main.models import Profile, Station, Reservation, Train
-from datetime import datetime
 from django.utils import timezone
 from djmoney.money import Money
+
+from main.models import Profile, Station, Train
 from main.utils import logger
-from datetime import timedelta
 
 
 def repetitive_handler(request):
     """Обрабатывает запрос на повторяющееся бронирование."""
-    from .get_attributes import get_attributes
     from .do_reservation import do_reservation
+    from .get_attributes import get_attributes
 
     (
         departure_time,
@@ -84,9 +84,7 @@ def repetitive_handler(request):
             parsed_time,
         )
 
-        logger.info(
-            f"Повторяющееся бронирование #{reservation.reservation_id} создано для пользователя #{user_id}"
-        )
+        logger.info(f"Повторяющееся бронирование #{reservation.reservation_id} создано для пользователя #{user_id}")
 
         return JsonResponse(
             {
@@ -99,9 +97,7 @@ def repetitive_handler(request):
 
     except Exception as e:
         logger.exception("Ошибка при создании повторяющегося бронирования")
-        return JsonResponse(
-            {"status": "error", "message": f"Ошибка: {str(e)}"}, status=400
-        )
+        return JsonResponse({"status": "error", "message": f"Ошибка: {str(e)}"}, status=400)
 
 
 def get_some_atr(
@@ -129,7 +125,7 @@ def get_some_atr(
     if departure_time:
         try:
             parsed_time = datetime.fromisoformat(departure_time)
-        except:
+        except BaseException:
             parsed_time = timezone.now()
     else:
         parsed_time = timezone.now()
@@ -178,7 +174,5 @@ def add_repetitive_reservation(reservation):
         )
         return True
     else:
-        logger.warning(
-            f"Повторяющаяся бронь #{reservation.reservation_id}: недостаточно средств"
-        )
+        logger.warning(f"Повторяющаяся бронь #{reservation.reservation_id}: недостаточно средств")
         return False

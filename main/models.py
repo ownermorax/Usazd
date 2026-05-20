@@ -1,9 +1,10 @@
-from django.db import models
-from django.contrib.auth.models import User
-from djmoney.models.fields import MoneyField
-from djmoney.money import Money
 import datetime
 from decimal import Decimal
+
+from django.contrib.auth.models import User
+from django.db import models
+from djmoney.models.fields import MoneyField
+from djmoney.money import Money
 
 
 class Profile(models.Model):
@@ -17,9 +18,7 @@ class Profile(models.Model):
     is_vip = models.BooleanField(default=False)
     vip_data = models.TextField(blank=True)
 
-    balance = MoneyField(
-        max_digits=10, decimal_places=2, default_currency="USD", default=1000
-    )
+    balance = MoneyField(max_digits=10, decimal_places=2, default_currency="USD", default=1000)
 
     def __str__(self):
         """Возвращает имя пользователя."""
@@ -55,12 +54,8 @@ class Train(models.Model):
     """Модель поездов."""
 
     train_id = models.AutoField(primary_key=True)
-    id_station_start = models.ForeignKey(
-        Station, on_delete=models.CASCADE, related_name="station_start"
-    )
-    id_station_stop = models.ForeignKey(
-        Station, on_delete=models.CASCADE, related_name="station_stop"
-    )
+    id_station_start = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="station_start")
+    id_station_stop = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="station_stop")
     station_at_time = models.DateTimeField()
     path = models.TextField(blank=True)
 
@@ -71,6 +66,7 @@ class Train(models.Model):
 
 class Order(models.Model):
     """Модель заказа."""
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default="active")
@@ -93,12 +89,8 @@ class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     train = models.ForeignKey(Train, on_delete=models.CASCADE, related_name="train")
     place_num = models.CharField(max_length=10)
-    station_in = models.ForeignKey(
-        Station, on_delete=models.CASCADE, related_name="station_in"
-    )
-    station_out = models.ForeignKey(
-        Station, on_delete=models.CASCADE, related_name="station_out"
-    )
+    station_in = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="station_in")
+    station_out = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="station_out")
     reservation_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default="active")
     order = models.ForeignKey(

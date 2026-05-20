@@ -1,6 +1,6 @@
+from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django import forms
 from django.contrib.auth.password_validation import validate_password
 
 
@@ -33,9 +33,7 @@ def clean_password(self):
     validate_password(password, self.instance)
 
     if password.islower() or password.isupper() or password.isdigit():
-        raise forms.ValidationError(
-            "Пароль должен содержать буквы различного регистра и цифры"
-        )
+        raise forms.ValidationError("Пароль должен содержать буквы различного регистра и цифры")
 
     return password
 

@@ -1,6 +1,9 @@
-from django.shortcuts import render
-from main.models import Train as TrainModel, Profile, Reservation, Station
 import json
+
+from django.shortcuts import render
+
+from main.models import Reservation
+from main.models import Train as TrainModel
 from main.utils import logger
 
 

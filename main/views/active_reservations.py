@@ -1,5 +1,6 @@
-from main.models import Profile, Order
 from django.shortcuts import redirect, render
+
+from main.models import Order
 from main.utils import logger
 
 
@@ -17,12 +18,14 @@ def active_reservations(request):
 
     total_places = sum(order.reservations.count() for order in orders)
 
-    logger.debug(
-        f"Найдено заказов: {len(orders)} для пользователя #{request.user.id}."
-    )
+    logger.debug(f"Найдено заказов: {len(orders)} для пользователя #{request.user.id}.")
     logger.info(f"total_places = {total_places}")
 
-    return render(request, "active_reservations.html", {
-        "orders": orders,
-        "total_places": total_places,
-    })
+    return render(
+        request,
+        "active_reservations.html",
+        {
+            "orders": orders,
+            "total_places": total_places,
+        },
+    )

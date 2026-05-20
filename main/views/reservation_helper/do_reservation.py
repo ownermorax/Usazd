@@ -1,7 +1,7 @@
-from djmoney.money import Money
-from main.models import Reservation, Order
-from main.utils import logger
 from decimal import Decimal
+
+from main.models import Order, Reservation
+from main.utils import logger
 
 
 def do_reservation(
