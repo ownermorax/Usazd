@@ -59,7 +59,7 @@ def repetitive_handler(request):
                 status=400,
             )
 
-        parsed_time, place_nums, repeat_hours, total_price, train = get_some_atr(
+        parsed_time, place_nums, repeat_hours, total_price, train = get_some_rep_atr(
             departure_time, repetitive, seats, station_in, station_out, train_number
         )
 
@@ -100,7 +100,7 @@ def repetitive_handler(request):
         return JsonResponse({"status": "error", "message": f"Ошибка: {str(e)}"}, status=400)
 
 
-def get_some_atr(
+def get_some_rep_atr(
     departure_time,
     repetitive,
     seats,
