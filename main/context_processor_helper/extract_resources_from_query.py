@@ -1,4 +1,5 @@
 def extract_resources_from_query(query, stations_dict):
+    """Извлекает ресурсы (станции, дату) из текстового запроса."""
     from .get_last_result import get_last_result
     from .small_func import (
         get_stop_words,

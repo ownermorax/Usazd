@@ -1,6 +1,7 @@
 def find_best_matching_stations(
     query_word, stations_dict, min_score=0.5, max_results=10
 ):
+    """Находит лучшие соответствия станций по слову запроса."""
     from .calculate_word_similarity import calculate_word_similarity
     from .extract_resources_from_query import extract_resources_from_query
     from .station_matches_query_word import station_matches_query_word

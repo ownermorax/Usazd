@@ -1,4 +1,5 @@
 def get_last_result(result, word_matches):
+    """Заполняет результат последними найденными совпадениями станций."""
     if not result["from_station"] and not result["to_station"]:
         all_matches = []
         for word, matches in word_matches.items():

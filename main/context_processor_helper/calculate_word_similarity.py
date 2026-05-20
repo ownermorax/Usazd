@@ -1,4 +1,5 @@
 def calculate_word_similarity(query_word, station_word):
+    """Вычисляет схожесть между двумя словами."""
     from .small_func import normalize_text, get_max_len
     from .extract_all_words_from_station import extract_all_words_from_station
 

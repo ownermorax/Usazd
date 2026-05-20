@@ -1,4 +1,5 @@
 def extract_all_words_from_station(station_title):
+    """Извлекает все слова из названия станции."""
     from .extract_resources_from_query import extract_resources_from_query
     from .small_func import normalize_text
     import re

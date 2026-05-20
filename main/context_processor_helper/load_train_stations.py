@@ -1,4 +1,5 @@
 def load_train_stations():
+    """Загружает данные о железнодорожных станциях из JSON файла."""
     from pathlib import Path
     from django.conf import settings
     import json

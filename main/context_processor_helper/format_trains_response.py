@@ -1,4 +1,5 @@
 def format_trains_response(trains_data, from_station_title, to_station_title, date):
+    """Форматирует данные о поездах в текстовый ответ."""
     from .get_last_result import get_last_result
     from .small_func import simplify_station_name_for_display
 

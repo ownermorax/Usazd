@@ -4,6 +4,7 @@ from .context_processor_helper import *
 
 
 def search_form(request):
+    """Обрабатывает поисковую форму и возвращает контекст для шаблона."""
     form = NeuralNetworkForm(request.GET or None)
     search_query = None
     search_answer = None
@@ -60,6 +61,7 @@ def search_form(request):
 
 
 def get_atr(booking_link, form, from_station, schedule_link, search_query, to_station):
+    """Извлекает атрибуты из формы поиска."""
     search_query = form.cleaned_data["text"]
     stations_dict = load_train_stations()
     extracted_info = extract_resources_from_query(search_query, stations_dict)
@@ -84,6 +86,7 @@ def get_atr(booking_link, form, from_station, schedule_link, search_query, to_st
 
 
 def if_not_atr_in_question(from_station, search_answer, stations_dict, to_station):
+    """Формирует ответ, если станции не найдены в запросе."""
     if not from_station and not to_station:
         search_answer = (
             "Укажите станции отправления и назначения. Например: 'Долгопрудная Москва'"

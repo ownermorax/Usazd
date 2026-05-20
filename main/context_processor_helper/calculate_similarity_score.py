@@ -1,4 +1,5 @@
 def calculate_similarity_score(query_word, station_info):
+    """Вычисляет оценку схожести между словом запроса и информацией о станции."""
     from .calculate_word_similarity import calculate_word_similarity
     from .extract_all_words_from_station import extract_all_words_from_station
     from .small_func import normalize_text

@@ -1,3 +1,5 @@
+"""Вспомогательные функции для обработки контекстных процессоров."""
+
 from .calculate_word_similarity import *
 from .calculate_similarity_score import *
 from .extract_all_words_from_station import *

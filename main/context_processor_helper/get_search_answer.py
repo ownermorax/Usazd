@@ -1,6 +1,7 @@
 def get_search_answer(
     date, from_code, from_station, search_answer, to_code, to_station, trains_data
 ):
+    """Получает ответ на поисковый запрос о расписании поездов."""
     from main.classes import YandexAPI
     from .format_trains_response import format_trains_response
 

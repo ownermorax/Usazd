@@ -1,4 +1,5 @@
 def simplify_station_name(full_name):
+    """Упрощает название станции, удаляя скобки и лишние пробелы."""
     import re
 
     simplified = re.sub(r"\s*\([^)]*\)", "", full_name).strip()
@@ -9,10 +10,12 @@ def simplify_station_name(full_name):
 
 
 def normalize_text(text):
+    """Приводит текст к нижнему регистру и заменяет ё на е."""
     return text.lower().replace("ё", "е").strip()
 
 
 def get_max_len(dp, m, max_len, n, query_word, station_word):
+    """Вычисляет максимальную длину общей подстроки."""
     for i in range(1, m + 1):
         for j in range(1, n + 1):
             if query_word[i - 1] == station_word[j - 1]:
@@ -23,6 +26,7 @@ def get_max_len(dp, m, max_len, n, query_word, station_word):
 
 
 def get_another_result(query_lower, result):
+    """Определяет тип ресурса по ключевым словам в запросе."""
     if any(
         word in query_lower
         for word in [
@@ -46,6 +50,7 @@ def get_another_result(query_lower, result):
 
 
 def get_time(result):
+    """Устанавливает текущую дату в московском часовом поясе."""
     from datetime import datetime, timedelta, timezone
 
     moscow_tz = timezone(timedelta(hours=3))
@@ -54,6 +59,7 @@ def get_time(result):
 
 
 def get_date_patterns():
+    """Возвращает регулярные выражения для поиска дат."""
     date_patterns = [
         r"(\d{2})[./-](\d{2})[./-](\d{4})",
         r"(\d{4})[./-](\d{2})[./-](\d{2})",
@@ -62,6 +68,7 @@ def get_date_patterns():
 
 
 def if_second_matches(result, second_matches):
+    """Заполняет станцию назначения из совпадений."""
     best = second_matches[0][1]
     result["to_station"] = best["title"].lower()
     result["to_station_code"] = best["code"]
@@ -69,6 +76,7 @@ def if_second_matches(result, second_matches):
 
 
 def if_first_matches(first_matches, result):
+    """Заполняет станцию отправления из совпадений."""
     best = first_matches[0][1]
     result["from_station"] = best["title"].lower()
     result["from_station_code"] = best["code"]
@@ -76,6 +84,7 @@ def if_first_matches(first_matches, result):
 
 
 def get_best_result(first_matches, result, second_matches):
+    """Заполняет обе станции из лучших совпадений."""
     best_from, best_to = get_best_form(first_matches, second_matches)
     result["from_station"] = best_from["title"].lower()
     result["from_station_code"] = best_from["code"]
@@ -86,6 +95,7 @@ def get_best_result(first_matches, result, second_matches):
 
 
 def get_second_atr(query_words, word_matches):
+    """Получает совпадения для первых двух слов запроса."""
     first_word = query_words[0]
     second_word = query_words[1]
     first_matches = word_matches.get(first_word, [])
@@ -94,6 +104,7 @@ def get_second_atr(query_words, word_matches):
 
 
 def get_best_form(first_matches, second_matches):
+    """Находит лучшие станции отправления и назначения."""
     first_stations = [m[1] for m in first_matches]
     second_stations = [m[1] for m in second_matches]
     best_from = first_stations[0]
@@ -107,6 +118,7 @@ def get_best_form(first_matches, second_matches):
 
 
 def get_init_result():
+    """Возвращает инициализированный словарь результата."""
     result = {
         "from_station": None,
         "from_station_code": None,
@@ -122,6 +134,7 @@ def get_init_result():
 
 
 def get_stop_words():
+    """Возвращает список стоп-слов для фильтрации запросов."""
     stop_words = [
         "из",
         "от",
@@ -148,6 +161,7 @@ def get_stop_words():
 
 
 def get_word_matches(query_words, stations_dict, word_matches):
+    """Находит совпадения станций для каждого слова запроса."""
     from .find_best_matching_stations import find_best_matching_stations
 
     for query_word in query_words:
@@ -159,6 +173,7 @@ def get_word_matches(query_words, stations_dict, word_matches):
 
 
 def simplify_station_name_for_display(full_name):
+    """Упрощает название станции для отображения."""
     import re
 
     simplified = re.sub(r"\s*\([^)]*\)", "", full_name).strip()
