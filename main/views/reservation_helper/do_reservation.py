@@ -2,17 +2,18 @@ from djmoney.money import Money
 from main.models import Reservation, Order
 from main.utils import logger
 from decimal import Decimal
-from .get_attributes import *
-from .repetitive_handler import *
-from .get_attributes import *
-from .get_some_atr import *
-from .search_train import *
-from .do_reservation import *
-from .get_response import *
 
 
 def do_reservation(
-    place_nums, profile, station_in, station_out, total_price, train, user
+    place_nums,
+    profile,
+    station_in,
+    station_out,
+    total_price,
+    train,
+    user,
+    repeat="0",
+    last_repeat=None,
 ):
     profile.update_balance(-total_price)
     if profile.is_vip:
@@ -20,10 +21,8 @@ def do_reservation(
         profile.update_balance(cashback)
     profile.save()
 
-    # Создаём Order
     order = Order.objects.create(user=user)
 
-    # Создаём отдельную Reservation на каждое место
     for place_num in place_nums:
         Reservation.objects.create(
             user=user,
@@ -33,6 +32,8 @@ def do_reservation(
             station_out=station_out,
             status="active",
             order=order,
+            repeat=repeat,
+            last_repeat=last_repeat,
         )
 
     logger.info(f"Успешное бронирование, заказ #{order.id}, мест: {len(place_nums)}.")

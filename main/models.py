@@ -101,6 +101,8 @@ class Reservation(models.Model):
         null=True,
         blank=True,
     )
+    repeat = models.CharField(max_length=10)
+    last_repeat = models.DateTimeField(null=True, blank=True)
 
     def cancel(self):
         if self.status != "cancelled":

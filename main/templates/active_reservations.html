@@ -38,6 +38,16 @@
 
             <div class="card-body">
                 {% for reservation in order.reservations.all %}
+                {% if reservation.repeat != "0" %}
+                <div class="repeat-badge">
+                    🔄 Повторяющееся бронирование
+                    {% if reservation.repeat == "24" %}
+                        (каждый день)
+                    {% elif reservation.repeat == "168" %}
+                        (раз в неделю)
+                    {% endif %}
+                </div>
+                {% endif %}
                 <div class="info-grid">
                     <div class="info-item">
                         <div class="info-icon">🚂</div>
@@ -64,7 +74,7 @@
                         <div class="info-icon">🕐</div>
                         <div class="info-content">
                             <div class="info-label">Отправление</div>
-                            <div class="info-value">{{ reservation.train.station_at_time|date:"d.m.Y H:i" }}</div>
+                            <div class="info-value">{{ reservation.last_repeat|date:"d.m.Y H:i" }}</div>
                         </div>
                     </div>
                 </div>
@@ -87,13 +97,25 @@
     </div>
     {% endif %}
 
-    <!-- Кнопка возврата в профиль -->
     <div class="back-wrapper">
         <a href="{% url 'profile' user.username %}" class="back-button">
             ← Вернуться в профиль
         </a>
     </div>
 </div>
+
+<style>
+.repeat-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+</style>
 
 <script>
 

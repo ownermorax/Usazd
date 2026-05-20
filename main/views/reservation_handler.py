@@ -2,10 +2,10 @@ from django.http import JsonResponse
 from djmoney.money import Money
 from main.models import Profile, Station
 from .reservation_helper import *
+from main.utils import logger
 
 
 def reservation_handler(request):
-    """Обработчик бронирования мест"""
     (
         departure_time,
         seats,
@@ -17,13 +17,16 @@ def reservation_handler(request):
         user_id,
         repetitive,
     ) = get_attributes(request)
+
     if not user_id or not train_number or not seats:
         return JsonResponse(
             {"status": "error", "message": "Недостаточно данных для бронирования"},
             status=400,
         )
+
     if repetitive != "0":
-        repetitive_handler(request)
+        return repetitive_handler(request)
+
     try:
         profile = Profile.objects.get(user__id=user_id)
         logger.debug(f"Пользователь найден: #{user_id}.")
@@ -56,6 +59,7 @@ def reservation_handler(request):
         return JsonResponse(
             {"status": "error", "message": f"Ошибка: {str(e)}"}, status=400
         )
+
     PRICE_PER_SEAT, booked_seats, place_nums, total_price = get_some_atr()
     for item in seats.split("W"):
         if item and "x" in item:
@@ -78,9 +82,11 @@ def reservation_handler(request):
             )
             place_nums.append(place_num)
             total_price += PRICE_PER_SEAT
+
     if profile.balance < total_price:
         response = get_bad_response(profile, total_price, user_id)
         return response
+
     reservation, seats_list = do_reservation(
         place_nums, profile, station_in, station_out, total_price, train, user
     )

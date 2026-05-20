@@ -3,6 +3,7 @@ from main.api_instance import yandex_api
 import threading
 import sys
 import os
+from main.utils import logger
 
 
 class MainConfig(AppConfig):
@@ -34,19 +35,36 @@ class MainConfig(AppConfig):
             time.sleep(2)
             from main.parser import parser
 
+            parser.start_parser("usdt")
+
             parser.start()
 
         def run_premium_parser():
             """Запускает проверку истечения VIP статусов в фоновом режиме."""
             import time
 
-            time.sleep(2)
+            time.sleep(3)
             from main.parser import parser
 
-            parser.check_premium()
+            parser.start_parser("vip")
+
+        def run_resrvation_parser():
+            """Запускает проверку на повторные бронирования в фоновом режиме."""
+            import time
+
+            time.sleep(4)
+            from main.parser import parser
+
+            parser.start_parser("reservation")
 
         thread_usdt = threading.Thread(target=run_usdt_parser, daemon=True)
         thread_usdt.start()
+        logger.info(f"USDT парсер запущен")
 
         thread_premium = threading.Thread(target=run_premium_parser, daemon=True)
         thread_premium.start()
+        logger.info(f"VIP парсер запущен")
+
+        thread_premium = threading.Thread(target=run_resrvation_parser, daemon=True)
+        thread_premium.start()
+        logger.info(f"Reservation парсер запущен")

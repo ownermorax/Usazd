@@ -6,6 +6,8 @@ import os
 import django
 import json
 from pathlib import Path
+from main.models import Reservation
+from djmoney.money import Money
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "coffee_project.settings")
 django.setup()
@@ -13,14 +15,10 @@ django.setup()
 from main.models import Profile
 import datetime
 
+from main.utils import logger
 
-class Parser:
-    """Парсер для обработки USDT транзакций и проверки VIP статусов.
 
-    Отслеживает транзакции USDT в блокчейне TON и обновляет балансы пользователей.
-    Также проверяет истечение срока действия VIP статусов.
-    """
-
+class UsdtParser:
     def __init__(self):
         self.usdt_contract = (
             "0:b113a994b5024a16719f69139328eb759596c38a25f59028b146fecdc3621dfe"
@@ -35,11 +33,6 @@ class Parser:
         self.seen = self.load_seen_transactions()
 
     def load_seen_transactions(self):
-        """Загружает список обработанных транзакций из файла.
-
-        :return: Множество идентификаторов обработанных событий
-        :rtype: set
-        """
         if self.seen_file.exists():
             try:
                 with open(self.seen_file, "r", encoding="utf-8") as f:
@@ -50,7 +43,6 @@ class Parser:
         return set()
 
     def save_seen_transactions(self):
-        """Сохраняет список обработанных транзакций в файл."""
         try:
             data = {"processed_events": list(self.seen)}
             with open(self.seen_file, "w", encoding="utf-8") as f:
@@ -59,10 +51,6 @@ class Parser:
             pass
 
     def start(self):
-        """Запускает бесконечный цикл парсинга USDT транзакций.
-
-        Проверяет новые транзакции каждые 10 секунд и обновляет балансы пользователей.
-        """
         while True:
             try:
                 response = requests.get(self.url, timeout=30)
@@ -101,29 +89,128 @@ class Parser:
                                     self.seen.add(event_id)
                                     self.save_seen_transactions()
                                 except Profile.DoesNotExist:
-                                    pass
-                                except Exception:
-                                    pass
+                                    logger.info(f"Профиль не найден: id{str(user_id)}")
+                                except Exception as e:
+                                    logger.info(f"Ошибка в парсере: {str(e)}")
                             else:
                                 pass
 
-            except Exception:
-                pass
+            except Exception as e:
+                logger.info(f"Ошибка в парсере: {str(e)}")
             sleep(10)
 
-    def check_premium(self):
-        """Запускает бесконечный цикл проверки VIP статусов.
 
-        Деактивирует VIP статус пользователей, у которых истек срок действия.
-        Проверка выполняется каждые 10 секунд.
-        """
+class PremiumParser:
+    def __init__(self):
+        pass
+
+    def start(self):
         while True:
-            for profile in Profile.objects.filter(is_vip=True):
-                if profile.vip_expire and profile.vip_expire < datetime.datetime.now():
-                    profile.is_vip = False
-                    profile.vip_data = ""
-                    profile.save()
+            try:
+                for profile in Profile.objects.filter(is_vip=True):
+                    if (
+                        profile.vip_expire
+                        and profile.vip_expire < datetime.datetime.now()
+                    ):
+                        profile.is_vip = False
+                        profile.vip_data = ""
+                        profile.save()
+                        logger.info(f"VIP expired for user {profile.user.id}")
+            except Exception as e:
+                logger.info(f"Ошибка в парсере: {str(e)}")
+
+            sleep(30)
+
+
+class ReservationParser:
+    def __init__(self):
+        pass
+
+    def start(self):
+        from main.views.reservation_helper.repetitive_handler import (
+            add_repetitive_reservation,
+        )
+
+        while True:
+            try:
+                now = datetime.datetime.now(datetime.timezone.utc)
+                repetitive_reservations = Reservation.objects.filter(
+                    status="active"
+                ).exclude(repeat="0")
+
+                for reservation in repetitive_reservations:
+                    try:
+                        repeat_hours = int(reservation.repeat)
+                        if repeat_hours <= 0:
+                            continue
+
+                        if reservation.last_repeat:
+                            last_repeat = reservation.last_repeat
+                            if last_repeat.tzinfo is None:
+                                last_repeat = last_repeat.replace(
+                                    tzinfo=datetime.timezone.utc
+                                )
+
+                            next_departure = last_repeat + datetime.timedelta(
+                                hours=repeat_hours
+                            )
+
+                            if next_departure <= now:
+                                while next_departure <= now:
+                                    next_departure += datetime.timedelta(
+                                        hours=repeat_hours
+                                    )
+
+                            booking_time = next_departure - datetime.timedelta(days=1)
+
+                            if now >= booking_time:
+                                reservation.refresh_from_db()
+                                if reservation.last_repeat.tzinfo is None:
+                                    reservation.last_repeat = (
+                                        reservation.last_repeat.replace(
+                                            tzinfo=datetime.timezone.utc
+                                        )
+                                    )
+                                if (
+                                    reservation.last_repeat
+                                    >= next_departure
+                                    - datetime.timedelta(hours=repeat_hours)
+                                ):
+                                    continue
+                                success = add_repetitive_reservation(reservation)
+                                if success:
+                                    logger.info(
+                                        f"Повторяющаяся бронь #{reservation.reservation_id} обработана"
+                                    )
+                                else:
+                                    logger.warning(
+                                        f"Повторяющаяся бронь #{reservation.reservation_id}: недостаточно средств"
+                                    )
+
+                    except Exception as e:
+                        logger.info(
+                            f"Ошибка обработки брони #{reservation.reservation_id}: {str(e)}"
+                        )
+
+            except Exception as e:
+                logger.info(f"Ошибка в ReservationParser: {str(e)}")
+
             sleep(10)
+
+
+class Parser:
+    def __init__(self):
+        pass
+
+    def start_parser(self, mode):
+        mods = {
+            "usdt": UsdtParser,
+            "vip": PremiumParser,
+            "reservation": ReservationParser,
+        }
+        sparser = mods[mode]()
+        sparser.start()
+        return True
 
 
 parser = Parser()
