@@ -1,6 +1,6 @@
 from django.test import RequestFactory
 import json
-from unittest.mock import patch, MagicMock, PropertyMock
+from unittest.mock import patch, MagicMock, PropertyMock, mock_open
 import pytest
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -769,3 +769,59 @@ def test_redirects_after_cancel(mock_get, factory, user):
     response = cancel_reservation(request, reservation_id=1)
 
     assert response.status_code == 302
+
+def test_load_train_stations_file_not_exists():
+    with patch("pathlib.Path.exists", return_value=False):
+        from main.context_processors import load_train_stations
+        result = load_train_stations()
+        assert result == {}
+
+def test_load_train_stations_returns_stations():
+    data = {
+        "countries": [{
+            "regions": [{
+                "settlements": [{
+                    "stations": [{
+                        "transport_type": "train",
+                        "title": "Москва",
+                        "codes": {"yandex_code": "s123"}
+                    }]
+                }]
+            }]
+        }]
+    }
+
+    with patch("pathlib.Path.exists", return_value=True), \
+         patch("builtins.open", mock_open(read_data=json.dumps(data))):
+        from main.context_processors import load_train_stations
+        result = load_train_stations()
+        assert "москва" in result
+        assert result["москва"]["code"] == "s123"
+
+def test_load_train_stations_skips_non_train():
+    data = {
+        "countries": [{
+            "regions": [{
+                "settlements": [{
+                    "stations": [{
+                        "transport_type": "bus",
+                        "title": "Автовокзал",
+                        "codes": {"yandex_code": "s999"}
+                    }]
+                }]
+            }]
+        }]
+    }
+
+    with patch("pathlib.Path.exists", return_value=True), \
+         patch("builtins.open", mock_open(read_data=json.dumps(data))):
+        from main.context_processors import load_train_stations
+        result = load_train_stations()
+        assert result == {}
+
+def test_load_train_stations_invalid_json():
+    with patch("pathlib.Path.exists", return_value=True), \
+         patch("builtins.open", mock_open(read_data="not json")):
+        from main.context_processors import load_train_stations
+        result = load_train_stations()
+        assert result == {}

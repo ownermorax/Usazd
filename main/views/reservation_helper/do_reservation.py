@@ -15,6 +15,17 @@ def do_reservation(
     repeat="0",
     last_repeat=None,
 ):
+
+    for place_num in place_nums:
+        if Reservation.objects.filter(
+            train=train,
+            place_num=place_num,
+            station_in=station_in,
+            station_out=station_out,
+            status="active",
+        ).exists():
+            raise ValueError(f"Место {place_num} уже занято")
+
     profile.update_balance(-total_price)
     if profile.is_vip:
         cashback = total_price.amount * Decimal("0.05")

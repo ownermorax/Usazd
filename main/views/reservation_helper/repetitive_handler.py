@@ -132,7 +132,7 @@ def get_some_atr(
     else:
         parsed_time = timezone.now()
 
-    repetitive_int = int(repetitive)
+    repetitive_int = int(repetitive) if repetitive else 0
     if repetitive_int == 1:
         repeat_hours = "24"
     elif repetitive_int == 2:
