@@ -18,7 +18,7 @@ class Profile(models.Model):
     is_vip = models.BooleanField(default=False)
     vip_data = models.TextField(blank=True)
 
-    balance = MoneyField(max_digits=10, decimal_places=2, default_currency="USD", default=1000)
+    balance = MoneyField(max_digits=10, decimal_places=2, default_currency="USD", default=10)
 
     def __str__(self):
         """Возвращает имя пользователя."""

@@ -53,6 +53,12 @@
                         <li>
                             <a href="/info" class="nav-link px-2 text-white">О нас</a>
                         </li>
+                        <li>
+                    {% load static %}
+                    <a href="{% static 'usazd.apk' %}" class="nav-link px-2 text-white" download>
+                        Скачать приложение
+                    </a>
+                </li>
                     </ul>
 
                     <form method="GET" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
