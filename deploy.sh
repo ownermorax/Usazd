@@ -25,23 +25,26 @@ fi
 "$VENV_PATH/bin/pip" install -r "$PROJECT_DIR/requirements.txt" -q
 "$VENV_PATH/bin/pip" install gunicorn -q
 
-echo "[3/7] Статика и мигирации..."
+echo "[3/7] Статика и миграции..."
+sudo mkdir -p "$PROJECT_DIR/logs" "$PROJECT_DIR/media" "$PROJECT_DIR/static"
+
 "$VENV_PATH/bin/python" "$PROJECT_DIR/manage.py" migrate --noinput
 "$VENV_PATH/bin/python" "$PROJECT_DIR/manage.py" collectstatic --noinput --clear
 
 echo "[4/7] Права доступа..."
+sudo chmod +x "/home/$CURRENT_USER"
+
 sudo chown -R "$CURRENT_USER:www-data" "$PROJECT_DIR"
 
 sudo find "$PROJECT_DIR" -not -path "*/venv/*" -type d -exec chmod 755 {} +
 sudo find "$PROJECT_DIR" -not -path "*/venv/*" -type f -exec chmod 644 {} +
 sudo chmod +x "$PROJECT_DIR/manage.py" || true
 
-sudo mkdir -p "$PROJECT_DIR/logs" "$PROJECT_DIR/media"
-sudo find "$PROJECT_DIR/logs" "$PROJECT_DIR/media" -type d -exec chmod 775 {} +
-sudo find "$PROJECT_DIR/logs" "$PROJECT_DIR/media" -type f -exec chmod 664 {} +
+sudo find "$PROJECT_DIR/logs" "$PROJECT_DIR/media" "$PROJECT_DIR/static" -type d -exec chmod 775 {} +
+sudo find "$PROJECT_DIR/logs" "$PROJECT_DIR/media" "$PROJECT_DIR/static" -type f -exec chmod 664 {} +
 
 if [ -f "$PROJECT_DIR/db.sqlite3" ]; then
-    sudo chown $CURRENT_USER:www-data "$PROJECT_DIR/db.sqlite3"
+    sudo chown "$CURRENT_USER:www-data" "$PROJECT_DIR/db.sqlite3"
     sudo chmod 664 "$PROJECT_DIR/db.sqlite3"
     sudo chmod 775 "$PROJECT_DIR" 
 fi
