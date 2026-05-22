@@ -51,7 +51,7 @@ fi
 
 echo "[5/7] systemd сервис..."
 CPU_CORES=$(nproc)
-WORKERS=$(expr $CPU_CORES \* 2 + 1)
+WORKERS=$((CPU_CORES * 2 + 1))
 
 sudo tee "/etc/systemd/system/$SERVICE_NAME.service" > /dev/null << EOF
 [Unit]
