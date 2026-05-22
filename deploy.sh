@@ -52,66 +52,68 @@ sudo chown -R www-data:www-data "$LOG_DIR"
 
 
 echo "[6/8] Настройка systemd сервиса..."
-sudo tee "/etc/systemd/system/$SERVICE_NAME.service" > /dev/null <<EOF
+sudo tee "/etc/systemd/system/$SERVICE_NAME.service" > /dev/null << 'SERVICEEOF'
 [Unit]
-Description=gunicorn daemon for $PROJECT_NAME project
+Description=gunicorn daemon for USAZD project
 After=network.target
 
 [Service]
 User=www-data
 Group=www-data
-WorkingDirectory=$PROJECT_DIR
+WorkingDirectory=/home/dev/usazd
 Environment="RUN_MAIN=true"
-Environment="DJANGO_SETTINGS_MODULE=$PROJECT_NAME.settings"
-ExecStart=$VENV_PATH/bin/gunicorn \\
-    --access-logfile - \\
-    --error-logfile - \\
-    --workers 1 \\
-    --bind unix:$SOCKET_PATH \\
-    $PROJECT_NAME.wsgi:application
+Environment="DJANGO_SETTINGS_MODULE=USAZD.settings"
+ExecStart=/home/dev/usazd/venv/bin/gunicorn \
+    --access-logfile - \
+    --error-logfile - \
+    --workers 1 \
+    --bind unix:/home/dev/usazd/gunicorn.sock \
+    USAZD.wsgi:application
 Restart=always
 RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
-EOF
+SERVICEEOF
 
 sudo systemctl daemon-reload
 sudo systemctl enable "$SERVICE_NAME"
 sudo systemctl restart "$SERVICE_NAME"
 
+
 echo "[7/8] Настройка Nginx..."
-sudo tee "/etc/nginx/sites-available/$DOMAIN" > /dev/null <<EOF
+sudo tee "/etc/nginx/sites-available/$DOMAIN" > /dev/null << 'NGINXEOF'
 server {
     listen 80;
-    server_name $DOMAIN;
+    server_name usazd.xpowl.xyz;
 
     location /static/ {
-        alias $STATIC_DIR/;
+        alias /home/dev/usazd/static/;
         expires 30d;
         add_header Cache-Control "public, immutable";
     }
 
     location /media/ {
-        alias $MEDIA_DIR/;
+        alias /home/dev/usazd/media/;
         expires 30d;
         add_header Cache-Control "public, immutable";
     }
 
     location / {
         include proxy_params;
-        proxy_pass http://unix:$SOCKET_PATH;
+        proxy_pass http://unix:/home/dev/usazd/gunicorn.sock;
         proxy_read_timeout 300s;
         proxy_connect_timeout 75s;
     }
 }
-EOF
+NGINXEOF
 
 if [ ! -L "/etc/nginx/sites-enabled/$DOMAIN" ]; then
     sudo ln -s "/etc/nginx/sites-available/$DOMAIN" "/etc/nginx/sites-enabled/"
 fi
 
 sudo nginx -t && sudo systemctl reload nginx
+
 
 echo "[8/8] Настройка SSL сертификата..."
 if [ ! -d "/etc/letsencrypt/live/$DOMAIN" ]; then
