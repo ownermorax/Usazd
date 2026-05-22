@@ -53,15 +53,15 @@
 python manage.py runserver
 ```
 
-#  {yellow}(USAZD — деплой с нуля)
+# {yellow}(USAZD — деплой с нуля)
 
 **Быстрый старт**
 
 ```bash
-`git clone git@github.com:username/usazd.git /home/dev/usazd
+git clone git@github.com:username/usazd.git /home/dev/usazd
 cd /home/dev/usazd
 chmod +x deploy.sh
-sudo ./deploy.sh`
+sudo ./deploy.sh
 ```
 
 ---
