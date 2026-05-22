@@ -1,134 +1,130 @@
 #!/bin/bash
 set -e
 
-# ============================================
-# Автоматический деплой USAZD
-# ============================================
-
 PROJECT_DIR="/home/dev/usazd"
 PROJECT_NAME="USAZD"
 DOMAIN="usazd.xpowl.xyz"
 SERVICE_NAME="gunicorn-usazd"
 VENV_PATH="$PROJECT_DIR/venv"
 SOCKET_PATH="$PROJECT_DIR/gunicorn.sock"
-STATIC_DIR="$PROJECT_DIR/static"
-MEDIA_DIR="$PROJECT_DIR/media"
-LOG_DIR="$PROJECT_DIR/logs"
+CURRENT_USER=$(whoami)
 
 echo "========================================="
 echo "  Деплой $PROJECT_NAME на $DOMAIN"
 echo "========================================="
 
-
-echo "[1/8] Установка системных пакетов..."
+echo "[1/7] Системные пакеты..."
 sudo apt-get update -qq
 sudo apt-get install -y -qq nginx certbot python3-certbot-nginx python3-pip python3-venv
 
-
-echo "[2/8] Настройка виртуального окружения..."
+echo "[2/7] Зависимости Python..."
 if [ ! -d "$VENV_PATH" ]; then
     python3 -m venv "$VENV_PATH"
 fi
-source "$VENV_PATH/bin/activate"
-pip install --upgrade pip -q
-pip install -r "$PROJECT_DIR/requirements.txt" -q
-pip install gunicorn -q
+"$VENV_PATH/bin/pip" install --upgrade pip -q
+"$VENV_PATH/bin/pip" install -r "$PROJECT_DIR/requirements.txt" -q
+"$VENV_PATH/bin/pip" install gunicorn -q
 
+echo "[3/7] Статика и мигирации..."
+"$VENV_PATH/bin/python" "$PROJECT_DIR/manage.py" migrate --noinput
+"$VENV_PATH/bin/python" "$PROJECT_DIR/manage.py" collectstatic --noinput --clear
 
-echo "[3/8] Сбор статических файлов..."
-python "$PROJECT_DIR/manage.py" collectstatic --noinput --clear
+echo "[4/7] Права доступа..."
+sudo chown -R $CURRENT_USER:www-data "$PROJECT_DIR"
 
+sudo find "$PROJECT_DIR" -not -path "*/venv/*" -type d -exec chmod 755 {} +
+sudo find "$PROJECT_DIR" -not -path "*/venv/*" -type f -exec chmod 644 {} +
+sudo chmod +x "$PROJECT_DIR/manage.py" || true
 
-echo "[4/8] Применение миграций..."
-python "$PROJECT_DIR/manage.py" migrate --noinput
+sudo mkdir -p "$PROJECT_DIR/logs" "$PROJECT_DIR/media"
+sudo find "$PROJECT_DIR/logs" "$PROJECT_DIR/media" -type d -exec chmod 775 {} +
+sudo find "$PROJECT_DIR/logs" "$PROJECT_DIR/media" -type f -exec chmod 664 {} +
 
+if [ -f "$PROJECT_DIR/db.sqlite3" ]; then
+    sudo chown $CURRENT_USER:www-data "$PROJECT_DIR/db.sqlite3"
+    sudo chmod 664 "$PROJECT_DIR/db.sqlite3"
+    sudo chmod 775 "$PROJECT_DIR" 
+fi
 
-echo "[5/8] Настройка прав доступа..."
-sudo chown -R www-data:www-data "$PROJECT_DIR"
-sudo chmod -R 755 "$PROJECT_DIR"
-sudo chmod 600 "$PROJECT_DIR/db.sqlite3" 2>/dev/null || true
-sudo mkdir -p "$LOG_DIR"
-sudo chown -R www-data:www-data "$LOG_DIR"
+echo "[5/7] systemd сервис..."
+CPU_CORES=$(nproc)
+WORKERS=$((CPU_CORES * 2 + 1))
 
-
-echo "[6/8] Настройка systemd сервиса..."
-sudo tee "/etc/systemd/system/$SERVICE_NAME.service" > /dev/null << 'SERVICEEOF'
+sudo tee "/etc/systemd/system/$SERVICE_NAME.service" > /dev/null << EOF
 [Unit]
-Description=gunicorn daemon for USAZD project
+Description=gunicorn daemon for $PROJECT_NAME
 After=network.target
 
 [Service]
-User=www-data
+User=$CURRENT_USER
 Group=www-data
-WorkingDirectory=/home/dev/usazd
+WorkingDirectory=$PROJECT_DIR
 Environment="RUN_MAIN=true"
-Environment="DJANGO_SETTINGS_MODULE=USAZD.settings"
-ExecStart=/home/dev/usazd/venv/bin/gunicorn \
-    --access-logfile - \
-    --error-logfile - \
-    --workers 1 \
-    --bind unix:/home/dev/usazd/gunicorn.sock \
-    USAZD.wsgi:application
+Environment="DJANGO_SETTINGS_MODULE=$PROJECT_NAME.settings"
+ExecStart=$VENV_PATH/bin/gunicorn \\
+    --access-logfile $PROJECT_DIR/logs/gunicorn-access.log \\
+    --error-logfile $PROJECT_DIR/logs/gunicorn-error.log \\
+    --workers $WORKERS \\
+    --umask 007 \\
+    --bind unix:$SOCKET_PATH \\
+    $PROJECT_NAME.wsgi:application
 Restart=always
 RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
-SERVICEEOF
+EOF
 
 sudo systemctl daemon-reload
 sudo systemctl enable "$SERVICE_NAME"
 sudo systemctl restart "$SERVICE_NAME"
 
-
-echo "[7/8] Настройка Nginx..."
-sudo tee "/etc/nginx/sites-available/$DOMAIN" > /dev/null << 'NGINXEOF'
+echo "[6/7] Nginx..."
+sudo tee "/etc/nginx/sites-available/$DOMAIN" > /dev/null << EOF
 server {
     listen 80;
-    server_name usazd.xpowl.xyz;
+    server_name $DOMAIN;
 
     location /static/ {
-        alias /home/dev/usazd/static/;
-        expires 30d;
-        add_header Cache-Control "public, immutable";
+        alias $PROJECT_DIR/static/;
     }
 
     location /media/ {
-        alias /home/dev/usazd/media/;
-        expires 30d;
-        add_header Cache-Control "public, immutable";
+        alias $PROJECT_DIR/media/;
     }
 
     location / {
-        include proxy_params;
-        proxy_pass http://unix:/home/dev/usazd/gunicorn.sock;
+        proxy_pass http://unix:$SOCKET_PATH;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
         proxy_read_timeout 300s;
-        proxy_connect_timeout 75s;
     }
 }
-NGINXEOF
+EOF
 
 if [ ! -L "/etc/nginx/sites-enabled/$DOMAIN" ]; then
-    sudo ln -s "/etc/nginx/sites-available/$DOMAIN" "/etc/nginx/sites-enabled/"
+    sudo ln -sf "/etc/nginx/sites-available/$DOMAIN" "/etc/nginx/sites-enabled/"
+fi
+
+if [ -f "/etc/nginx/sites-enabled/default" ]; then
+    sudo rm "/etc/nginx/sites-enabled/default"
 fi
 
 sudo nginx -t && sudo systemctl reload nginx
 
-
-echo "[8/8] Настройка SSL сертификата..."
+echo "[7/7] SSL..."
 if [ ! -d "/etc/letsencrypt/live/$DOMAIN" ]; then
-    sudo certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos --email admin@xpowl.xyz --redirect
+    sudo certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos --email admin@xpowl.xyz --redirect || {
+        echo "Certbot упал. Проверь DNS для $DOMAIN"
+        exit 1
+    }
 else
-    echo "SSL сертификат уже существует, пропускаем..."
+    echo "SSL уже есть"
 fi
 
 echo ""
 echo "========================================="
-echo "  Деплой завершён!"
+echo "  Готово: https://$DOMAIN"
 echo "========================================="
-echo "Сайт: https://$DOMAIN"
-echo ""
-echo "Полезные команды:"
-echo "  Статус:      sudo systemctl status $SERVICE_NAME"
-echo "  Логи:        sudo journalctl -u $SERVICE_NAME -f"
-echo "  Перезапуск:  sudo systemctl restart $SERVICE_NAME"
