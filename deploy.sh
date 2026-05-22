@@ -30,7 +30,7 @@ echo "[3/7] Статика и мигирации..."
 "$VENV_PATH/bin/python" "$PROJECT_DIR/manage.py" collectstatic --noinput --clear
 
 echo "[4/7] Права доступа..."
-sudo chown -R $CURRENT_USER:www-data "$PROJECT_DIR"
+sudo chown -R "$CURRENT_USER:www-data" "$PROJECT_DIR"
 
 sudo find "$PROJECT_DIR" -not -path "*/venv/*" -type d -exec chmod 755 {} +
 sudo find "$PROJECT_DIR" -not -path "*/venv/*" -type f -exec chmod 644 {} +
