@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 PROJECT_DIR="/home/dev/usazd"
@@ -7,7 +7,7 @@ DOMAIN="usazd.xpowl.xyz"
 SERVICE_NAME="gunicorn-usazd"
 VENV_PATH="$PROJECT_DIR/venv"
 SOCKET_PATH="$PROJECT_DIR/gunicorn.sock"
-CURRENT_USER=$(whoami)
+CURRENT_USER=$(id -un)
 
 echo "========================================="
 echo "  Деплой $PROJECT_NAME на $DOMAIN"
@@ -51,7 +51,7 @@ fi
 
 echo "[5/7] systemd сервис..."
 CPU_CORES=$(nproc)
-WORKERS=$((CPU_CORES * 2 + 1))
+WORKERS=$(expr $CPU_CORES \* 2 + 1)
 
 sudo tee "/etc/systemd/system/$SERVICE_NAME.service" > /dev/null << EOF
 [Unit]
