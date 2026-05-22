@@ -43,3 +43,39 @@ workflows:
             artifacts:
               paths:
                 - htmlcov/
+
+      - name: deploy-check
+        cubes:
+          - name: validate-deploy-script
+            image: docker.io/library/python:3.13.3-alpine3.20
+            script:
+              - cd "$SOURCECRAFT_WORKSPACE"
+              - apk add --no-cache shellcheck bash
+              - shellcheck deploy.sh
+              - bash -n deploy.sh
+              - |
+                echo "Проверка обязательных параметров в deploy.sh..."
+                grep -q "PROJECT_DIR=" deploy.sh || (echo "Нет PROJECT_DIR" && exit 1)
+                grep -q "PROJECT_NAME=" deploy.sh || (echo "Нет PROJECT_NAME" && exit 1)
+                grep -q "DOMAIN=" deploy.sh || (echo "Нет DOMAIN" && exit 1)
+                grep -q "gunicorn" deploy.sh || (echo "Нет gunicorn" && exit 1)
+                grep -q "nginx" deploy.sh || (echo "Нет nginx" && exit 1)
+                grep -q "certbot" deploy.sh || (echo "Нет certbot" && exit 1)
+                grep -q "systemctl" deploy.sh || (echo "Нет systemctl" && exit 1)
+                echo "Все проверки пройдены!"
+              - |
+                echo "Извлечение и проверка nginx конфига..."
+                sed -n '/sudo tee.*sites-available/,/EOF/p' deploy.sh | grep -v "sudo tee" | grep -v "EOF" > /tmp/nginx_test.conf
+                # Проверяем базовую структуру
+                grep -q "server {" /tmp/nginx_test.conf || (echo "Нет server блока в nginx конфиге" && exit 1)
+                grep -q "listen 80" /tmp/nginx_test.conf || (echo "Нет listen 80" && exit 1)
+                grep -q "proxy_pass" /tmp/nginx_test.conf || (echo "Нет proxy_pass" && exit 1)
+                echo "Nginx конфиг валиден!"
+              - |
+                echo "Извлечение и проверка systemd конфига..."
+                sed -n '/sudo tee.*systemd.*service/,/EOF/p' deploy.sh | grep -v "sudo tee" | grep -v "EOF" > /tmp/systemd_test.service
+                grep -q "\[Unit\]" /tmp/systemd_test.service || (echo "Нет секции Unit" && exit 1)
+                grep -q "\[Service\]" /tmp/systemd_test.service || (echo "Нет секции Service" && exit 1)
+                grep -q "\[Install\]" /tmp/systemd_test.service || (echo "Нет секции Install" && exit 1)
+                grep -q "ExecStart=" /tmp/systemd_test.service || (echo "Нет ExecStart" && exit 1)
+                echo "Systemd конфиг валиден!"
