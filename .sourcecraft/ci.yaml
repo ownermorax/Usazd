@@ -53,7 +53,7 @@ workflows:
               - apk add --no-cache shellcheck dos2unix
               - dos2unix deploy.sh
               - shellcheck deploy.sh
-              - bash -n deploy.sh
+              - sh -n deploy.sh
               - grep -q "gunicorn" deploy.sh || (echo "❌ нет gunicorn" && exit 1)
               - grep -q "nginx" deploy.sh || (echo "❌ нет nginx" && exit 1)
               - grep -q "certbot" deploy.sh || (echo "❌ нет certbot" && exit 1)
