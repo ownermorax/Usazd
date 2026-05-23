@@ -31,7 +31,7 @@ SECRET_KEY = "SECRET_KEY_REPLACED"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['usazd.xpowl.xyz', 'www.usazd.xpowl.xyz']
+ALLOWED_HOSTS = ['usazd.xpowl.xyz', 'www.usazd.xpowl.xyz', '127.0.0.1']
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
