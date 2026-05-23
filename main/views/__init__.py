@@ -21,3 +21,4 @@ from .user_info_edit_page import *
 from .user_info_page import *
 from .vip_handler import *
 from .vip_page import *
+from .get_stations import *

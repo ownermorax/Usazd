@@ -2,7 +2,53 @@
 {% load static %}
 
 {% block extra_css %}
-<!-- Стили теперь берутся из основного style.css -->
+<style>
+    .autocomplete-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+    
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-top: none;
+        z-index: 99;
+        top: 100%;
+        left: 0;
+        right: 0;
+        max-height: 250px;
+        overflow-y: auto;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        border-radius: 0 0 4px 4px;
+    }
+    
+    .autocomplete-items div {
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 14px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .autocomplete-items div:hover {
+        background-color: #e9e9e9;
+    }
+    
+    .autocomplete-active {
+        background-color: #007bff !important;
+        color: #ffffff !important;
+    }
+    
+    .station-highlight {
+        font-weight: bold;
+        background-color: #fff3cd;
+    }
+    
+    .autocomplete-active .station-highlight {
+        background-color: #0056b3;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -11,13 +57,17 @@
 
     <div class="search-form">
         <div class="form-group">
-            <label>📍 Откуда (код станции)</label>
-            <input type="text" id="from_code" placeholder="Например: MOS" value="">
+            <label>📍 Откуда (название станции)</label>
+            <div class="autocomplete-wrapper">
+                <input type="text" id="from_code" placeholder="Например: Долгопрудная" value="" autocomplete="off">
+            </div>
         </div>
 
         <div class="form-group">
-            <label>🎯 Куда (код станции)</label>
-            <input type="text" id="to_code" placeholder="Например: SPB" value="">
+            <label>🎯 Куда (название станции)</label>
+            <div class="autocomplete-wrapper">
+                <input type="text" id="to_code" placeholder="Например: Новодачная" value="" autocomplete="off">
+            </div>
         </div>
 
         <div class="form-group">
@@ -41,69 +91,263 @@ let allSegments = []
 let showPast = false
 let currentTime = ''
 let selectedDate = ''
+let allStations = []
+let currentFocusFrom = -1
+let currentFocusTo = -1
+let stationsLoaded = false
 
 // Устанавливаем сегодняшнюю дату по умолчанию
 document.getElementById('date').value = new Date().toISOString().split('T')[0];
 
+// Загружаем станции при загрузке страницы
+function loadStations() {
+    if (stationsLoaded) return;
+    
+    fetch('/api/stations/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok' && data.stations) {
+                allStations = data.stations.sort();
+                stationsLoaded = true;
+                console.log('Загружено станций:', allStations.length);
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки станций:', error);
+        });
+}
+
+// Загружаем сразу
+loadStations();
+
+// Обработчики ввода с задержкой для быстродействия
+let fromTimeout, toTimeout;
+
+document.getElementById('from_code').addEventListener('input', function(e) {
+    clearTimeout(fromTimeout);
+    let val = this.value;
+    fromTimeout = setTimeout(() => {
+        autocomplete(this, 'from');
+    }, 100);
+});
+
+document.getElementById('to_code').addEventListener('input', function(e) {
+    clearTimeout(toTimeout);
+    let val = this.value;
+    toTimeout = setTimeout(() => {
+        autocomplete(this, 'to');
+    }, 100);
+});
+
+// Закрытие выпадающих списков при клике вне
+document.addEventListener('click', function(e) {
+    if (!e.target.matches('#from_code') && !e.target.matches('#to_code')) {
+        closeAllLists();
+    }
+});
+
+// Предотвращаем поиск при выборе из подсказки Enter
+document.getElementById('from_code').addEventListener('keydown', function(e) {
+    let list = document.getElementById('from-autocomplete-list');
+    if (list) {
+        let items = list.getElementsByTagName('div');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            currentFocusFrom++;
+            addActive(items, currentFocusFrom);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            currentFocusFrom--;
+            addActive(items, currentFocusFrom);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (currentFocusFrom > -1 && items[currentFocusFrom]) {
+                items[currentFocusFrom].click();
+            } else {
+                closeAllLists();
+                searchRoutes();
+            }
+        } else if (e.key === 'Escape') {
+            closeAllLists();
+        }
+    } else if (e.key === 'Enter') {
+        searchRoutes();
+    }
+});
+
+document.getElementById('to_code').addEventListener('keydown', function(e) {
+    let list = document.getElementById('to-autocomplete-list');
+    if (list) {
+        let items = list.getElementsByTagName('div');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            currentFocusTo++;
+            addActive(items, currentFocusTo);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            currentFocusTo--;
+            addActive(items, currentFocusTo);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (currentFocusTo > -1 && items[currentFocusTo]) {
+                items[currentFocusTo].click();
+            } else {
+                closeAllLists();
+                searchRoutes();
+            }
+        } else if (e.key === 'Escape') {
+            closeAllLists();
+        }
+    } else if (e.key === 'Enter') {
+        searchRoutes();
+    }
+});
+
+function autocomplete(input, type) {
+    let val = input.value.trim();
+    closeAllLists();
+    
+    if (!val || val.length < 1) {
+        return false;
+    }
+    
+    // Создаем контейнер для подсказок
+    let autocompleteContainer = document.createElement('div');
+    autocompleteContainer.setAttribute('id', type + '-autocomplete-list');
+    autocompleteContainer.setAttribute('class', 'autocomplete-items');
+    input.parentNode.appendChild(autocompleteContainer);
+    
+    // Быстрый поиск совпадений
+    val = val.toLowerCase();
+    let matches = [];
+    let count = 0;
+    
+    for (let station of allStations) {
+        if (station.toLowerCase().includes(val)) {
+            matches.push(station);
+            count++;
+            if (count >= 15) break;
+        }
+    }
+    
+    if (matches.length === 0) {
+        let noResult = document.createElement('div');
+        noResult.innerHTML = '<em>Совпадений не найдено</em>';
+        noResult.style.color = '#999';
+        noResult.style.cursor = 'default';
+        autocompleteContainer.appendChild(noResult);
+        return;
+    }
+    
+    for (let station of matches) {
+        let item = document.createElement('div');
+        
+        // Подсвечиваем совпадающую часть
+        let idx = station.toLowerCase().indexOf(val);
+        if (idx >= 0) {
+            let before = station.substring(0, idx);
+            let match = station.substring(idx, idx + val.length);
+            let after = station.substring(idx + val.length);
+            item.innerHTML = before + '<span class="station-highlight">' + match + '</span>' + after;
+        } else {
+            item.textContent = station;
+        }
+        
+        item.addEventListener('mousedown', function(e) {
+            e.preventDefault(); // Предотвращаем blur
+            input.value = station;
+            closeAllLists();
+            input.focus();
+        });
+        
+        autocompleteContainer.appendChild(item);
+    }
+}
+
+function closeAllLists() {
+    let items = document.getElementsByClassName('autocomplete-items');
+    while (items.length > 0) {
+        items[0].parentNode.removeChild(items[0]);
+    }
+    currentFocusFrom = -1;
+    currentFocusTo = -1;
+}
+
+function addActive(items, currentFocus) {
+    if (!items || items.length === 0) return;
+    
+    // Убираем активный класс со всех элементов
+    for (let i = 0; i < items.length; i++) {
+        items[i].classList.remove('autocomplete-active');
+    }
+    
+    // Циклическая навигация
+    if (currentFocus >= items.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = items.length - 1;
+    
+    // Добавляем активный класс
+    if (items[currentFocus]) {
+        items[currentFocus].classList.add('autocomplete-active');
+        items[currentFocus].scrollIntoView({ block: 'nearest' });
+    }
+}
+
 function searchRoutes() {
-    showLoading(true)
-
-    let r = new XMLHttpRequest()
-    let now = new Date()
-    currentTime = now.toTimeString().slice(0, 5)
-    selectedDate = document.getElementById('date').value
-
     let fromCode = document.getElementById('from_code').value.trim()
     let toCode = document.getElementById('to_code').value.trim()
 
-    // Валидация
     if (!fromCode || !toCode) {
         showError('Пожалуйста, заполните оба поля "Откуда" и "Куда"')
-        showLoading(false)
         return
     }
+
+    showLoading(true)
+    closeAllLists()
+
+    let now = new Date()
+    currentTime = now.toTimeString().slice(0, 5)
+    selectedDate = document.getElementById('date').value
 
     let url = "/api/search/?from_code=" + encodeURIComponent(fromCode) +
               "&to_code=" + encodeURIComponent(toCode) +
               "&date=" + selectedDate
 
-    r.open("GET", url)
-    r.onload = function() {
-        showLoading(false)
-        try {
-            let response = JSON.parse(r.response)
-
-            if (response.status == 'ok' && response.data && response.data.segments) {
-                allSegments = response.data.segments
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            showLoading(false)
+            
+            if (data.status === 'error') {
+                showError(data.message || 'Ошибка при поиске')
+                return
+            }
+            
+            let segments = data.data?.segments || []
+            
+            if (segments.length > 0) {
+                allSegments = segments
                 showPast = false
                 document.getElementById('togglePastBtn').style.display = 'inline-block'
                 document.getElementById('togglePastBtn').textContent = '📅 Показать прошедшие'
                 renderResults()
             } else {
                 allSegments = []
-                showPast = false
                 document.getElementById('togglePastBtn').style.display = 'none'
                 showEmpty('Ничего не найдено. Попробуйте изменить параметры поиска.')
             }
-        } catch(e) {
-            showError('Ошибка при обработке данных')
-        }
-    }
-    r.onerror = function() {
-        showLoading(false)
-        showError('Ошибка соединения. Проверьте интернет-соединение.')
-    }
-    r.send()
+        })
+        .catch(error => {
+            showLoading(false)
+            showError('Ошибка соединения. Проверьте интернет-соединение.')
+        })
 }
 
 function togglePastTrains() {
     showPast = !showPast
     let btn = document.getElementById('togglePastBtn')
-    if (showPast) {
-        btn.textContent = '⏪ Скрыть прошедшие'
-    } else {
-        btn.textContent = '📅 Показать прошедшие'
-    }
+    btn.textContent = showPast ? '⏪ Скрыть прошедшие' : '📅 Показать прошедшие'
     renderResults()
 }
 
@@ -119,8 +363,7 @@ function renderResults() {
     let pastSegments = []
 
     if (is_today) {
-        for (let i = 0; i < allSegments.length; i++) {
-            let s = allSegments[i]
+        for (let s of allSegments) {
             let departure_time = s.departure ? s.departure.slice(11,16) : null
             if (departure_time && departure_time > currentTime) {
                 futureSegments.push(s)
@@ -129,109 +372,72 @@ function renderResults() {
             }
         }
 
-        pastSegments.sort((a, b) => {
-            let timeA = a.departure ? a.departure.slice(11,16) : '00:00'
-            let timeB = b.departure ? b.departure.slice(11,16) : '00:00'
-            return timeA.localeCompare(timeB)
-        })
-
-        futureSegments.sort((a, b) => {
-            let timeA = a.departure ? a.departure.slice(11,16) : '00:00'
-            let timeB = b.departure ? b.departure.slice(11,16) : '00:00'
-            return timeA.localeCompare(timeB)
-        })
+        pastSegments.sort((a, b) => (a.departure || '').slice(11,16).localeCompare((b.departure || '').slice(11,16)))
+        futureSegments.sort((a, b) => (a.departure || '').slice(11,16).localeCompare((b.departure || '').slice(11,16)))
     } else {
-        futureSegments = [...allSegments]
-        pastSegments = []
-
-        futureSegments.sort((a, b) => {
-            let timeA = a.departure ? a.departure.slice(11,16) : '00:00'
-            let timeB = b.departure ? b.departure.slice(11,16) : '00:00'
-            return timeA.localeCompare(timeB)
-        })
+        futureSegments = [...allSegments].sort((a, b) => 
+            (a.departure || '').slice(11,16).localeCompare((b.departure || '').slice(11,16))
+        )
     }
 
-    let segmentsToShow = []
-    if (showPast) {
-        segmentsToShow = [...pastSegments, ...futureSegments]
-    } else {
-        segmentsToShow = futureSegments
-    }
+    let segmentsToShow = showPast ? [...pastSegments, ...futureSegments] : futureSegments
 
     if (segmentsToShow.length === 0) {
-        if (is_today && futureSegments.length === 0 && !showPast) {
-            showEmpty('На сегодня поездов больше нет')
-        } else if (is_today && pastSegments.length === 0 && showPast) {
-            showEmpty('Нет прошедших поездов')
-        } else {
-            showEmpty('Ничего не найдено')
-        }
+        let msg = is_today && !showPast ? 'На сегодня поездов больше нет' : 'Ничего не найдено'
+        showEmpty(msg)
         return
     }
 
-    // Показываем результаты
-    let html = '<div class="results-header"><p class="results-count">📊 Найдено поездов: ' + segmentsToShow.length + '</p></div>'
+    let html = `<div class="results-header"><p class="results-count">📊 Найдено поездов: ${segmentsToShow.length}</p></div>`
 
-    for (let i = 0; i < segmentsToShow.length; i++) {
-        let s = segmentsToShow[i]
+    for (let s of segmentsToShow) {
         let departure_time = s.departure ? s.departure.slice(11,16) : null
         let isPast = is_today && departure_time && departure_time <= currentTime
-
-        let cardClass = 'train-card'
-        if (isPast) {
-            cardClass += ' past-train'
-        }
-
-        html += '<div class="' + cardClass + '">'
-
+        
+        let thread = s.thread || {}
+        let from = s.from || {}
+        let to = s.to || {}
+        let duration = s.duration || 0
+        let hours = Math.floor(duration / 3600)
+        let minutes = Math.floor((duration % 3600) / 60)
+        
+        html += `<div class="train-card${isPast ? ' past-train' : ''}">`
+        
         if (isPast) {
             html += '<div class="past-badge">⏰ ПРОШЕДШИЙ</div>'
         }
-
-        html += '<div class="train-header">'
-        html += '<div class="train-number">🚆 Поезд №' + (s.thread?.number || '???') + '</div>'
-        html += '<div class="train-title">' + (s.thread?.title || '') + '</div>'
-        html += '</div>'
-
-        html += '<div class="train-body">'
-        html += '<div class="route-info">'
-        html += '<div class="station">'
-        html += '<div class="station-label">Откуда</div>'
-        html += '<div class="station-name">' + (s.from?.title || '???') + '</div>'
-        html += '<div class="station-time">' + (s.departure ? s.departure.slice(11,16) : '???') + '</div>'
-        html += '</div>'
-        html += '<div class="route-arrow">→</div>'
-        html += '<div class="station">'
-        html += '<div class="station-label">Куда</div>'
-        html += '<div class="station-name">' + (s.to?.title || '???') + '</div>'
-        html += '<div class="station-time">' + (s.arrival ? s.arrival.slice(11,16) : '???') + '</div>'
-        html += '</div>'
-        html += '</div>'
-
-        html += '<div class="duration-info">'
-        html += '⏱ В пути: <span>' + Math.floor((s.duration||0)/3600) + 'ч ' + Math.floor(((s.duration||0)%3600)/60) + 'м</span>'
-        html += '</div>'
-
-        html += '<div class="price-tag">💰 Цена билета: 2$</div>'
-
-        // Проверка на скорое прибытие
-        if (s.arrival) {
-            let arrivalTime = new Date(s.arrival)
-            let now = new Date()
-            let minutesUntil = Math.floor((arrivalTime - now) / 60000)
-            if (minutesUntil >= 0 && minutesUntil <= 10) {
-                html += '<div class="urgent-alert">'
-                html += '<p>🚨 ВНИМАНИЕ! Поезд прибывает через ' + minutesUntil + ' минут!</p>'
-                html += '</div>'
-            }
-        }
-
+        
+        html += `
+            <div class="train-header">
+                <div class="train-number">🚆 Поезд №${thread.number || '???'}</div>
+                <div class="train-title">${thread.title || ''}</div>
+            </div>
+            <div class="train-body">
+                <div class="route-info">
+                    <div class="station">
+                        <div class="station-label">Откуда</div>
+                        <div class="station-name">${from.title || '???'}</div>
+                        <div class="station-time">${departure_time || '???'}</div>
+                    </div>
+                    <div class="route-arrow">→</div>
+                    <div class="station">
+                        <div class="station-label">Куда</div>
+                        <div class="station-name">${to.title || '???'}</div>
+                        <div class="station-time">${s.arrival ? s.arrival.slice(11,16) : '???'}</div>
+                    </div>
+                </div>
+                <div class="duration-info">⏱ В пути: <span>${hours}ч ${minutes}м</span></div>
+                <div class="price-tag">💰 Цена билета: 2$</div>
+        `
+        
         if (!isPast) {
-            html += '<a href="/train/?id=' + (s.thread?.number || '') + '&from=' + (s.from?.title || '') + '&to=' + (s.to?.title || '') + '&departure_time=' + encodeURIComponent(s.departure || '') + '" style="display:inline-block; margin-top:10px; padding:5px 10px; background:#007bff; color:white; text-decoration:none; border-radius:5px;">Забронировать</a>'
+            html += `<a href="/train/?id=${thread.number || ''}&from=${from.title || ''}&to=${to.title || ''}&departure_time=${encodeURIComponent(s.departure || '')}" 
+                       style="display:inline-block;margin-top:10px;padding:5px 10px;background:#007bff;color:white;text-decoration:none;border-radius:5px;">
+                       Забронировать</a>`
         } else {
             html += '<div class="booking-disabled">❌ Бронирование недоступно</div>'
         }
-
+        
         html += '</div></div>'
     }
 
@@ -239,28 +445,17 @@ function renderResults() {
 }
 
 function showLoading(show) {
-    if (show) {
-        document.getElementById('results').innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Поиск поездов...</p></div>'
-    }
+    document.getElementById('results').innerHTML = show 
+        ? '<div class="loading"><div class="loading-spinner"></div><p>Поиск поездов...</p></div>' 
+        : ''
 }
 
 function showError(message) {
-    document.getElementById('results').innerHTML = '<div class="empty-state"><p>⚠️ ' + message + '</p></div>'
+    document.getElementById('results').innerHTML = `<div class="empty-state"><p>⚠️ ${message}</p></div>`
 }
 
 function showEmpty(message) {
-    document.getElementById('results').innerHTML = '<div class="empty-state"><p>😔 ' + message + '</p></div>'
+    document.getElementById('results').innerHTML = `<div class="empty-state"><p>😔 ${message}</p></div>`
 }
-
-// Добавляем поддержку Enter для быстрого поиска
-document.getElementById('from_code').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') searchRoutes()
-})
-document.getElementById('to_code').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') searchRoutes()
-})
-document.getElementById('date').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') searchRoutes()
-})
 </script>
 {% endblock %}

@@ -55,6 +55,7 @@ urlpatterns = [
     ),
     path("quick-booking/", views.quick_booking, name="quick_booking"),
     path("api/cancel-order/<int:order_id>/", views.cancel_order, name="cancel_order"),
+    path('api/stations/', views.get_stations, name='get_stations'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

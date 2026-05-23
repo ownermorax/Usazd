@@ -100,12 +100,21 @@ def timetable_handler(request):
     if not date:
         date = datetime.now().strftime("%Y-%m-%d")
     result = yandexAPI.station_request(from_code, to_code, date, lang)
+    if isinstance(result, str):
+        logger.error(f"Ошибка API: {result}")
+        return JsonResponse(
+            {
+                "status": "error",
+                "message": result,
+            },
+            status=500,
+        )
     context = get_context(result)
     for segment in result.get("segments", []):
         thread = segment.get("thread", {})
         from_info = segment.get("from", {})
         to_info = segment.get("to", {})
-        carrier = thread.get("carrier", {})
+        carrier = thread.get("carrier", {}) or {}
         duration = segment.get("duration", 0)
         hours = int(duration // 3600)
         minutes = int((duration % 3600) // 60)
