@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from djmoney.models.fields import MoneyField
 from djmoney.money import Money
-
+from django.utils import timezone
 
 class Profile(models.Model):
     """Модель профиля пользователя."""
@@ -91,7 +91,7 @@ class Reservation(models.Model):
     place_num = models.CharField(max_length=10)
     station_in = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="station_in")
     station_out = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="station_out")
-    reservation_date = models.DateTimeField(auto_now_add=True)
+    reservation_date = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=20, default="active")
     order = models.ForeignKey(
         Order,

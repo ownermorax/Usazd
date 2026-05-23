@@ -39,8 +39,6 @@ class MainConfig(AppConfig):
 
             parser.start_parser("usdt")
 
-            parser.start()
-
         def run_premium_parser():
             """Запускает проверку истечения VIP статусов в фоновом режиме."""
             import time
@@ -50,14 +48,23 @@ class MainConfig(AppConfig):
 
             parser.start_parser("vip")
 
-        def run_resrvation_parser():
+        def run_repeat_resrvation_parser():
             """Запускает проверку на повторные бронирования в фоновом режиме."""
             import time
 
             time.sleep(4)
             from main.parser import parser
 
-            parser.start_parser("reservation")
+            parser.start_parser("repeat_reservation")
+
+        def run_active_resrvation_parser():
+            """Запускает проверку на истекшие бронирования в фоновом режиме."""
+            import time
+
+            time.sleep(4)
+            from main.parser import parser
+
+            parser.start_parser("active_reservation")
 
         thread_usdt = threading.Thread(target=run_usdt_parser, daemon=True)
         thread_usdt.start()
@@ -67,6 +74,10 @@ class MainConfig(AppConfig):
         thread_premium.start()
         logger.info(f"VIP парсер запущен")
 
-        thread_premium = threading.Thread(target=run_resrvation_parser, daemon=True)
-        thread_premium.start()
-        logger.info(f"Reservation парсер запущен")
+        thread_repeat_res = threading.Thread(target=run_repeat_resrvation_parser, daemon=True)
+        thread_repeat_res.start()
+        logger.info(f"Repeat Reservation парсер запущен")
+        
+        thread_active_res = threading.Thread(target=run_active_resrvation_parser, daemon=True)
+        thread_active_res.start()
+        logger.info(f"Active Reservation парсер запущен")

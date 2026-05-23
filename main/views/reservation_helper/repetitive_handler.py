@@ -77,6 +77,7 @@ def repetitive_handler(request):
             profile,
             station_in,
             station_out,
+            parsed_time,
             total_price,
             train,
             user,

@@ -11,7 +11,7 @@ from time import sleep
 import django
 import requests
 
-from main.models import Reservation
+from main.models import Reservation, Order
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "coffee_project.settings")
 django.setup()
@@ -117,10 +117,10 @@ class PremiumParser:
             except Exception as e:
                 logger.info(f"Ошибка в парсере: {str(e)}")
 
-            sleep(30)
+            sleep(20)
 
 
-class ReservationParser:
+class RepeatReservationParser:
     """Парсер для обработки повторяющихся бронирований."""
 
     def __init__(self):
@@ -175,10 +175,69 @@ class ReservationParser:
                         logger.info(f"Ошибка обработки брони #{reservation.reservation_id}: {str(e)}")
 
             except Exception as e:
-                logger.info(f"Ошибка в ReservationParser: {str(e)}")
-
+                logger.info(f"Ошибка в RepeatReservationParser: {str(e)}")
+            
             sleep(10)
+            
+class ActiveReservationParser:
+    """Парсер для обработки бронирований."""
 
+    def __init__(self):
+        """Инициализирует парсер бронирований."""
+        pass
+
+    def start(self):
+        """Запускает бесконечный цикл обработки бронирований."""
+
+        while True:
+            try:
+                now = datetime.datetime.now(datetime.timezone.utc)
+                
+                expired_reservations = Reservation.objects.filter(
+                    status="active",
+                    reservation_date__lt=now
+                )
+                
+                affected_order_ids = set()
+                
+                for reservation in expired_reservations:
+                    reservation.status = "completed"
+                    reservation.save()
+                    
+                    if reservation.order:
+                        affected_order_ids.add(reservation.order.id)
+                    
+                    logger.info(
+                        f"Бронь #{reservation.reservation_id} завершена. "
+                        f"Дата отправления: {reservation.reservation_date}"
+                    )
+                
+                for order_id in affected_order_ids:
+                    try:
+                        order = Order.objects.get(id=order_id)
+                        
+                        active_reservations_count = Reservation.objects.filter(
+                            order=order,
+                            status="active"
+                        ).count()
+                        
+                        if active_reservations_count == 0 and order.status == "active":
+                            order.status = "completed"
+                            order.save()
+                            logger.info(f"Заказ #{order.id} завершён")
+                            
+                    except Order.DoesNotExist:
+                        logger.error(f"Заказ #{order_id} не найден")
+                        continue
+                
+                if expired_reservations:
+                    logger.info(f"Завершено бронирований: {expired_reservations.count()}")
+                
+                sleep(15)
+                        
+            except Exception as e:
+                logger.error(f"Ошибка в ActiveReservationParser: {str(e)}")
+                sleep(15)
 
 class Parser:
     """Главный класс для управления парсерами."""
@@ -192,7 +251,8 @@ class Parser:
         mods = {
             "usdt": UsdtParser,
             "vip": PremiumParser,
-            "reservation": ReservationParser,
+            "active_reservation": ActiveReservationParser,
+            "repeat_reservation": RepeatReservationParser,
         }
         sparser = mods[mode]()
         sparser.start()

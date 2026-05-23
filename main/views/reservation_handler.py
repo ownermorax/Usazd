@@ -1,4 +1,5 @@
 from .reservation_helper import *
+from django.utils import timezone
 
 
 def reservation_handler(request):
@@ -52,7 +53,13 @@ def reservation_handler(request):
     except Exception as e:
         logger.exception("Ошибка при обработке бронирования.")
         return JsonResponse({"status": "error", "message": f"Ошибка: {str(e)}"}, status=400)
-
+    if departure_time:
+        try:
+            parsed_time = datetime.fromisoformat(departure_time)
+        except BaseException:
+            parsed_time = timezone.now()
+    else:
+        parsed_time = timezone.now()
     PRICE_PER_SEAT, booked_seats, place_nums, total_price = get_some_atr()
     for item in seats.split("W"):
         if item and "x" in item:
@@ -76,6 +83,6 @@ def reservation_handler(request):
         response = get_bad_response(profile, total_price, user_id)
         return response
 
-    reservation, seats_list = do_reservation(place_nums, profile, station_in, station_out, total_price, train, user)
+    reservation, seats_list = do_reservation(place_nums, profile, station_in, station_out, parsed_time, total_price, train, user)
     response = get_last_response(place_nums, profile, reservation, seats_list, total_price)
     return response

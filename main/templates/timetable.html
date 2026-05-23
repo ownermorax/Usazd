@@ -352,47 +352,114 @@ function togglePastTrains() {
 }
 
 function renderResults() {
-    let is_today = selectedDate === new Date().toISOString().split('T')[0]
-
     if (allSegments.length === 0) {
         showEmpty('Ничего не найдено')
         return
     }
 
+    let now = new Date()
+    let currentHours = now.getHours()
+    let currentMinutes = now.getMinutes()
+    let nowMinutesTotal = currentHours * 60 + currentMinutes
+    
+    let todayStr = now.getFullYear() + '-' + 
+                   String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                   String(now.getDate()).padStart(2, '0')
+    
+    let todayObj = new Date(todayStr + 'T00:00:00')
+    let selectedObj = new Date(selectedDate + 'T00:00:00')
+    
+    let isToday = (todayStr === selectedDate)
+    let isPastDate = (selectedObj.getTime() < todayObj.getTime())
+    let isFutureDate = (selectedObj.getTime() > todayObj.getTime())
+    
+    console.log('Сегодня локально:', todayStr)
+    console.log('Выбранная дата:', selectedDate)
+    console.log('Это сегодня:', isToday)
+    console.log('Дата в прошлом:', isPastDate)
+    console.log('Текущее время (минуты):', nowMinutesTotal)
+    
+    let sortedSegments = [...allSegments].sort((a, b) => 
+        (a.departure || '').slice(11,16).localeCompare((b.departure || '').slice(11,16))
+    )
+
     let futureSegments = []
     let pastSegments = []
 
-    if (is_today) {
-        for (let s of allSegments) {
-            let departure_time = s.departure ? s.departure.slice(11,16) : null
-            if (departure_time && departure_time > currentTime) {
+    if (isToday) {
+        for (let s of sortedSegments) {
+            let depTime = s.departure ? s.departure.slice(11,16) : '00:00'
+            let depParts = depTime.split(':')
+            let depMinutes = parseInt(depParts[0]) * 60 + parseInt(depParts[1])
+            
+            console.log('Поезд:', s.thread?.number, 'отправление:', depTime, 
+                       'минуты:', depMinutes, 'сейчас:', nowMinutesTotal,
+                       'прошел:', depMinutes <= nowMinutesTotal)
+            
+            if (depMinutes > nowMinutesTotal) {
                 futureSegments.push(s)
             } else {
                 pastSegments.push(s)
             }
         }
-
-        pastSegments.sort((a, b) => (a.departure || '').slice(11,16).localeCompare((b.departure || '').slice(11,16)))
-        futureSegments.sort((a, b) => (a.departure || '').slice(11,16).localeCompare((b.departure || '').slice(11,16)))
+    } else if (isPastDate) {
+        pastSegments = sortedSegments
+        futureSegments = []
     } else {
-        futureSegments = [...allSegments].sort((a, b) => 
-            (a.departure || '').slice(11,16).localeCompare((b.departure || '').slice(11,16))
-        )
+        futureSegments = sortedSegments
+        pastSegments = []
     }
+
+    console.log('Будущие поезда:', futureSegments.length)
+    console.log('Прошедшие поезда:', pastSegments.length)
 
     let segmentsToShow = showPast ? [...pastSegments, ...futureSegments] : futureSegments
 
+    let toggleBtn = document.getElementById('togglePastBtn')
+    if (pastSegments.length > 0) {
+        toggleBtn.style.display = 'inline-block'
+        if (isToday) {
+            toggleBtn.textContent = showPast ? '⏪ Скрыть прошедшие' : '📅 Показать прошедшие'
+        } else if (isPastDate) {
+            toggleBtn.textContent = showPast ? '⏪ Скрыть поезда' : '📅 Показать все поезда'
+        }
+    } else {
+        toggleBtn.style.display = 'none'
+    }
+
     if (segmentsToShow.length === 0) {
-        let msg = is_today && !showPast ? 'На сегодня поездов больше нет' : 'Ничего не найдено'
-        showEmpty(msg)
+        if (isToday && !showPast) {
+            showEmpty('На сегодня поездов больше нет')
+        } else if (isPastDate && !showPast) {
+            showEmpty('Поезда за прошедшую дату скрыты. Нажмите "Показать все поезда"')
+        } else {
+            showEmpty('Ничего не найдено')
+        }
         return
     }
 
-    let html = `<div class="results-header"><p class="results-count">📊 Найдено поездов: ${segmentsToShow.length}</p></div>`
+    let html = ''
+    
+    if (isPastDate && showPast) {
+        html += `<div style="background:#fff3cd; color:#856404; padding:10px; margin-bottom:15px; border-radius:5px;">
+            ⚠️ Вы просматриваете архивные поезда за прошедшую дату: ${selectedDate}
+        </div>`
+    }
+    
+    html += `<div class="results-header"><p class="results-count">📊 Найдено поездов: ${segmentsToShow.length}</p></div>`
 
     for (let s of segmentsToShow) {
         let departure_time = s.departure ? s.departure.slice(11,16) : null
-        let isPast = is_today && departure_time && departure_time <= currentTime
+        
+        let trainIsPast = false
+        
+        if (isPastDate) {
+            trainIsPast = true
+        } else if (isToday && departure_time) {
+            let depParts = departure_time.split(':')
+            let depMinutes = parseInt(depParts[0]) * 60 + parseInt(depParts[1])
+            trainIsPast = depMinutes <= nowMinutesTotal
+        }
         
         let thread = s.thread || {}
         let from = s.from || {}
@@ -401,9 +468,9 @@ function renderResults() {
         let hours = Math.floor(duration / 3600)
         let minutes = Math.floor((duration % 3600) / 60)
         
-        html += `<div class="train-card${isPast ? ' past-train' : ''}">`
+        html += `<div class="train-card${trainIsPast ? ' past-train' : ''}">`
         
-        if (isPast) {
+        if (trainIsPast) {
             html += '<div class="past-badge">⏰ ПРОШЕДШИЙ</div>'
         }
         
@@ -430,7 +497,7 @@ function renderResults() {
                 <div class="price-tag">💰 Цена билета: 2$</div>
         `
         
-        if (!isPast) {
+        if (!trainIsPast) {
             html += `<a href="/train/?id=${thread.number || ''}&from=${from.title || ''}&to=${to.title || ''}&departure_time=${encodeURIComponent(s.departure || '')}" 
                        style="display:inline-block;margin-top:10px;padding:5px 10px;background:#007bff;color:white;text-decoration:none;border-radius:5px;">
                        Забронировать</a>`
@@ -443,7 +510,6 @@ function renderResults() {
 
     document.getElementById('results').innerHTML = html
 }
-
 function showLoading(show) {
     document.getElementById('results').innerHTML = show 
         ? '<div class="loading"><div class="loading-spinner"></div><p>Поиск поездов...</p></div>' 
