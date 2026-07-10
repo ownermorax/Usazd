@@ -1,6 +1,15 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,django,pycharm,virtualenv
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,django,pycharm,virtualenv
 logs/
+
+# Project-specific — secrets, data, build artifacts
+config.json
+stations.json
+main/stations.json
+main/processed_transactions.json
+staticfiles/
+*.apk
+static/qrcode.jpg
 ### Django ###
 *.log
 *.pot

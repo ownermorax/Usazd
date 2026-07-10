@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
@@ -26,7 +29,11 @@ from pathlib import Path
 # Далее полученное значение подставляется в соответствующую переменную
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "SECRET_KEY_REPLACED"
+# Generate a new key: python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-change-me-in-production",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -39,9 +46,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
-# Для разработки
-DEBUG = False
 
 # Application definition
 
@@ -84,10 +88,7 @@ TEMPLATES = [
         },
     },
 ]
-OPENROUTER_API_KEY = os.environ.get(
-    "OPENROUTER_API_KEY",
-    "OPENROUTER_API_KEY_REPLACED",
-)
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 WSGI_APPLICATION = "USAZD.wsgi.application"
 
 

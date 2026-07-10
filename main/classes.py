@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 
 import requests
 
@@ -54,9 +55,9 @@ class YandexAPI:
         """
         with open("main/config.json") as file:
             conf = json.load(file)
-            self.YandexAPI_Key = conf["keys"][
-                "YandexAPI"
-            ]  # для получения ключа https://developer.tech.yandex.ru/services
+            self.YandexAPI_Key = conf["keys"]["YandexAPI"]
+        # Override with environment variable if set
+        self.YandexAPI_Key = os.environ.get("YANDEX_API_KEY", self.YandexAPI_Key)
         self.stations_id = {}
 
     def load_stations_to_json(self):
